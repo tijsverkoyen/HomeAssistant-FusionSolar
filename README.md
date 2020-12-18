@@ -58,6 +58,34 @@ You can configure multiple plants:
             name: "A readable name for plant YYYYY"
 
 
+## Future plans
+
+No of the items below are promises, so don't expect anything to happen soon:
+
+### Build a view
+Make a custom view that shows everything in a single card.
+
+Possible inspiration:
+* https://home-assistant-cards.bessarabov.com/
+* https://github.com/denysdovhan/vacuum-card
+* https://community.home-assistant.io/t/lovelace-power-wheel-card/82374
+* https://community.home-assistant.io/t/solar-pv-system-card/80218
+* https://github.com/gurbyz/power-wheel-card
+* https://github.com/reptilex/tesla-style-solar-power-card
+
+### Use separate entities
+Use separate entities instead of attributes.
+
+### Better naming of the sensors
+At this point the sensor is named: `sensor.plantname` which is not scoped.
+
+### Add power chart
+Add the power chart
+
+### Add social contributions
+Add the social contributions
+
+
 ## Known issues
 ### Detected I/O inside the event loop
 
