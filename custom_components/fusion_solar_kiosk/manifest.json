@@ -1,0 +1,12 @@
+{
+  "domain": "fusion_solar_kiosk",
+  "name": "FusionSolar Kiosk",
+  "documentation": "https://github.com/tijsverkoyen/Home-Assisant-FusionSolar-Kiosk",
+  "issue_tracker": "https://github.com/tijsverkoyen/Home-Assisant-FusionSolar-Kiosk/issues",
+  "dependencies": [],
+  "config_flow": false,
+  "codeowners": [
+    "@tijsVerkoyen"
+  ],
+  "requirements": []
+}
