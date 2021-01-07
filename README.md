@@ -73,12 +73,6 @@ Possible inspiration:
 * https://github.com/gurbyz/power-wheel-card
 * https://github.com/reptilex/tesla-style-solar-power-card
 
-### Use separate entities
-Use separate entities instead of attributes.
-
-### Better naming of the sensors
-At this point the sensor is named: `sensor.plantname` which is not scoped.
-
 ### Add power chart
 Add the power chart
 
