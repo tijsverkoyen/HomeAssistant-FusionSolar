@@ -1,11 +1,12 @@
 """FusionSolar Kiosk sensor."""
 import async_timeout
+import json
 import homeassistant.helpers.config_validation as cv
 import logging
+import sys
 import voluptuous as vol
 
 from datetime import timedelta
-
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import (
     CONF_ID,
@@ -26,10 +27,17 @@ from homeassistant.helpers.update_coordinator import (
     DataUpdateCoordinator,
     UpdateFailed,
 )
-
+from requests import post
 from typing import Any, Callable, Dict, Optional
-
-from .const import DOMAIN
+from .const import (
+    DOMAIN,
+    ATTR_SUCCESS,
+    ATTR_REALTIME_POWER,
+    ATTR_TOTAL_CURRENT_DAY_ENERGY,
+    ATTR_TOTAL_CURRENT_MONTH_ENERGY,
+    ATTR_TOTAL_CURRENT_YEAR_ENERGY,
+    ATTR_TOTAL_LIFETIME_ENERGY,
+)
 
 CONF_KIOSKS = "kiosks"
 KIOSK_SCHEMA = vol.Schema(
@@ -48,21 +56,52 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-#     api = hass.data[DOMAIN][entry.entry_id]
-
     async def async_update_data():
-        """Fetch data from API endpoint.
-
-        This is the place to pre-process the data to lookup tables
-        so entities can quickly look up their data.
-        """
-        # try:
+        #try:
         #     # Note: asyncio.TimeoutError and aiohttp.ClientError are already
         #     # handled by the data update coordinator.
         #     async with async_timeout.timeout(10):
         #         return await api.fetch_data()
         # except ApiError as err:
         #     raise UpdateFailed(f"Error communicating with API: {err}")
+
+        url = "https://eu5.fusionsolar.huawei.com/kiosk/getRealTimeKpi"
+        headers = {
+            "content-type": "application/json",
+            "accept": "application/json",
+        }
+
+        data = {}
+
+        for kiosk in config[CONF_KIOSKS]:
+            requestBody = {"kk": kiosk['id']}
+            data[kiosk['id']] = {}
+
+            try:
+                response = post(url, headers=headers, data=json.dumps(requestBody))
+                responseData = json.loads(response.text)
+
+                data[kiosk['id']][ATTR_SUCCESS] = responseData["success"]
+                data[kiosk['id']][ATTR_REALTIME_POWER] = responseData["data"][ATTR_REALTIME_POWER]
+                data[kiosk['id']][ATTR_TOTAL_CURRENT_DAY_ENERGY] = responseData["data"][ATTR_TOTAL_CURRENT_DAY_ENERGY]
+                data[kiosk['id']][ATTR_TOTAL_CURRENT_MONTH_ENERGY] = responseData["data"][ATTR_TOTAL_CURRENT_MONTH_ENERGY]
+                data[kiosk['id']][ATTR_TOTAL_CURRENT_YEAR_ENERGY] = responseData["data"][ATTR_TOTAL_CURRENT_YEAR_ENERGY]
+                data[kiosk['id']][ATTR_TOTAL_LIFETIME_ENERGY] = responseData["data"][ATTR_TOTAL_LIFETIME_ENERGY]
+
+                if not responseData["success"]:
+                    failCode = responseData["failCode"]
+                    raise RuntimeError(f'Retrieving the data failed with failCode: {failCode}')
+            except RuntimeError as error:
+                _LOGGER.error(error)
+                _LOGGER.debug(response.text)
+            except:
+                # self._available = False
+                _LOGGER.error('Unknown error while retrieving data.')
+                _LOGGER.debug(response.text)
+                _LOGGER.debug(sys.exc_info()[0])
+
+        return data
+
 
     coordinator = DataUpdateCoordinator(
         hass,
@@ -110,7 +149,7 @@ class FusionSolarKioskSensorRealtimePower(CoordinatorEntity, Entity):
 
     @property
     def state(self):
-        return 100
+        return self.coordinator.data[self.kioskId][ATTR_REALTIME_POWER] if self.coordinator.data[self.kioskId][ATTR_SUCCESS] else None
 
     @property
     def unique_id(self):
@@ -138,7 +177,7 @@ class FusionSolarKioskSensorTotalCurrentDayEnergy(CoordinatorEntity, Entity):
 
     @property
     def state(self):
-        return 100
+        return self.coordinator.data[self.kioskId][ATTR_TOTAL_CURRENT_DAY_ENERGY] if self.coordinator.data[self.kioskId][ATTR_SUCCESS] else None
 
     @property
     def unique_id(self):
@@ -156,8 +195,6 @@ class FusionSolarKioskSensorTotalCurrentMonthEnergy(CoordinatorEntity, Entity):
         super().__init__(coordinator)
         self.kioskId = id
         self.kioskName = name
-
-        _LOGGER.debug(self)
  
     @property
     def device_class(self):
@@ -169,7 +206,7 @@ class FusionSolarKioskSensorTotalCurrentMonthEnergy(CoordinatorEntity, Entity):
 
     @property
     def state(self):
-        return 100
+        return self.coordinator.data[self.kioskId][ATTR_TOTAL_CURRENT_MONTH_ENERGY] if self.coordinator.data[self.kioskId][ATTR_SUCCESS] else None
 
     @property
     def unique_id(self):
@@ -197,7 +234,7 @@ class FusionSolarKioskSensorTotalCurrentYearEnergy(CoordinatorEntity, Entity):
 
     @property
     def state(self):
-        return 100
+        return self.coordinator.data[self.kioskId][ATTR_TOTAL_CURRENT_YEAR_ENERGY] if self.coordinator.data[self.kioskId][ATTR_SUCCESS] else None
 
     @property
     def unique_id(self):
@@ -225,7 +262,7 @@ class FusionSolarKioskSensorTotalLifetimeEnergy(CoordinatorEntity, Entity):
 
     @property
     def state(self):
-        return 100
+        return self.coordinator.data[self.kioskId][ATTR_TOTAL_LIFETIME_ENERGY] if self.coordinator.data[self.kioskId][ATTR_SUCCESS] else None
 
     @property
     def unique_id(self):
