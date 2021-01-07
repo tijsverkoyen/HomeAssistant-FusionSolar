@@ -6,38 +6,20 @@ import logging
 import sys
 import voluptuous as vol
 
+from . import FusionSolarKioskEnergyEntity, FusionSolarKioskPowerEntity
+
 from datetime import timedelta
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import (
     CONF_ID,
     CONF_NAME,
-    DEVICE_CLASS_ENERGY,
-    DEVICE_CLASS_POWER,
-    ENERGY_KILO_WATT_HOUR,
-    POWER_KILO_WATT,
-)
-from homeassistant.helpers.entity import Entity
-from homeassistant.helpers.typing import (
-    ConfigType,
-    DiscoveryInfoType,
-    HomeAssistantType,
 )
 from homeassistant.helpers.update_coordinator import (
-    CoordinatorEntity,
     DataUpdateCoordinator,
     UpdateFailed,
 )
 from requests import post
-from typing import Any, Callable, Dict, Optional
-from .const import (
-    DOMAIN,
-    ATTR_SUCCESS,
-    ATTR_REALTIME_POWER,
-    ATTR_TOTAL_CURRENT_DAY_ENERGY,
-    ATTR_TOTAL_CURRENT_MONTH_ENERGY,
-    ATTR_TOTAL_CURRENT_YEAR_ENERGY,
-    ATTR_TOTAL_LIFETIME_ENERGY,
-)
+from .const import *
 
 CONF_KIOSKS = "kiosks"
 KIOSK_SCHEMA = vol.Schema(
@@ -108,166 +90,75 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         _LOGGER,
         name="FusionSolarKiosk",
         update_method=async_update_data,
-        update_interval=timedelta(seconds=30),
+        update_interval=timedelta(seconds=300),
     )
 
     # Fetch initial data so we have data when entities subscribe
     await coordinator.async_refresh()
 
     async_add_entities(
-        FusionSolarKioskSensorRealtimePower(coordinator, kiosk['id'], kiosk['name']) for kiosk in config[CONF_KIOSKS]
+        FusionSolarKioskSensorRealtimePower(
+            coordinator,
+            kiosk['id'],
+            kiosk['name'],
+            ID_REALTIME_POWER,
+            NAME_REALTIME_POWER,
+            ATTR_REALTIME_POWER,
+        ) for kiosk in config[CONF_KIOSKS]
     )
     async_add_entities(
-        FusionSolarKioskSensorTotalCurrentDayEnergy(coordinator, kiosk['id'], kiosk['name']) for kiosk in config[CONF_KIOSKS]
+        FusionSolarKioskSensorTotalCurrentDayEnergy(
+            coordinator,
+            kiosk['id'],
+            kiosk['name'],
+            ID_TOTAL_CURRENT_DAY_ENERGY,
+            NAME_TOTAL_CURRENT_DAY_ENERGY,
+            ATTR_TOTAL_CURRENT_DAY_ENERGY,
+        ) for kiosk in config[CONF_KIOSKS]
     )
     async_add_entities(
-        FusionSolarKioskSensorTotalCurrentMonthEnergy(coordinator, kiosk['id'], kiosk['name']) for kiosk in config[CONF_KIOSKS]
+        FusionSolarKioskSensorTotalCurrentMonthEnergy(
+            coordinator,
+            kiosk['id'],
+            kiosk['name'],
+            ID_TOTAL_CURRENT_MONTH_ENERGY,
+            NAME_TOTAL_CURRENT_MONTH_ENERGY,
+            ATTR_TOTAL_CURRENT_MONTH_ENERGY,
+        ) for kiosk in config[CONF_KIOSKS]
     )
     async_add_entities(
-        FusionSolarKioskSensorTotalCurrentYearEnergy(coordinator, kiosk['id'], kiosk['name']) for kiosk in config[CONF_KIOSKS]
+        FusionSolarKioskSensorTotalCurrentYearEnergy(
+            coordinator,
+            kiosk['id'],
+            kiosk['name'],
+            ID_TOTAL_CURRENT_YEAR_ENERGY,
+            NAME_TOTAL_CURRENT_YEAR_ENERGY,
+            ATTR_TOTAL_CURRENT_YEAR_ENERGY,
+        ) for kiosk in config[CONF_KIOSKS]
     )
     async_add_entities(
-        FusionSolarKioskSensorTotalLifetimeEnergy(coordinator, kiosk['id'], kiosk['name']) for kiosk in config[CONF_KIOSKS]
+        FusionSolarKioskSensorTotalLifetimeEnergy(
+            coordinator,
+            kiosk['id'],
+            kiosk['name'],
+            ID_TOTAL_LIFETIME_ENERGY,
+            NAME_TOTAL_LIFETIME_ENERGY,
+            ATTR_TOTAL_LIFETIME_ENERGY,
+        ) for kiosk in config[CONF_KIOSKS]
     )
 
 
-class FusionSolarKioskSensorRealtimePower(CoordinatorEntity, Entity):
-    """Representation of the real-time power of the installation"""
-    def __init__(self, coordinator, id, name):
-        """Pass coordinator to CoordinatorEntity."""
-        super().__init__(coordinator)
-        self.kioskId = id
-        self.kioskName = name
+class FusionSolarKioskSensorRealtimePower(FusionSolarKioskPowerEntity):
+    pass
 
-    @property
-    def device_class(self):
-        return DEVICE_CLASS_POWER
+class FusionSolarKioskSensorTotalCurrentDayEnergy(FusionSolarKioskEnergyEntity):
+    pass
 
-    @property
-    def name(self):
-        return f'{self.kioskName} ({self.kioskId}) - Realtime Power'
+class FusionSolarKioskSensorTotalCurrentMonthEnergy(FusionSolarKioskEnergyEntity):
+    pass
 
-    @property
-    def state(self):
-        return self.coordinator.data[self.kioskId][ATTR_REALTIME_POWER] if self.coordinator.data[self.kioskId][ATTR_SUCCESS] else None
+class FusionSolarKioskSensorTotalCurrentYearEnergy(FusionSolarKioskEnergyEntity):
+    pass
 
-    @property
-    def unique_id(self):
-        return f'fusion_solar_{self.kioskId})_realtime_power'
-
-    @property
-    def unit_of_measurement(self):
-        return POWER_KILO_WATT
-
-class FusionSolarKioskSensorTotalCurrentDayEnergy(CoordinatorEntity, Entity):
-    """Representation of the daily energy of the installation"""
-    def __init__(self, coordinator, id, name):
-        """Pass coordinator to CoordinatorEntity."""
-        super().__init__(coordinator)
-        self.kioskId = id
-        self.kioskName = name
-
-    @property
-    def device_class(self):
-        return DEVICE_CLASS_ENERGY
-
-    @property
-    def name(self):
-        return f'{self.kioskName} ({self.kioskId}) - Current Day Energy'
-
-    @property
-    def state(self):
-        return self.coordinator.data[self.kioskId][ATTR_TOTAL_CURRENT_DAY_ENERGY] if self.coordinator.data[self.kioskId][ATTR_SUCCESS] else None
-
-    @property
-    def unique_id(self):
-        return f'fusion_solar_{self.kioskId})_current_day_energy'
-
-    @property
-    def unit_of_measurement(self):
-        return ENERGY_KILO_WATT_HOUR
-
-
-class FusionSolarKioskSensorTotalCurrentMonthEnergy(CoordinatorEntity, Entity):
-    """Representation of the monthly energy of the installation"""
-    def __init__(self, coordinator, id, name):
-        """Pass coordinator to CoordinatorEntity."""
-        super().__init__(coordinator)
-        self.kioskId = id
-        self.kioskName = name
- 
-    @property
-    def device_class(self):
-        return DEVICE_CLASS_ENERGY
-
-    @property
-    def name(self):
-        return f'{self.kioskName} ({self.kioskId}) - Current Month Energy'
-
-    @property
-    def state(self):
-        return self.coordinator.data[self.kioskId][ATTR_TOTAL_CURRENT_MONTH_ENERGY] if self.coordinator.data[self.kioskId][ATTR_SUCCESS] else None
-
-    @property
-    def unique_id(self):
-        return f'fusion_solar_{self.kioskId})_current_month_energy'
-
-    @property
-    def unit_of_measurement(self):
-        return ENERGY_KILO_WATT_HOUR
-
-class FusionSolarKioskSensorTotalCurrentYearEnergy(CoordinatorEntity, Entity):
-    """Representation of the annual energy of the installation"""
-    def __init__(self, coordinator, id, name):
-        """Pass coordinator to CoordinatorEntity."""
-        super().__init__(coordinator)
-        self.kioskId = id
-        self.kioskName = name
-
-    @property
-    def device_class(self):
-        return DEVICE_CLASS_ENERGY
-
-    @property
-    def name(self):
-        return f'{self.kioskName} ({self.kioskId}) - Current Year Energy'
-
-    @property
-    def state(self):
-        return self.coordinator.data[self.kioskId][ATTR_TOTAL_CURRENT_YEAR_ENERGY] if self.coordinator.data[self.kioskId][ATTR_SUCCESS] else None
-
-    @property
-    def unique_id(self):
-        return f'fusion_solar_{self.kioskId})_current_year_energy'
-
-    @property
-    def unit_of_measurement(self):
-        return ENERGY_KILO_WATT_HOUR
-
-class FusionSolarKioskSensorTotalLifetimeEnergy(CoordinatorEntity, Entity):
-    """Representation of the lifetime energy of the installation"""
-    def __init__(self, coordinator, id, name):
-        """Pass coordinator to CoordinatorEntity."""
-        super().__init__(coordinator)
-        self.kioskId = id
-        self.kioskName = name
-
-    @property
-    def device_class(self):
-        return DEVICE_CLASS_ENERGY
-
-    @property
-    def name(self):
-        return f'{self.kioskName} ({self.kioskId}) - Lifetime Energy'
-
-    @property
-    def state(self):
-        return self.coordinator.data[self.kioskId][ATTR_TOTAL_LIFETIME_ENERGY] if self.coordinator.data[self.kioskId][ATTR_SUCCESS] else None
-
-    @property
-    def unique_id(self):
-        return f'fusion_solar_{self.kioskId})_lifetime_energy'
-
-    @property
-    def unit_of_measurement(self):
-        return ENERGY_KILO_WATT_HOUR
+class FusionSolarKioskSensorTotalLifetimeEnergy(FusionSolarKioskEnergyEntity):
+    pass
