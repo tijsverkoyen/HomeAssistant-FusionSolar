@@ -3,8 +3,15 @@
 DOMAIN = 'fusion_solar_kiosk'
 
 
-# Possible attributes
+# Configuration
+CONF_KIOSKS = 'kiosks'
+
+
+# Fusion Solar Kiosk API response attributes
+ATTR_DATA = 'data'
+ATTR_FAIL_CODE = 'failCode'
 ATTR_SUCCESS = 'success'
+# Data attributes
 ATTR_REALTIME_POWER = 'curPower'
 ATTR_TOTAL_CURRENT_DAY_ENERGY = 'dailyCapacity'
 ATTR_TOTAL_CURRENT_MONTH_ENERGY = 'monthCapacity'

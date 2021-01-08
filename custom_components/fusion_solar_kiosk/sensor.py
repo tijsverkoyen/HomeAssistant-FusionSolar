@@ -1,9 +1,7 @@
 """FusionSolar Kiosk sensor."""
-import async_timeout
-import json
+from .fusion_solar_kiosk_api import *
 import homeassistant.helpers.config_validation as cv
 import logging
-import sys
 import voluptuous as vol
 
 from . import FusionSolarKioskEnergyEntity, FusionSolarKioskPowerEntity
@@ -14,14 +12,9 @@ from homeassistant.const import (
     CONF_ID,
     CONF_NAME,
 )
-from homeassistant.helpers.update_coordinator import (
-    DataUpdateCoordinator,
-    UpdateFailed,
-)
-from requests import post
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from .const import *
 
-CONF_KIOSKS = "kiosks"
 KIOSK_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_ID): cv.string,
@@ -39,48 +32,11 @@ _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     async def async_update_data():
-        #try:
-        #     # Note: asyncio.TimeoutError and aiohttp.ClientError are already
-        #     # handled by the data update coordinator.
-        #     async with async_timeout.timeout(10):
-        #         return await api.fetch_data()
-        # except ApiError as err:
-        #     raise UpdateFailed(f"Error communicating with API: {err}")
-
-        url = "https://eu5.fusionsolar.huawei.com/kiosk/getRealTimeKpi"
-        headers = {
-            "content-type": "application/json",
-            "accept": "application/json",
-        }
-
+        """Fetch data"""
+        api = FusionSolarKioksApi('https://eu5.fusionsolar.huawei.com')
         data = {}
-
         for kiosk in config[CONF_KIOSKS]:
-            requestBody = {"kk": kiosk['id']}
-            data[kiosk['id']] = {}
-
-            try:
-                response = post(url, headers=headers, data=json.dumps(requestBody))
-                responseData = json.loads(response.text)
-
-                data[kiosk['id']][ATTR_SUCCESS] = responseData["success"]
-                data[kiosk['id']][ATTR_REALTIME_POWER] = responseData["data"][ATTR_REALTIME_POWER]
-                data[kiosk['id']][ATTR_TOTAL_CURRENT_DAY_ENERGY] = responseData["data"][ATTR_TOTAL_CURRENT_DAY_ENERGY]
-                data[kiosk['id']][ATTR_TOTAL_CURRENT_MONTH_ENERGY] = responseData["data"][ATTR_TOTAL_CURRENT_MONTH_ENERGY]
-                data[kiosk['id']][ATTR_TOTAL_CURRENT_YEAR_ENERGY] = responseData["data"][ATTR_TOTAL_CURRENT_YEAR_ENERGY]
-                data[kiosk['id']][ATTR_TOTAL_LIFETIME_ENERGY] = responseData["data"][ATTR_TOTAL_LIFETIME_ENERGY]
-
-                if not responseData["success"]:
-                    failCode = responseData["failCode"]
-                    raise RuntimeError(f'Retrieving the data failed with failCode: {failCode}')
-            except RuntimeError as error:
-                _LOGGER.error(error)
-                _LOGGER.debug(response.text)
-            except:
-                # self._available = False
-                _LOGGER.error('Unknown error while retrieving data.')
-                _LOGGER.debug(response.text)
-                _LOGGER.debug(sys.exc_info()[0])
+            data[kiosk['id']] = await hass.async_add_executor_job(api.getRealTimeKpi, kiosk['id'])
 
         return data
 
@@ -88,7 +44,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     coordinator = DataUpdateCoordinator(
         hass,
         _LOGGER,
-        name="FusionSolarKiosk",
+        name='FusionSolarKiosk',
         update_method=async_update_data,
         update_interval=timedelta(seconds=300),
     )

@@ -3,7 +3,7 @@ Custom integration to integrate FusionSolar Kiosk with Home Assistant.
 """
 import logging
 
-from homeassistant import core
+from homeassistant.core import Config, HomeAssistant
 from homeassistant.const import (
     DEVICE_CLASS_ENERGY,
     DEVICE_CLASS_POWER,
@@ -13,17 +13,17 @@ from homeassistant.const import (
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import (
+    ATTR_DATA,
     ATTR_SUCCESS, 
     DOMAIN,
 )
 
+
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup(hass: core.HomeAssistant, config: dict) -> bool:
+async def async_setup(hass: HomeAssistant, config: Config) -> bool:
     """Set up the FusionSolar Kiosk component."""
-    _LOGGER.debug("Set up the  Solar Kiosk component")
-
     return True
 
 
@@ -47,23 +47,23 @@ class FusionSolarKioskEnergyEntity(CoordinatorEntity, Entity):
         self._attribute = attribute
 
     @property
-    def device_class(self):
+    def device_class(self) -> str:
         return DEVICE_CLASS_ENERGY
 
     @property
-    def name(self):
+    def name(self) -> str:
         return f'{self._kioskName} ({self._kioskId}) - {self._nameSuffix}'
 
     @property
     def state(self):
-        return self.coordinator.data[self._kioskId][self._attribute] if self.coordinator.data[self._kioskId][ATTR_SUCCESS] else None
+        return self.coordinator.data[self._kioskId][ATTR_DATA][self._attribute] if self.coordinator.data[self._kioskId][ATTR_SUCCESS] else None
 
     @property
     def unique_id(self) -> str:
         return f'{DOMAIN}-{self._kioskId}-{self._idSuffix}'
 
     @property
-    def unit_of_measurement(self):
+    def unit_of_measurement(self) -> str:
         return ENERGY_KILO_WATT_HOUR
 
 
@@ -96,7 +96,7 @@ class FusionSolarKioskPowerEntity(CoordinatorEntity, Entity):
 
     @property
     def state(self):
-        return self.coordinator.data[self._kioskId][self._attribute] if self.coordinator.data[self._kioskId][ATTR_SUCCESS] else None
+        return self.coordinator.data[self._kioskId][ATTR_DATA][self._attribute] if self.coordinator.data[self._kioskId][ATTR_SUCCESS] else None
 
     @property
     def unique_id(self) -> str:
