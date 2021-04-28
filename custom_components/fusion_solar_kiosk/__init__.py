@@ -13,8 +13,7 @@ from homeassistant.const import (
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import (
-    ATTR_DATA,
-    ATTR_SUCCESS, 
+    ATTR_DATA_REALKPI,
     DOMAIN,
 )
 
@@ -56,7 +55,7 @@ class FusionSolarKioskEnergyEntity(CoordinatorEntity, Entity):
 
     @property
     def state(self):
-        return self.coordinator.data[self._kioskId][ATTR_DATA][self._attribute] if self.coordinator.data[self._kioskId][ATTR_SUCCESS] else None
+        return float(self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI][self._attribute]) if self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI] else None
 
     @property
     def unique_id(self) -> str:
@@ -96,7 +95,7 @@ class FusionSolarKioskPowerEntity(CoordinatorEntity, Entity):
 
     @property
     def state(self):
-        return self.coordinator.data[self._kioskId][ATTR_DATA][self._attribute] if self.coordinator.data[self._kioskId][ATTR_SUCCESS] else None
+        return float(self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI][self._attribute]) if self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI] else None
 
     @property
     def unique_id(self) -> str:
