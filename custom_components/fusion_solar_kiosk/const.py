@@ -11,6 +11,7 @@ CONF_KIOSKS = 'kiosks'
 ATTR_DATA = 'data'
 ATTR_FAIL_CODE = 'failCode'
 ATTR_SUCCESS = 'success'
+ATTR_DATA_REALKPI = 'realKpi'
 # Data attributes
 ATTR_REALTIME_POWER = 'curPower'
 ATTR_TOTAL_CURRENT_DAY_ENERGY = 'dailyCapacity'
