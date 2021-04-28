@@ -11,12 +11,13 @@ CONF_KIOSKS = 'kiosks'
 ATTR_DATA = 'data'
 ATTR_FAIL_CODE = 'failCode'
 ATTR_SUCCESS = 'success'
+ATTR_DATA_REALKPI = 'realKpi'
 # Data attributes
-ATTR_REALTIME_POWER = 'curPower'
-ATTR_TOTAL_CURRENT_DAY_ENERGY = 'dailyCapacity'
-ATTR_TOTAL_CURRENT_MONTH_ENERGY = 'monthCapacity'
-ATTR_TOTAL_CURRENT_YEAR_ENERGY = 'yearCapacity'
-ATTR_TOTAL_LIFETIME_ENERGY = 'allCapacity'
+ATTR_REALTIME_POWER = 'realTimePower'
+ATTR_TOTAL_CURRENT_DAY_ENERGY = 'dailyEnergy'
+ATTR_TOTAL_CURRENT_MONTH_ENERGY = 'monthEnergy'
+ATTR_TOTAL_CURRENT_YEAR_ENERGY = 'yearEnergy'
+ATTR_TOTAL_LIFETIME_ENERGY = 'cumulativeEnergy'
 
 
 # Possible ID suffixes
