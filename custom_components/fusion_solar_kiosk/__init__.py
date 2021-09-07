@@ -4,6 +4,7 @@ Custom integration to integrate FusionSolar Kiosk with Home Assistant.
 import logging
 
 from homeassistant.core import Config, HomeAssistant
+from homeassistant.components.sensor import STATE_CLASS_TOTAL_INCREASING, SensorEntity
 from homeassistant.const import (
     DEVICE_CLASS_ENERGY,
     DEVICE_CLASS_POWER,
@@ -26,7 +27,7 @@ async def async_setup(hass: HomeAssistant, config: Config) -> bool:
     return True
 
 
-class FusionSolarKioskEnergyEntity(CoordinatorEntity, Entity):
+class FusionSolarKioskEnergyEntity(CoordinatorEntity, SensorEntity):
     """Base class for all FusionSolarKioskEnergy entities."""
     def __init__(
         self,
@@ -54,7 +55,7 @@ class FusionSolarKioskEnergyEntity(CoordinatorEntity, Entity):
         return f'{self._kioskName} ({self._kioskId}) - {self._nameSuffix}'
 
     @property
-    def state(self):
+    def state(self) -> float:
         return float(self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI][self._attribute]) if self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI] else None
 
     @property
@@ -64,6 +65,18 @@ class FusionSolarKioskEnergyEntity(CoordinatorEntity, Entity):
     @property
     def unit_of_measurement(self) -> str:
         return ENERGY_KILO_WATT_HOUR
+
+    @property
+    def state_class(self) -> str:
+        return STATE_CLASS_TOTAL_INCREASING
+
+    @property
+    def native_value(self) -> str:
+        return self.state if self.state else ''
+
+    @property
+    def native_unit_of_measurement(self) -> str:
+        return self.unit_of_measurement
 
 
 class FusionSolarKioskPowerEntity(CoordinatorEntity, Entity):
