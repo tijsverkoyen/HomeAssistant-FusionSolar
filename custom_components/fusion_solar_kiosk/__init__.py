@@ -55,7 +55,7 @@ class FusionSolarKioskEnergyEntity(CoordinatorEntity, SensorEntity):
         return f'{self._kioskName} ({self._kioskId}) - {self._nameSuffix}'
 
     @property
-    def state(self):
+    def state(self) -> float:
         return float(self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI][self._attribute]) if self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI] else None
 
     @property
