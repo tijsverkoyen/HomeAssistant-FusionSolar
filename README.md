@@ -20,7 +20,7 @@ When this is done, just install the repository.
 The configuration of this integration happens in a few steps:
 
 ### Enable kiosk mode
-1. Sign in on the Huawei FusionSolar portal: [https://eu5.fusionsolar.huawei.com](https://eu5.fusionsolar.huawei.com).
+1. Sign in on the Huawei FusionSolar portal: [https://region04eu5.fusionsolar.huawei.com/](https://region04eu5.fusionsolar.huawei.com/).
 2. At the top there is a link: Kiosk View, click it.
 3. An overlay will open, and you need to enable the kioks view by enabling the toggle.
 4. Note down the url that is shown.
