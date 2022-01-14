@@ -20,29 +20,24 @@ When this is done, just install the repository.
 The configuration of this integration happens in a few steps:
 
 ### Enable kiosk mode
-1. Sign in on the Huawei FusionSolar portal: [https://region04eu5.fusionsolar.huawei.com/](https://region04eu5.fusionsolar.huawei.com/).
-2. At the top there is a link: Kiosk View, click it.
-3. An overlay will open, and you need to enable the kioks view by enabling the toggle.
+1. Sign in on the Huawei FusionSolar portal: [https://eu5.fusionsolar.huawei.com/](https://eu5.fusionsolar.huawei.com/).
+2. Select your plant if needed.
+2. At the top there is a button: "Kiosk", click it.
+3. An overlay will open, and you need to enable the kiosk view by enabling the toggle.
 4. Note down the url that is shown.
-
-We only need the unique id, which is located just after the `kk=`. So if your
-url is `https://eu5.fusionsolar.huawei.com/singleKiosk.html?kk=XXXXX` the id is:
-`XXXXX`.
 
 ### Add into configuration
 Open your `configuration.yaml`, add the code below:
 
     sensor:
-        - platform: fusion_solar_kiosk
+      - platform: fusion_solar_kiosk
         kiosks:
-            - id: "XXXXX"
+          - url: "REPLACE THIS WITH THE KIOSK URL"
             name: "A readable name for the plant"
 
-Make sure you replace the `XXXXX`, with the unique id.
-
 ### Use secrets
-I would advice to store the unique id as a secret. With this uniaue token
-anybody can access your kiosk url, so be carefull to share this.
+I strongly advise to store the unique urls as a secret. The kiosk url is public, 
+so anybody with the link can access your data. Be careful when sharing this.
 
 More information on secrets: [Storing secrets](https://www.home-assistant.io/docs/configuration/secrets/).
 
@@ -50,31 +45,9 @@ More information on secrets: [Storing secrets](https://www.home-assistant.io/doc
 You can configure multiple plants:
 
     sensor:
-        - platform: fusion_solar_kiosk
+      - platform: fusion_solar_kiosk
         kiosks:
-            - id: "XXXXX"
-            name: "A readable name for plant XXXXX"
-            - id: "YYYYY"
-            name: "A readable name for plant YYYYY"
-
-
-## Future plans
-
-No of the items below are promises, so don't expect anything to happen soon:
-
-### Build a view
-Make a custom view that shows everything in a single card.
-
-Possible inspiration:
-* https://home-assistant-cards.bessarabov.com/
-* https://github.com/denysdovhan/vacuum-card
-* https://community.home-assistant.io/t/lovelace-power-wheel-card/82374
-* https://community.home-assistant.io/t/solar-pv-system-card/80218
-* https://github.com/gurbyz/power-wheel-card
-* https://github.com/reptilex/tesla-style-solar-power-card
-
-### Add power chart
-Add the power chart
-
-### Add social contributions
-Add the social contributions
+            - url: "KIOSK URL XXXXX"
+              name: "A readable name for plant XXXXX"
+            - url: "KIOSK URL YYYYY"
+              name: "A readable name for plant YYYYY"
