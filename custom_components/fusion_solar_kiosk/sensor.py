@@ -9,7 +9,6 @@ from . import FusionSolarKioskEnergyEntity, FusionSolarKioskPowerEntity
 from datetime import timedelta
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import (
-    CONF_ID,
     CONF_NAME,
 )
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
@@ -17,7 +16,7 @@ from .const import *
 
 KIOSK_SCHEMA = vol.Schema(
     {
-        vol.Required(CONF_ID): cv.string,
+        vol.Required(CONF_KIOSK_URL): cv.string,
         vol.Required(CONF_NAME): cv.string
     }
 )
