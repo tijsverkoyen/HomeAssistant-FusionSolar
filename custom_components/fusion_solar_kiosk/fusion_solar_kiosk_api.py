@@ -26,9 +26,7 @@ class FusionSolarKioksApi:
 
         try:
             response = get(url, headers=headers)
-
             # _LOGGER.debug(response.text)
-
             jsonData = response.json()
 
             if not jsonData[ATTR_SUCCESS]:
@@ -36,7 +34,8 @@ class FusionSolarKioksApi:
 
             # convert encoded html string to JSON
             jsonData[ATTR_DATA] = json.loads(html.unescape(jsonData[ATTR_DATA]))
-
+            _LOGGER.debug('Received data for ' + id + ': ')
+            _LOGGER.debug(jsonData[ATTR_DATA][ATTR_DATA_REALKPI])
             return jsonData[ATTR_DATA][ATTR_DATA_REALKPI]
 
         except FusionSolarKioskApiError as error:
