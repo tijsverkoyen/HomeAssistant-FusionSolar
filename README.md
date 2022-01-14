@@ -7,6 +7,22 @@ Integrate FusionSolar into you Home Assistant.
 FusionSolar has a kiosk mode. When this kiosk mode is enabled we can access 
 data about our plants through a JSON REST api.
 
+{% if installed %}
+{% if version_installed.replace("v", "").replace(".","") | int < 300  %}
+## Breaking Changes
+### Use the full kiosk url (since v3.0.0)
+Your current configuration should be updated. Before v3.0.0 we used the kiosk id. 
+Starting with v3.0.0 the full kiosk url should be used:
+
+    sensor:
+      - platform: fusion_solar_kiosk
+        kiosks:
+          - url: "REPLACE THIS WITH THE KIOSK URL"
+            name: "A readable name for the plant"
+
+See the "Configuration" section for more details
+{% endif %}
+{% endif %}
 
 ## Installation
 At this point the integration is not part of the default HACS repositories, so
