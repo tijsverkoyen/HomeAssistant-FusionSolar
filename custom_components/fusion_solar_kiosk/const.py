@@ -5,6 +5,7 @@ DOMAIN = 'fusion_solar_kiosk'
 
 # Configuration
 CONF_KIOSKS = 'kiosks'
+CONF_KIOSK_URL = 'url'
 
 
 # Fusion Solar Kiosk API response attributes
