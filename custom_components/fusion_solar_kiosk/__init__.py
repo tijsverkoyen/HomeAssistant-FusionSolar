@@ -15,6 +15,7 @@ from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import (
     ATTR_DATA_REALKPI,
+    ATTR_TOTAL_LIFETIME_ENERGY,
     DOMAIN,
 )
 
@@ -56,6 +57,19 @@ class FusionSolarKioskEnergyEntity(CoordinatorEntity, SensorEntity):
 
     @property
     def state(self) -> float:
+        # It seems like Huawei Fusion Solar returns some invalid data for the lifetime energy just before midnight
+        # Therefore we validate if the new value is higher than the current value
+        if ATTR_TOTAL_LIFETIME_ENERGY == self._attribute:
+            # Grab the current data
+            entity = self.hass.states.get(self.entity_id)
+
+            if entity is not None:
+                current_value = entity.state
+                new_value = self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI][self._attribute]
+                if float(new_value) < float(current_value):
+                    _LOGGER.debug(f'{self.entity_id}: new value ({new_value}) is smaller then current value ({entity.state}), so not updating.')
+                    return float(current_value)
+
         return float(self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI][self._attribute]) if self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI] else None
 
     @property
