@@ -38,9 +38,9 @@ class FusionSolarKioksApi:
             _LOGGER.debug(jsonData[ATTR_DATA][ATTR_DATA_REALKPI])
             return jsonData[ATTR_DATA][ATTR_DATA_REALKPI]
 
-        except FusionSolarKioskApiError as error:
+        except KeyError as error:
             _LOGGER.error(error)
-            _LOGGER.debug(response.text)
+            _LOGGER.error(response.text)
 
         except FusionSolarKioskApiError as error:
             _LOGGER.error(error)
