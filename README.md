@@ -24,6 +24,11 @@ See the "Configuration" section for more details
 {% endif %}
 {% endif %}
 
+## Remark
+**In kiosk mode the "realtime" data is not really realtime, it is cached at FusionSolars end for 30 minutes.**
+
+If you need more accurate information you can use [Home Assistant FusionSolar OpenAPI Integration](https://github.com/olibos/Home-Assistant-FusionSolar-OpenApi/) by @olibos. This integration requires an OpenAPI account.
+
 ## Installation
 At this point the integration is not part of the default HACS repositories, so
 you will need to add this repository as a custom repository in HACS.
