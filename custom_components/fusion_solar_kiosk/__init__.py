@@ -19,13 +19,13 @@ from .const import (
     DOMAIN,
 )
 
-
 _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup(hass: HomeAssistant, config: Config) -> bool:
     """Set up the FusionSolar Kiosk component."""
     return True
+
 
 def isfloat(num) -> bool:
     try:
@@ -34,16 +34,18 @@ def isfloat(num) -> bool:
     except ValueError:
         return False
 
+
 class FusionSolarKioskEnergyEntity(CoordinatorEntity, SensorEntity):
     """Base class for all FusionSolarKioskEnergy entities."""
+
     def __init__(
-        self,
-        coordinator,
-        kioskId,
-        kioskName,
-        idSuffix,
-        nameSuffix,
-        attribute,
+            self,
+            coordinator,
+            kioskId,
+            kioskName,
+            idSuffix,
+            nameSuffix,
+            attribute,
     ):
         """Initialize the entity"""
         super().__init__(coordinator)
@@ -81,10 +83,12 @@ class FusionSolarKioskEnergyEntity(CoordinatorEntity, SensorEntity):
                     return 0
 
                 if float(new_value) < float(current_value):
-                    _LOGGER.debug(f'{self.entity_id}: new value ({new_value}) is smaller then current value ({entity.state}), so not updating.')
+                    _LOGGER.debug(
+                        f'{self.entity_id}: new value ({new_value}) is smaller then current value ({entity.state}), so not updating.')
                     return float(current_value)
 
-        return float(self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI][self._attribute]) if self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI] else None
+        return float(self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI][self._attribute]) if \
+        self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI] else None
 
     @property
     def unique_id(self) -> str:
@@ -109,14 +113,15 @@ class FusionSolarKioskEnergyEntity(CoordinatorEntity, SensorEntity):
 
 class FusionSolarKioskPowerEntity(CoordinatorEntity, Entity):
     """Base class for all FusionSolarKioskEnergy entities."""
+
     def __init__(
-        self,
-        coordinator,
-        kioskId,
-        kioskName,
-        idSuffix,
-        nameSuffix,
-        attribute,
+            self,
+            coordinator,
+            kioskId,
+            kioskName,
+            idSuffix,
+            nameSuffix,
+            attribute,
     ):
         """Initialize the entity"""
         super().__init__(coordinator)
@@ -136,7 +141,8 @@ class FusionSolarKioskPowerEntity(CoordinatorEntity, Entity):
 
     @property
     def state(self):
-        return float(self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI][self._attribute]) if self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI] else None
+        return float(self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI][self._attribute]) if \
+        self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI] else None
 
     @property
     def unique_id(self) -> str:

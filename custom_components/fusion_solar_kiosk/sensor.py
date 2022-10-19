@@ -32,6 +32,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 
 _LOGGER = logging.getLogger(__name__)
 
+
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     async def async_update_data():
         """Fetch data"""
@@ -101,6 +102,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
             )
         ])
 
+
 class Kiosk:
     def __init__(self, url, name):
         self.url = url
@@ -122,14 +124,18 @@ class Kiosk:
 class FusionSolarKioskSensorRealtimePower(FusionSolarKioskPowerEntity):
     pass
 
+
 class FusionSolarKioskSensorTotalCurrentDayEnergy(FusionSolarKioskEnergyEntity):
     pass
+
 
 class FusionSolarKioskSensorTotalCurrentMonthEnergy(FusionSolarKioskEnergyEntity):
     pass
 
+
 class FusionSolarKioskSensorTotalCurrentYearEnergy(FusionSolarKioskEnergyEntity):
     pass
+
 
 class FusionSolarKioskSensorTotalLifetimeEnergy(FusionSolarKioskEnergyEntity):
     pass
