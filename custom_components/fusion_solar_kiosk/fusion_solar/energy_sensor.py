@@ -18,7 +18,7 @@ def isfloat(num) -> bool:
         return False
 
 
-class FusionSolarKioskEnergyEntity(CoordinatorEntity, SensorEntity):
+class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
     """Base class for all FusionSolarKioskEnergy entities."""
 
     def __init__(
@@ -94,17 +94,17 @@ class FusionSolarKioskEnergyEntity(CoordinatorEntity, SensorEntity):
         return self.unit_of_measurement
 
 
-class FusionSolarKioskSensorTotalCurrentDayEnergy(FusionSolarKioskEnergyEntity):
+class FusionSolarEnergySensorTotalCurrentDay(FusionSolarEnergySensor):
     pass
 
 
-class FusionSolarKioskSensorTotalCurrentMonthEnergy(FusionSolarKioskEnergyEntity):
+class FusionSolarEnergySensorTotalCurrentMonth(FusionSolarEnergySensor):
     pass
 
 
-class FusionSolarKioskSensorTotalCurrentYearEnergy(FusionSolarKioskEnergyEntity):
+class FusionSolarEnergySensorTotalCurrentYear(FusionSolarEnergySensor):
     pass
 
 
-class FusionSolarKioskSensorTotalLifetimeEnergy(FusionSolarKioskEnergyEntity):
+class FusionSolarEnergySensorTotalLifetime(FusionSolarEnergySensor):
     pass

@@ -6,7 +6,7 @@ from .const import ATTR_DATA_REALKPI
 from ..const import DOMAIN
 
 
-class FusionSolarKioskPowerEntity(CoordinatorEntity, Entity):
+class FusionSolarPowerEntity(CoordinatorEntity, Entity):
     """Base class for all FusionSolarKioskPower entities."""
 
     def __init__(
@@ -48,5 +48,5 @@ class FusionSolarKioskPowerEntity(CoordinatorEntity, Entity):
         return POWER_KILO_WATT
 
 
-class FusionSolarKioskSensorRealtimePower(FusionSolarKioskPowerEntity):
+class FusionSolarPowerEntityRealtime(FusionSolarPowerEntity):
     pass
