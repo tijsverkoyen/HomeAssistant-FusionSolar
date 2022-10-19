@@ -3,45 +3,41 @@ from homeassistant.helpers.entity import Entity
 from homeassistant.const import DEVICE_CLASS_POWER, POWER_KILO_WATT
 
 from .const import ATTR_DATA_REALKPI
-from ..const import DOMAIN
-
 
 class FusionSolarPowerEntity(CoordinatorEntity, Entity):
-    """Base class for all FusionSolarKioskPower entities."""
+    """Base class for all FusionSolarPowerEntity entities."""
 
     def __init__(
             self,
             coordinator,
-            kioskId,
-            kioskName,
-            idSuffix,
-            nameSuffix,
+            unique_id,
+            name,
             attribute,
+            data_name
     ):
         """Initialize the entity"""
         super().__init__(coordinator)
-        self._kioskId = kioskId
-        self._kioskName = kioskName
-        self._idSuffix = idSuffix
-        self._nameSuffix = nameSuffix
+        self._unique_id = unique_id
+        self._name = name
         self._attribute = attribute
+        self._data_name = data_name
 
     @property
     def device_class(self):
         return DEVICE_CLASS_POWER
 
     @property
+    def unique_id(self) -> str:
+        return self._unique_id
+
+    @property
     def name(self):
-        return f'{self._kioskName} ({self._kioskId}) - {self._nameSuffix}'
+        return self._name
 
     @property
     def state(self):
-        return float(self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI][self._attribute]) if \
-            self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI] else None
-
-    @property
-    def unique_id(self) -> str:
-        return f'{DOMAIN}-{self._kioskId}-{self._idSuffix}'
+        return float(self.coordinator.data[self._data_name][ATTR_DATA_REALKPI][self._attribute]) if \
+            self.coordinator.data[self._data_name][ATTR_DATA_REALKPI] else None
 
     @property
     def unit_of_measurement(self):

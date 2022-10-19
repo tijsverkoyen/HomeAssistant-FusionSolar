@@ -5,7 +5,6 @@ from homeassistant.components.sensor import STATE_CLASS_TOTAL_INCREASING, Sensor
 from homeassistant.const import DEVICE_CLASS_ENERGY, ENERGY_KILO_WATT_HOUR
 
 from .const import ATTR_TOTAL_LIFETIME_ENERGY, ATTR_DATA_REALKPI
-from ..const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -19,32 +18,34 @@ def isfloat(num) -> bool:
 
 
 class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
-    """Base class for all FusionSolarKioskEnergy entities."""
+    """Base class for all FusionSolarEnergySensor sensors."""
 
     def __init__(
             self,
             coordinator,
-            kioskId,
-            kioskName,
-            idSuffix,
-            nameSuffix,
+            unique_id,
+            name,
             attribute,
+            data_name
     ):
         """Initialize the entity"""
         super().__init__(coordinator)
-        self._kioskId = kioskId
-        self._kioskName = kioskName
-        self._idSuffix = idSuffix
-        self._nameSuffix = nameSuffix
+        self._unique_id = unique_id
+        self._name = name
         self._attribute = attribute
+        self._data_name = data_name
 
     @property
     def device_class(self) -> str:
         return DEVICE_CLASS_ENERGY
 
     @property
+    def unique_id(self) -> str:
+        return self._unique_id
+
+    @property
     def name(self) -> str:
-        return f'{self._kioskName} ({self._kioskId}) - {self._nameSuffix}'
+        return self._name
 
     @property
     def state(self) -> float:
@@ -56,7 +57,8 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
 
             if entity is not None:
                 current_value = entity.state
-                new_value = self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI][self._attribute]
+                new_value = self.coordinator.data[self._data_name][ATTR_DATA_REALKPI][self._attribute]
+
                 if not isfloat(new_value):
                     _LOGGER.warning(f'{self.entity_id}: new value ({new_value}) is not a float, so not updating.')
                     return float(current_value)
@@ -70,12 +72,8 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
                         f'{self.entity_id}: new value ({new_value}) is smaller then current value ({entity.state}), so not updating.')
                     return float(current_value)
 
-        return float(self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI][self._attribute]) if \
-            self.coordinator.data[self._kioskId][ATTR_DATA_REALKPI] else None
-
-    @property
-    def unique_id(self) -> str:
-        return f'{DOMAIN}-{self._kioskId}-{self._idSuffix}'
+        return float(self.coordinator.data[self._data_name][ATTR_DATA_REALKPI][self._attribute]) if \
+            self.coordinator.data[self._data_name][ATTR_DATA_REALKPI] else None
 
     @property
     def unit_of_measurement(self) -> str:

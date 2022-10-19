@@ -18,7 +18,7 @@ from .fusion_solar.energy_sensor import FusionSolarEnergySensorTotalCurrentDay, 
     FusionSolarEnergySensorTotalLifetime
 from .fusion_solar.power_entity import FusionSolarPowerEntityRealtime
 
-from .const import CONF_KIOSK_URL, CONF_KIOSKS, ID_REALTIME_POWER, NAME_REALTIME_POWER, \
+from .const import CONF_KIOSK_URL, CONF_KIOSKS, DOMAIN, ID_REALTIME_POWER, NAME_REALTIME_POWER, \
     ID_TOTAL_CURRENT_DAY_ENERGY, NAME_TOTAL_CURRENT_DAY_ENERGY, \
     ID_TOTAL_CURRENT_MONTH_ENERGY, NAME_TOTAL_CURRENT_MONTH_ENERGY, \
     ID_TOTAL_CURRENT_YEAR_ENERGY, NAME_TOTAL_CURRENT_YEAR_ENERGY, \
@@ -47,7 +47,8 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         for kioskConfig in config[CONF_KIOSKS]:
             kiosk = Kiosk(kioskConfig['url'], kioskConfig['name'])
             api = FusionSolarKioksApi(kiosk.apiUrl())
-            data[kiosk.id] = {
+            name = f'{DOMAIN}-{kiosk.id}'
+            data[name] = {
                 ATTR_DATA_REALKPI: await hass.async_add_executor_job(api.getRealTimeKpi, kiosk.id)
             }
         return data
@@ -69,42 +70,38 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         async_add_entities([
             FusionSolarPowerEntityRealtime(
                 coordinator,
-                kiosk.id,
-                kiosk.name,
-                ID_REALTIME_POWER,
-                NAME_REALTIME_POWER,
+                f'{DOMAIN}-{kiosk.id}-{ID_REALTIME_POWER}',
+                f'{kiosk.name} ({kiosk.id}) - {NAME_REALTIME_POWER}',
                 ATTR_REALTIME_POWER,
+                f'{DOMAIN}-{kiosk.id}',
             ),
+
             FusionSolarEnergySensorTotalCurrentDay(
                 coordinator,
-                kiosk.id,
-                kiosk.name,
-                ID_TOTAL_CURRENT_DAY_ENERGY,
-                NAME_TOTAL_CURRENT_DAY_ENERGY,
+                f'{DOMAIN}-{kiosk.id}-{ID_TOTAL_CURRENT_DAY_ENERGY}',
+                f'{kiosk.name} ({kiosk.id}) - {NAME_TOTAL_CURRENT_DAY_ENERGY}',
                 ATTR_TOTAL_CURRENT_DAY_ENERGY,
+                f'{DOMAIN}-{kiosk.id}',
             ),
             FusionSolarEnergySensorTotalCurrentMonth(
                 coordinator,
-                kiosk.id,
-                kiosk.name,
-                ID_TOTAL_CURRENT_MONTH_ENERGY,
-                NAME_TOTAL_CURRENT_MONTH_ENERGY,
+                f'{DOMAIN}-{kiosk.id}-{ID_TOTAL_CURRENT_MONTH_ENERGY}',
+                f'{kiosk.name} ({kiosk.id}) - {NAME_TOTAL_CURRENT_MONTH_ENERGY}',
                 ATTR_TOTAL_CURRENT_MONTH_ENERGY,
+                f'{DOMAIN}-{kiosk.id}',
             ),
             FusionSolarEnergySensorTotalCurrentYear(
                 coordinator,
-                kiosk.id,
-                kiosk.name,
-                ID_TOTAL_CURRENT_YEAR_ENERGY,
-                NAME_TOTAL_CURRENT_YEAR_ENERGY,
+                f'{DOMAIN}-{kiosk.id}-{ID_TOTAL_CURRENT_YEAR_ENERGY}',
+                f'{kiosk.name} ({kiosk.id}) - {NAME_TOTAL_CURRENT_YEAR_ENERGY}',
                 ATTR_TOTAL_CURRENT_YEAR_ENERGY,
+                f'{DOMAIN}-{kiosk.id}',
             ),
             FusionSolarEnergySensorTotalLifetime(
                 coordinator,
-                kiosk.id,
-                kiosk.name,
-                ID_TOTAL_LIFETIME_ENERGY,
-                NAME_TOTAL_LIFETIME_ENERGY,
+                f'{DOMAIN}-{kiosk.id}-{ID_TOTAL_LIFETIME_ENERGY}',
+                f'{kiosk.name} ({kiosk.id}) - {NAME_TOTAL_LIFETIME_ENERGY}',
                 ATTR_TOTAL_LIFETIME_ENERGY,
+                f'{DOMAIN}-{kiosk.id}',
             )
         ])
