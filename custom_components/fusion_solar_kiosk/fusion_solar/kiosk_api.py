@@ -3,7 +3,7 @@ import logging
 import html
 import json
 
-from .const import (
+from custom_components.fusion_solar_kiosk.const import (
     ATTR_DATA,
     ATTR_FAIL_CODE,
     ATTR_SUCCESS,

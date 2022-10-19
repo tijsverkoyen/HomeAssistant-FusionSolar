@@ -1,9 +1,9 @@
 """FusionSolar Kiosk sensor."""
-from .fusion_solar_kiosk_api import *
 import homeassistant.helpers.config_validation as cv
 import logging
 import voluptuous as vol
 
+from .fusion_solar.kiosk_api import FusionSolarKioksApi
 from . import FusionSolarKioskEnergyEntity, FusionSolarKioskPowerEntity
 
 from datetime import timedelta
