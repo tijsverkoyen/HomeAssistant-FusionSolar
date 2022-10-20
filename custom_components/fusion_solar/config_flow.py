@@ -2,7 +2,7 @@ from typing import Any, Dict, Optional
 
 from homeassistant import config_entries
 from homeassistant.const import CONF_NAME, CONF_URL
-from .const import DOMAIN, CONF_KIOSKS
+from .const import DOMAIN, CONF_KIOSKS, CONF_TYPE, CONF_TYPE_KIOSK, CONF_TYPE_OPENAPI
 
 import voluptuous as vol
 import logging
@@ -24,22 +24,22 @@ class FusionSolarConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors: Dict[str, str] = {}
 
         if user_input is not None:
-            if user_input['type'] == 'kiosk':
+            if user_input[CONF_TYPE] == CONF_TYPE_KIOSK:
                 return await self.async_step_kiosk()
-            elif user_input['type'] == 'openapi':
+            elif user_input[CONF_TYPE] == CONF_TYPE_OPENAPI:
                 return await self.async_step_openapi()
             else:
                 errors['base'] = 'invalid_type'
 
         type_listing = {
-            'kiosk': 'Kiosk',
-            'openapi': 'OpenAPI',
+            CONF_TYPE_KIOSK: 'Kiosk',
+            CONF_TYPE_OPENAPI: 'OpenAPI',
         }
 
         return self.async_show_form(
             step_id="choose_type",
             data_schema=vol.Schema({
-                vol.Required("type", default='kiosk'): vol.In(type_listing)
+                vol.Required(CONF_TYPE, default=CONF_TYPE_KIOSK): vol.In(type_listing)
             }),
             errors=errors,
         )

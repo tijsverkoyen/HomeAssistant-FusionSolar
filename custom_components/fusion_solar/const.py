@@ -4,6 +4,9 @@ DOMAIN = 'fusion_solar'
 
 # Configuration
 CONF_KIOSKS = 'kiosks'
+CONF_TYPE = 'type'
+CONF_TYPE_KIOSK = 'kiosk'
+CONF_TYPE_OPENAPI = 'openapi'
 
 # Possible ID suffixes
 ID_REALTIME_POWER = 'realtime_power'
