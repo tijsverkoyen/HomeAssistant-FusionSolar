@@ -1,6 +1,6 @@
-"""Constants for FusionSolar Kiosk."""
+"""Constants for FusionSolar."""
 # Base constants
-DOMAIN = 'fusion_solar_kiosk'
+DOMAIN = 'fusion_solar'
 
 # Configuration
 CONF_KIOSKS = 'kiosks'

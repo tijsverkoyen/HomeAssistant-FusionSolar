@@ -1,4 +1,4 @@
-"""FusionSolar Kiosk sensor."""
+"""FusionSolar sensor."""
 import homeassistant.helpers.config_validation as cv
 import logging
 import voluptuous as vol

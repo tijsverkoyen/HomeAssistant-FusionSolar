@@ -1,0 +1,13 @@
+{
+  "domain": "fusion_solar",
+  "name": "FusionSolar",
+  "documentation": "https://github.com/tijsverkoyen/Home-Assistant-FusionSolar",
+  "issue_tracker": "https://github.com/tijsverkoyen/Home-Assistant-FusionSolar/issues",
+  "dependencies": [],
+  "config_flow": false,
+  "codeowners": [
+    "@tijsVerkoyen"
+  ],
+  "requirements": [],
+  "version": "2.1.0"
+}
