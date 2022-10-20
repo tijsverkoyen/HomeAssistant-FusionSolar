@@ -1,0 +1,14 @@
+{
+  "domain": "fusion_solar",
+  "name": "FusionSolar",
+  "version": "1.0.0",
+  "documentation": "https://github.com/tijsverkoyen/Home-Assistant-FusionSolar",
+  "issue_tracker": "https://github.com/tijsverkoyen/Home-Assistant-FusionSolar/issues",
+  "dependencies": [],
+  "codeowners": [
+    "@tijsVerkoyen"
+  ],
+  "config_flow": true,
+  "requirements": [],
+  "iot_class": "cloud_polling"
+}

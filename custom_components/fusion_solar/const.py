@@ -1,25 +1,12 @@
-"""Constants for FusionSolar Kiosk."""
+"""Constants for FusionSolar."""
 # Base constants
-DOMAIN = 'fusion_solar_kiosk'
-
+DOMAIN = 'fusion_solar'
 
 # Configuration
 CONF_KIOSKS = 'kiosks'
-CONF_KIOSK_URL = 'url'
-
-
-# Fusion Solar Kiosk API response attributes
-ATTR_DATA = 'data'
-ATTR_FAIL_CODE = 'failCode'
-ATTR_SUCCESS = 'success'
-ATTR_DATA_REALKPI = 'realKpi'
-# Data attributes
-ATTR_REALTIME_POWER = 'realTimePower'
-ATTR_TOTAL_CURRENT_DAY_ENERGY = 'dailyEnergy'
-ATTR_TOTAL_CURRENT_MONTH_ENERGY = 'monthEnergy'
-ATTR_TOTAL_CURRENT_YEAR_ENERGY = 'yearEnergy'
-ATTR_TOTAL_LIFETIME_ENERGY = 'cumulativeEnergy'
-
+CONF_TYPE = 'type'
+CONF_TYPE_KIOSK = 'kiosk'
+CONF_TYPE_OPENAPI = 'openapi'
 
 # Possible ID suffixes
 ID_REALTIME_POWER = 'realtime_power'
@@ -27,7 +14,6 @@ ID_TOTAL_CURRENT_DAY_ENERGY = 'total_current_day_energy'
 ID_TOTAL_CURRENT_MONTH_ENERGY = 'total_current_month_energy'
 ID_TOTAL_CURRENT_YEAR_ENERGY = 'total_current_year_energy'
 ID_TOTAL_LIFETIME_ENERGY = 'total_lifetime_energy'
-
 
 # Possible Name suffixes
 NAME_REALTIME_POWER = 'Realtime Power'

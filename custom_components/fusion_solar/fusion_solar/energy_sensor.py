@@ -1,0 +1,113 @@
+import logging
+
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.components.sensor import STATE_CLASS_TOTAL_INCREASING, SensorEntity
+from homeassistant.const import DEVICE_CLASS_ENERGY, ENERGY_KILO_WATT_HOUR
+
+from .const import ATTR_TOTAL_LIFETIME_ENERGY, ATTR_DATA_REALKPI
+
+_LOGGER = logging.getLogger(__name__)
+
+
+def isfloat(num) -> bool:
+    try:
+        float(num)
+        return True
+    except ValueError:
+        return False
+
+
+class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
+    """Base class for all FusionSolarEnergySensor sensors."""
+
+    def __init__(
+            self,
+            coordinator,
+            unique_id,
+            name,
+            attribute,
+            data_name
+    ):
+        """Initialize the entity"""
+        super().__init__(coordinator)
+        self._unique_id = unique_id
+        self._name = name
+        self._attribute = attribute
+        self._data_name = data_name
+
+    @property
+    def device_class(self) -> str:
+        return DEVICE_CLASS_ENERGY
+
+    @property
+    def unique_id(self) -> str:
+        return self._unique_id
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def state(self) -> float:
+        # It seems like Huawei Fusion Solar returns some invalid data for the lifetime energy just before midnight
+        # Therefore we validate if the new value is higher than the current value
+        if ATTR_TOTAL_LIFETIME_ENERGY == self._attribute:
+            # Grab the current data
+            entity = self.hass.states.get(self.entity_id)
+
+            if entity is not None:
+                current_value = entity.state
+                new_value = self.coordinator.data[self._data_name][ATTR_DATA_REALKPI][self._attribute]
+
+                if not isfloat(new_value):
+                    _LOGGER.warning(f'{self.entity_id}: new value ({new_value}) is not a float, so not updating.')
+                    return float(current_value)
+
+                if not isfloat(current_value):
+                    _LOGGER.warning(f'{self.entity_id}: current value ({current_value}) is not a float, send 0.')
+                    return 0
+
+                if float(new_value) < float(current_value):
+                    _LOGGER.debug(
+                        f'{self.entity_id}: new value ({new_value}) is smaller then current value ({entity.state}), so not updating.')
+                    return float(current_value)
+
+        if ATTR_DATA_REALKPI not in self.coordinator.data[self._data_name]:
+            return None
+
+        if self._attribute not in self.coordinator.data[self._data_name][ATTR_DATA_REALKPI]:
+            return None
+
+        return float(self.coordinator.data[self._data_name][ATTR_DATA_REALKPI][self._attribute])
+
+    @property
+    def unit_of_measurement(self) -> str:
+        return ENERGY_KILO_WATT_HOUR
+
+    @property
+    def state_class(self) -> str:
+        return STATE_CLASS_TOTAL_INCREASING
+
+    @property
+    def native_value(self) -> str:
+        return self.state if self.state else ''
+
+    @property
+    def native_unit_of_measurement(self) -> str:
+        return self.unit_of_measurement
+
+
+class FusionSolarEnergySensorTotalCurrentDay(FusionSolarEnergySensor):
+    pass
+
+
+class FusionSolarEnergySensorTotalCurrentMonth(FusionSolarEnergySensor):
+    pass
+
+
+class FusionSolarEnergySensorTotalCurrentYear(FusionSolarEnergySensor):
+    pass
+
+
+class FusionSolarEnergySensorTotalLifetime(FusionSolarEnergySensor):
+    pass
