@@ -36,8 +36,13 @@ class FusionSolarPowerEntity(CoordinatorEntity, Entity):
 
     @property
     def state(self):
-        return float(self.coordinator.data[self._data_name][ATTR_DATA_REALKPI][self._attribute]) if \
-            self.coordinator.data[self._data_name][ATTR_DATA_REALKPI] else None
+        if ATTR_DATA_REALKPI not in self.coordinator.data[self._data_name]:
+            return None
+
+        if self._attribute not in self.coordinator.data[self._data_name][ATTR_DATA_REALKPI]:
+            return None
+
+        return float(self.coordinator.data[self._data_name][ATTR_DATA_REALKPI][self._attribute])
 
     @property
     def unit_of_measurement(self):

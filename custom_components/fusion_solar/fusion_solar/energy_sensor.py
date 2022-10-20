@@ -72,8 +72,13 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
                         f'{self.entity_id}: new value ({new_value}) is smaller then current value ({entity.state}), so not updating.')
                     return float(current_value)
 
-        return float(self.coordinator.data[self._data_name][ATTR_DATA_REALKPI][self._attribute]) if \
-            self.coordinator.data[self._data_name][ATTR_DATA_REALKPI] else None
+        if ATTR_DATA_REALKPI not in self.coordinator.data[self._data_name]:
+            return None
+
+        if self._attribute not in self.coordinator.data[self._data_name][ATTR_DATA_REALKPI]:
+            return None
+
+        return float(self.coordinator.data[self._data_name][ATTR_DATA_REALKPI][self._attribute])
 
     @property
     def unit_of_measurement(self) -> str:

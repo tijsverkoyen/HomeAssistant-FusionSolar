@@ -4,7 +4,6 @@ DOMAIN = 'fusion_solar'
 
 # Configuration
 CONF_KIOSKS = 'kiosks'
-CONF_KIOSK_URL = 'url'
 
 # Possible ID suffixes
 ID_REALTIME_POWER = 'realtime_power'

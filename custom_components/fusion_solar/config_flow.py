@@ -2,7 +2,7 @@ from typing import Any, Dict, Optional
 
 from homeassistant import config_entries
 from homeassistant.const import CONF_NAME, CONF_URL
-from .const import DOMAIN
+from .const import DOMAIN, CONF_KIOSKS
 
 import voluptuous as vol
 import logging
@@ -12,7 +12,7 @@ _LOGGER = logging.getLogger(__name__)
 
 class FusionSolarConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     data: Optional[Dict[str, Any]] = {
-        'kiosks': [],
+        CONF_KIOSKS: [],
     }
 
     async def async_step_user(self, user_input: Optional[Dict[str, Any]] = None):
@@ -49,7 +49,7 @@ class FusionSolarConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors: Dict[str, str] = {}
 
         if user_input is not None:
-            self.data['kiosks'].append({
+            self.data[CONF_KIOSKS].append({
                 CONF_NAME: user_input[CONF_NAME],
                 CONF_URL: user_input[CONF_URL],
             })
