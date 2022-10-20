@@ -1,0 +1,25 @@
+{
+  "title": "Fusion Solar",
+  "config": {
+    "error": {
+      "invalid_type": "Invalid type, only kiosk or openapi are allowed.",
+      "not_implemented": "OpenApi is not implemented yet."
+    },
+    "step": {
+      "choose_type": {
+        "description": "FusionSolar can be connected in two ways:\n* **Kiosk**: This is the most easy way as you (probably) don't need any interaction with Huawei Fusion Solar, the drawback is the the realtime information is per 30 minutes.\n* **OpenAPI**: You will need an OpenAPI account from Huawei, this will give you better realtime information. [More information](https://forum.huawei.com/enterprise/en/communicate-with-fusionsolar-through-an-openapi-account/thread/591478-100027).",
+        "data": {
+          "type": "Choose the way you want to connect to Fusion Solar"
+        }
+      },
+      "kiosk": {
+        "description": "1. Sign in on the [Huawei FusionSolar portal](https://eu5.fusionsolar.huawei.com/).\n2. Select your plant if needed.\n3. At the top there is a button: \"Kiosk\", click it.\n4. An overlay will open, and you need to enable the kiosk view by enabling the toggle.",
+        "data": {
+          "name": "Name",
+          "url": "Kiosk URL",
+          "add_another": "Add another kiosk URL"
+        }
+      }
+    }
+  }
+}
