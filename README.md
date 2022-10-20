@@ -1,33 +1,9 @@
 # Home Assistant FusionSolar Integration
-
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
 
 Integrate FusionSolar into you Home Assistant.
 
-FusionSolar has a kiosk mode. When this kiosk mode is enabled we can access 
-data about our plants through a JSON REST api.
-
-{% if installed %}
-{% if version_installed.replace("v", "").replace(".","") | int < 300  %}
-## Breaking Changes
-### Use the full kiosk url (since v3.0.0)
-Your current configuration should be updated. Before v3.0.0 we used the kiosk id. 
-Starting with v3.0.0 the full kiosk url should be used:
-
-    sensor:
-      - platform: fusion_solar_kiosk
-        kiosks:
-          - url: "REPLACE THIS WITH THE KIOSK URL"
-            name: "A readable name for the plant"
-
-See the "Configuration" section for more details
-{% endif %}
-{% endif %}
-
-## Remark
-**In kiosk mode the "realtime" data is not really realtime, it is cached at FusionSolars end for 30 minutes.**
-
-If you need more accurate information you can use [Home Assistant FusionSolar OpenAPI Integration](https://github.com/olibos/Home-Assistant-FusionSolar-OpenApi/) by @olibos. This integration requires an OpenAPI account.
+The integration is able to work with Kiosk mode, or with an OpenAPI account, see below for more details.
 
 ## Installation
 At this point the integration is not part of the default HACS repositories, so
@@ -35,40 +11,16 @@ you will need to add this repository as a custom repository in HACS.
 
 When this is done, just install the repository.
 
+The configuration happens in the configuration flow when you add the integration.
 
 ## Configuration
+### Kiosk
+FusionSolar has a kiosk mode. The kiosk is a dashboard that is accessible for everyone that has the url.
+The integration uses a JSON REST api that is also consumed by the kiosk.
 
-The configuration of this integration happens in a few steps:
+**In kiosk mode the "realtime" data is not really realtime, it is cached at FusionSolars end for 30 minutes.**
 
-### Enable kiosk mode
-1. Sign in on the Huawei FusionSolar portal: [https://eu5.fusionsolar.huawei.com/](https://eu5.fusionsolar.huawei.com/).
-2. Select your plant if needed.
-2. At the top there is a button: "Kiosk", click it.
-3. An overlay will open, and you need to enable the kiosk view by enabling the toggle.
-4. Note down the url that is shown.
+If you need more accurate information you should use the OpenAPI mode.
 
-### Add into configuration
-Open your `configuration.yaml`, add the code below:
-
-    sensor:
-      - platform: fusion_solar_kiosk
-        kiosks:
-          - url: "REPLACE THIS WITH THE KIOSK URL"
-            name: "A readable name for the plant"
-
-### Use secrets
-I strongly advise to store the unique urls as a secret. The kiosk url is public, 
-so anybody with the link can access your data. Be careful when sharing this.
-
-More information on secrets: [Storing secrets](https://www.home-assistant.io/docs/configuration/secrets/).
-
-### Multiple plants
-You can configure multiple plants:
-
-    sensor:
-      - platform: fusion_solar_kiosk
-        kiosks:
-            - url: "KIOSK URL XXXXX"
-              name: "A readable name for plant XXXXX"
-            - url: "KIOSK URL YYYYY"
-              name: "A readable name for plant YYYYY"
+### OpenAPI
+You will need an OpenAPI account from Huawei for this to work. [More information](https://forum.huawei.com/enterprise/en/communicate-with-fusionsolar-through-an-openapi-account/thread/591478-100027)
