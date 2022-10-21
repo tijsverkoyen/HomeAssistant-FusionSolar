@@ -1,8 +1,10 @@
 from typing import Any, Dict, Optional
 
 from homeassistant import config_entries
-from homeassistant.const import CONF_NAME, CONF_URL
-from .const import DOMAIN, CONF_KIOSKS, CONF_TYPE, CONF_TYPE_KIOSK, CONF_TYPE_OPENAPI
+from homeassistant.const import CONF_NAME, CONF_URL, CONF_HOST, CONF_USERNAME, CONF_PASSWORD
+
+from .const import DOMAIN, CONF_KIOSKS, CONF_TYPE, CONF_TYPE_KIOSK, CONF_TYPE_OPENAPI, CONF_OPENAPI_CREDENTIALS
+from .fusion_solar.openapi.openapi_api import FusionSolarOpenApi, FusionSolarOpenApiError
 
 import voluptuous as vol
 import logging
@@ -13,6 +15,7 @@ _LOGGER = logging.getLogger(__name__)
 class FusionSolarConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     data: Optional[Dict[str, Any]] = {
         CONF_KIOSKS: [],
+        CONF_OPENAPI_CREDENTIALS: {}
     }
 
     async def async_step_user(self, user_input: Optional[Dict[str, Any]] = None):
@@ -76,11 +79,35 @@ class FusionSolarConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         _LOGGER.debug(f'async_step_openapi: {user_input}')
         errors: Dict[str, str] = {}
 
-        errors['base'] = 'not_implemented'
+        if user_input is not None:
+            try:
+                api = FusionSolarOpenApi(user_input[CONF_HOST])
+                response = await self.hass.async_add_executor_job(
+                    api.login,
+                    user_input[CONF_USERNAME],
+                    user_input[CONF_PASSWORD]
+                )
+
+                self.data[CONF_OPENAPI_CREDENTIALS] = {
+                    CONF_USERNAME: user_input[CONF_USERNAME],
+                    CONF_PASSWORD: user_input[CONF_PASSWORD],
+                }
+
+                return self.async_create_entry(
+                    title="Fusion Solar",
+                    data=self.data,
+                )
+
+            except FusionSolarOpenApiError as error:
+                _LOGGER.debug(error)
+                errors["base"] = "invalid_credentials"
 
         return self.async_show_form(
             step_id="openapi",
             data_schema=vol.Schema({
+                vol.Required(CONF_HOST, default='https://eu5.fusionsolar.huawei.com'): str,
+                vol.Required(CONF_USERNAME): str,
+                vol.Required(CONF_PASSWORD): str,
             }),
             errors=errors,
         )
