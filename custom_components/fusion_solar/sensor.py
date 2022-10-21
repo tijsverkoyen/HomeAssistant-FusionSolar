@@ -12,7 +12,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from .fusion_solar.const import ATTR_DATA_REALKPI, ATTR_REALTIME_POWER, ATTR_TOTAL_CURRENT_DAY_ENERGY, \
     ATTR_TOTAL_CURRENT_MONTH_ENERGY, ATTR_TOTAL_CURRENT_YEAR_ENERGY, ATTR_TOTAL_LIFETIME_ENERGY
 from .fusion_solar.kiosk.kiosk import Kiosk
-from .fusion_solar.kiosk.kiosk_api import FusionSolarKioksApi
+from .fusion_solar.kiosk.kiosk_api import FusionSolarKioskApi
 from .fusion_solar.energy_sensor import FusionSolarEnergySensorTotalCurrentDay, \
     FusionSolarEnergySensorTotalCurrentMonth, FusionSolarEnergySensorTotalCurrentYear, \
     FusionSolarEnergySensorTotalLifetime
@@ -46,7 +46,7 @@ async def add_entities_for_kiosk(hass, async_add_entities, kiosk: Kiosk):
     async def async_update_data():
         """Fetch data"""
         data = {}
-        api = FusionSolarKioksApi(kiosk.apiUrl())
+        api = FusionSolarKioskApi(kiosk.apiUrl())
         data[f'{DOMAIN}-{kiosk.id}'] = {
             ATTR_DATA_REALKPI: await hass.async_add_executor_job(api.getRealTimeKpi, kiosk.id)
         }

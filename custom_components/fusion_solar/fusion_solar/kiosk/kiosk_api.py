@@ -15,7 +15,7 @@ from requests import get
 _LOGGER = logging.getLogger(__name__)
 
 
-class FusionSolarKioksApi:
+class FusionSolarKioskApi:
     def __init__(self, host):
         self._host = host
 
