@@ -81,14 +81,15 @@ class FusionSolarConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             try:
-                api = FusionSolarOpenApi(user_input[CONF_HOST])
-                response = await self.hass.async_add_executor_job(
-                    api.login,
+                api = FusionSolarOpenApi(
+                    user_input[CONF_HOST],
                     user_input[CONF_USERNAME],
                     user_input[CONF_PASSWORD]
                 )
+                response = await self.hass.async_add_executor_job(api.login)
 
                 self.data[CONF_OPENAPI_CREDENTIALS] = {
+                    CONF_HOST: user_input[CONF_HOST],
                     CONF_USERNAME: user_input[CONF_USERNAME],
                     CONF_PASSWORD: user_input[CONF_PASSWORD],
                 }

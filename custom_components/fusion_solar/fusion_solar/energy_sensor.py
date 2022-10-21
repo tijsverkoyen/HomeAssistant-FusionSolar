@@ -26,7 +26,8 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
             unique_id,
             name,
             attribute,
-            data_name
+            data_name,
+            device_info
     ):
         """Initialize the entity"""
         super().__init__(coordinator)
@@ -34,6 +35,7 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
         self._name = name
         self._attribute = attribute
         self._data_name = data_name
+        self._device_info = device_info
 
     @property
     def device_class(self) -> str:
@@ -95,6 +97,12 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
     @property
     def native_unit_of_measurement(self) -> str:
         return self.unit_of_measurement
+
+    @property
+    def device_info(self) -> dict:
+        _LOGGER.debug(f'device info: {self._device_info}')
+        device_info = self._device_info
+        return device_info
 
 
 class FusionSolarEnergySensorTotalCurrentDay(FusionSolarEnergySensor):
