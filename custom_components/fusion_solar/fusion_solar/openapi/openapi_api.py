@@ -4,8 +4,12 @@ import logging
 from requests import post
 
 from ..const import ATTR_SUCCESS, ATTR_DATA, ATTR_FAIL_CODE, ATTR_MESSAGE, ATTR_STATION_CODE, \
-    ATTR_STATION_NAME, ATTR_PARAMS, ATTR_PARAMS_CURRENT_TIME
+    ATTR_STATION_NAME, ATTR_PARAMS, ATTR_PARAMS_CURRENT_TIME, ATTR_DEVICE_ID, ATTR_DEVICE_NAME, \
+    ATTR_DEVICE_STATION_CODE, ATTR_DEVICE_ESN_CODE, ATTR_DEVICE_TYPE_ID, ATTR_DEVICE_INVERTER_TYPE, \
+    ATTR_DEVICE_SOFTWARE_VERSION
+
 from .station import FusionSolarStation
+from .device import FusionSolarDevice
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -73,6 +77,42 @@ class FusionSolarOpenApi:
         json = {
             'stationCodes': ','.join(station_codes),
             'collectTime': self._last_station_list_current_time,
+        }
+        response = self._do_call(url, json)
+
+        return response[ATTR_DATA]
+
+    def get_dev_list(self, station_codes: list):
+        url = self._host + '/thirdData/getDevList'
+        json = {
+            'stationCodes': ','.join(station_codes),
+        }
+        response = self._do_call(url, json)
+
+        if ATTR_PARAMS in response and ATTR_PARAMS_CURRENT_TIME in response[ATTR_PARAMS]:
+            self._last_station_list_current_time = response[ATTR_PARAMS][ATTR_PARAMS_CURRENT_TIME]
+
+        data = []
+        for device in response[ATTR_DATA]:
+            data.append(
+                FusionSolarDevice(
+                    device[ATTR_DEVICE_ID],
+                    device[ATTR_DEVICE_NAME],
+                    device[ATTR_DEVICE_STATION_CODE],
+                    device[ATTR_DEVICE_ESN_CODE],
+                    device[ATTR_DEVICE_TYPE_ID],
+                    device[ATTR_DEVICE_INVERTER_TYPE],
+                    device[ATTR_DEVICE_SOFTWARE_VERSION],
+                )
+            )
+
+        return data
+
+    def get_dev_real_kpi(self, device_ids: list, type_id: int):
+        url = self._host + '/thirdData/getDevRealKpi'
+        json = {
+            'devIds': ','.join(device_ids),
+            'devTypeId': type_id,
         }
         response = self._do_call(url, json)
 

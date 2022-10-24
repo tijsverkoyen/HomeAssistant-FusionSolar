@@ -100,8 +100,7 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
 
     @property
     def device_info(self) -> dict:
-        device_info = self._device_info
-        return device_info
+        return self._device_info
 
 
 class FusionSolarEnergySensorTotalCurrentDay(FusionSolarEnergySensor):

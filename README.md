@@ -27,4 +27,5 @@ If you need more accurate information you should use the OpenAPI mode.
 ### OpenAPI
 You will need an OpenAPI account from Huawei for this to work. [More information](https://forum.huawei.com/enterprise/en/communicate-with-fusionsolar-through-an-openapi-account/thread/591478-100027)
 
-The integration updates the total yields (current day, current month, current year, lifetime) every 10 minutes.
+The integration updates the total yields (current day, current month, current year, lifetime) every 10 minutes. 
+The realtime data is updated every minute.

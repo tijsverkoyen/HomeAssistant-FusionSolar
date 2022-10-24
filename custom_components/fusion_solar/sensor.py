@@ -13,7 +13,8 @@ from .fusion_solar.const import ATTR_DATA_REALKPI, ATTR_REALTIME_POWER, ATTR_TOT
     ATTR_TOTAL_CURRENT_MONTH_ENERGY, ATTR_TOTAL_CURRENT_YEAR_ENERGY, ATTR_TOTAL_LIFETIME_ENERGY, \
     ATTR_STATION_CODE, ATTR_STATION_REAL_KPI_DATA_ITEM_MAP, ATTR_STATION_REAL_KPI_TOTAL_CURRENT_DAY_ENERGY, \
     ATTR_STATION_REAL_KPI_TOTAL_CURRENT_MONTH_ENERGY, ATTR_STATION_REAL_KPI_TOTAL_LIFETIME_ENERGY, \
-    ATTR_DATA_COLLECT_TIME, ATTR_KPI_YEAR_INVERTER_POWER
+    ATTR_DATA_COLLECT_TIME, ATTR_KPI_YEAR_INVERTER_POWER, ATTR_DEVICE_REAL_KPI_ACTIVE_POWER, \
+    PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER, ATTR_DEVICE_REAL_KPI_DEV_ID, ATTR_DEVICE_REAL_KPI_DATA_ITEM_MAP
 from .fusion_solar.kiosk.kiosk import FusionSolarKiosk
 from .fusion_solar.kiosk.kiosk_api import FusionSolarKioskApi
 from .fusion_solar.openapi.openapi_api import FusionSolarOpenApi
@@ -47,7 +48,7 @@ _LOGGER = logging.getLogger(__name__)
 async def add_entities_for_kiosk(hass, async_add_entities, kiosk: FusionSolarKiosk):
     _LOGGER.debug(f'Adding entities for kiosk {kiosk.id}')
 
-    async def async_update_data():
+    async def async_update_kiosk_data():
         """Fetch data"""
         data = {}
         api = FusionSolarKioskApi(kiosk.apiUrl())
@@ -60,7 +61,7 @@ async def add_entities_for_kiosk(hass, async_add_entities, kiosk: FusionSolarKio
         hass,
         _LOGGER,
         name='FusionSolarKiosk',
-        update_method=async_update_data,
+        update_method=async_update_kiosk_data,
         update_interval=timedelta(seconds=600),
     )
 
@@ -203,6 +204,51 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                 ATTR_KPI_YEAR_INVERTER_POWER,
                 f'{DOMAIN}-{station.code}',
                 station.device_info()
+            )
+        ])
+
+    devices = await hass.async_add_executor_job(api.get_dev_list, station_codes)
+    device_ids = [str(device.device_id) for device in devices]
+
+    async def async_update_device_real_kpi_data():
+        data = {}
+        response = await hass.async_add_executor_job(
+            api.get_dev_real_kpi,
+            device_ids,
+            PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER
+        )
+
+        for response_data in response:
+            key = f'{DOMAIN}-{response_data[ATTR_DEVICE_REAL_KPI_DEV_ID]}'
+            data[key] = response_data[ATTR_DEVICE_REAL_KPI_DATA_ITEM_MAP];
+
+        _LOGGER.debug(f'async_update_device_real_kpi_data: {data}')
+
+        return data
+
+    coordinator = DataUpdateCoordinator(
+        hass,
+        _LOGGER,
+        name='FusionSolarOpenAPIDeviceRealKpi',
+        update_method=async_update_device_real_kpi_data,
+        update_interval=timedelta(seconds=60),
+    )
+
+    # Fetch initial data so we have data when entities subscribe
+    await coordinator.async_refresh()
+
+    for device in devices:
+        if device.type_id != PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER:
+            continue
+
+        async_add_entities([
+            FusionSolarPowerEntityRealtime(
+                coordinator,
+                f'{DOMAIN}-{device.esn_code}-{ID_REALTIME_POWER}',
+                f'{device.name} ({device.esn_code}) - {NAME_REALTIME_POWER}',
+                ATTR_DEVICE_REAL_KPI_ACTIVE_POWER,
+                f'{DOMAIN}-{device.device_id}',
+                device.device_info()
             )
         ])
 

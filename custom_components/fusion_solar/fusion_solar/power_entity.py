@@ -2,7 +2,6 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.helpers.entity import Entity
 from homeassistant.const import DEVICE_CLASS_POWER, POWER_KILO_WATT
 
-from .const import ATTR_DATA_REALKPI
 
 class FusionSolarPowerEntity(CoordinatorEntity, Entity):
     """Base class for all FusionSolarPowerEntity entities."""
@@ -13,7 +12,8 @@ class FusionSolarPowerEntity(CoordinatorEntity, Entity):
             unique_id,
             name,
             attribute,
-            data_name
+            data_name,
+            device_info
     ):
         """Initialize the entity"""
         super().__init__(coordinator)
@@ -21,6 +21,7 @@ class FusionSolarPowerEntity(CoordinatorEntity, Entity):
         self._name = name
         self._attribute = attribute
         self._data_name = data_name
+        self._device_info = device_info
 
     @property
     def device_class(self):
@@ -36,6 +37,8 @@ class FusionSolarPowerEntity(CoordinatorEntity, Entity):
 
     @property
     def state(self):
+        if self._data_name not in self.coordinator.data:
+            return None
         if self._attribute not in self.coordinator.data[self._data_name]:
             return None
 
@@ -44,6 +47,10 @@ class FusionSolarPowerEntity(CoordinatorEntity, Entity):
     @property
     def unit_of_measurement(self):
         return POWER_KILO_WATT
+
+    @property
+    def device_info(self) -> dict:
+        return self._device_info
 
 
 class FusionSolarPowerEntityRealtime(FusionSolarPowerEntity):
