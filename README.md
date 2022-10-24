@@ -18,9 +18,13 @@ The configuration happens in the configuration flow when you add the integration
 FusionSolar has a kiosk mode. The kiosk is a dashboard that is accessible for everyone that has the url.
 The integration uses a JSON REST api that is also consumed by the kiosk.
 
+The integration updates the data every 10 minutes.
+
 **In kiosk mode the "realtime" data is not really realtime, it is cached at FusionSolars end for 30 minutes.**
 
 If you need more accurate information you should use the OpenAPI mode.
 
 ### OpenAPI
 You will need an OpenAPI account from Huawei for this to work. [More information](https://forum.huawei.com/enterprise/en/communicate-with-fusionsolar-through-an-openapi-account/thread/591478-100027)
+
+The integration updates the total yields (current day, current month, current year, lifetime) every 10 minutes.

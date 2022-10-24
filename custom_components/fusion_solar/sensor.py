@@ -12,7 +12,8 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from .fusion_solar.const import ATTR_DATA_REALKPI, ATTR_REALTIME_POWER, ATTR_TOTAL_CURRENT_DAY_ENERGY, \
     ATTR_TOTAL_CURRENT_MONTH_ENERGY, ATTR_TOTAL_CURRENT_YEAR_ENERGY, ATTR_TOTAL_LIFETIME_ENERGY, \
     ATTR_STATION_CODE, ATTR_STATION_REAL_KPI_DATA_ITEM_MAP, ATTR_STATION_REAL_KPI_TOTAL_CURRENT_DAY_ENERGY, \
-    ATTR_STATION_REAL_KPI_TOTAL_CURRENT_MONTH_ENERGY, ATTR_STATION_REAL_KPI_TOTAL_LIFETIME_ENERGY
+    ATTR_STATION_REAL_KPI_TOTAL_CURRENT_MONTH_ENERGY, ATTR_STATION_REAL_KPI_TOTAL_LIFETIME_ENERGY, \
+    ATTR_DATA_COLLECT_TIME, ATTR_KPI_YEAR_INVERTER_POWER
 from .fusion_solar.kiosk.kiosk import Kiosk
 from .fusion_solar.kiosk.kiosk_api import FusionSolarKioskApi
 from .fusion_solar.openapi.openapi_api import FusionSolarOpenApi
@@ -51,7 +52,7 @@ async def add_entities_for_kiosk(hass, async_add_entities, kiosk: Kiosk):
         data = {}
         api = FusionSolarKioskApi(kiosk.apiUrl())
         data[f'{DOMAIN}-{kiosk.id}'] = {
-            ATTR_DATA_REALKPI: await hass.async_add_executor_job(api.getRealTimeKpi, kiosk.id)
+            await hass.async_add_executor_job(api.getRealTimeKpi, kiosk.id)
         }
         return data
 
@@ -60,7 +61,7 @@ async def add_entities_for_kiosk(hass, async_add_entities, kiosk: Kiosk):
         _LOGGER,
         name='FusionSolarKiosk',
         update_method=async_update_data,
-        update_interval=timedelta(seconds=300),
+        update_interval=timedelta(seconds=600),
     )
 
     # Fetch initial data so we have data when entities subscribe
@@ -110,27 +111,24 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
     _LOGGER.debug(f'Adding entities for stations')
     station_codes = [station.code for station in stations]
 
-    async def async_update_data():
+    async def async_update_station_real_kpi_data():
         """Fetch data"""
         data = {}
         response = await hass.async_add_executor_job(api.get_station_real_kpi, station_codes)
-        _LOGGER.debug(f'response: {response}')
 
-        for data in response:
-            data[f'{DOMAIN}-{data[ATTR_STATION_CODE]}'] = {
-                ATTR_DATA_REALKPI: data[ATTR_STATION_REAL_KPI_DATA_ITEM_MAP]
-            }
+        for response_data in response:
+            data[f'{DOMAIN}-{response_data[ATTR_STATION_CODE]}'] = response_data[ATTR_STATION_REAL_KPI_DATA_ITEM_MAP]
 
-        _LOGGER.debug(f'async_update_data: {data}')
+        _LOGGER.debug(f'async_update_station_real_kpi_data: {data}')
 
         return data
 
     coordinator = DataUpdateCoordinator(
         hass,
         _LOGGER,
-        name='FusionSolarOpenAPIRealKpi',
-        update_method=async_update_data,
-        update_interval=timedelta(seconds=300),
+        name='FusionSolarOpenAPIStationRealKpi',
+        update_method=async_update_station_real_kpi_data,
+        update_interval=timedelta(seconds=600),
     )
 
     # Fetch initial data so we have data when entities subscribe
@@ -154,18 +152,55 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                 f'{DOMAIN}-{station.code}',
                 station.device_info()
             ),
-            #     FusionSolarEnergySensorTotalCurrentYear(
-            #         coordinator,
-            #         f'{DOMAIN}-{kiosk.id}-{ID_TOTAL_CURRENT_YEAR_ENERGY}',
-            #         f'{kiosk.name} ({kiosk.id}) - {NAME_TOTAL_CURRENT_YEAR_ENERGY}',
-            #         ATTR_TOTAL_CURRENT_YEAR_ENERGY,
-            #         f'{DOMAIN}-{kiosk.id}',
-            #     ),
             FusionSolarEnergySensorTotalLifetime(
                 coordinator,
                 f'{DOMAIN}-{station.code}-{ID_TOTAL_LIFETIME_ENERGY}',
                 f'{station.name} ({station.code}) - {NAME_TOTAL_LIFETIME_ENERGY}',
                 ATTR_STATION_REAL_KPI_TOTAL_LIFETIME_ENERGY,
+                f'{DOMAIN}-{station.code}',
+                station.device_info()
+            )
+        ])
+
+    async def async_update_station_year_kpi_data():
+        data = {}
+        collect_times = {}
+        response = await hass.async_add_executor_job(api.get_kpi_station_year, station_codes)
+
+        for response_data in response:
+            key = f'{DOMAIN}-{response_data[ATTR_STATION_CODE]}'
+
+            if key in collect_times and key in data:
+                # Only update if the collectTime is newer
+                if response_data[ATTR_DATA_COLLECT_TIME] > collect_times[key]:
+                    data[key] = response_data[ATTR_STATION_REAL_KPI_DATA_ITEM_MAP]
+                    collect_times[key] = response_data[ATTR_DATA_COLLECT_TIME]
+            else:
+                data[key] = response_data[ATTR_STATION_REAL_KPI_DATA_ITEM_MAP]
+                collect_times[key] = response_data[ATTR_DATA_COLLECT_TIME]
+
+        _LOGGER.debug(f'async_update_station_year_kpi_data: {data}')
+
+        return data
+
+    coordinator = DataUpdateCoordinator(
+        hass,
+        _LOGGER,
+        name='FusionSolarOpenAPIStationYearKpi',
+        update_method=async_update_station_year_kpi_data,
+        update_interval=timedelta(seconds=600),
+    )
+
+    # Fetch initial data so we have data when entities subscribe
+    await coordinator.async_refresh()
+
+    for station in stations:
+        async_add_entities([
+            FusionSolarEnergySensorTotalCurrentYear(
+                coordinator,
+                f'{DOMAIN}-{station.code}-{ID_TOTAL_CURRENT_YEAR_ENERGY}',
+                f'{station.name} ({station.code}) - {NAME_TOTAL_CURRENT_YEAR_ENERGY}',
+                ATTR_KPI_YEAR_INVERTER_POWER,
                 f'{DOMAIN}-{station.code}',
                 station.device_info()
             )
@@ -191,8 +226,6 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         )
         stations = await hass.async_add_executor_job(api.get_station_list)
         await add_entities_for_stations(hass, async_add_entities, stations, api)
-
-        _LOGGER.debug(stations)
 
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):

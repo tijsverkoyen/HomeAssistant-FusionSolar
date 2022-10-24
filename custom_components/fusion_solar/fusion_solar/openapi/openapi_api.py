@@ -3,7 +3,8 @@ import logging
 
 from requests import post
 
-from ..const import ATTR_SUCCESS, ATTR_DATA, ATTR_FAIL_CODE, ATTR_MESSAGE, ATTR_STATION_CODE, ATTR_STATION_NAME
+from ..const import ATTR_SUCCESS, ATTR_DATA, ATTR_FAIL_CODE, ATTR_MESSAGE, ATTR_STATION_CODE, \
+    ATTR_STATION_NAME, ATTR_PARAMS, ATTR_PARAMS_CURRENT_TIME
 from .station import FusionSolarStation
 
 _LOGGER = logging.getLogger(__name__)
@@ -11,10 +12,11 @@ _LOGGER = logging.getLogger(__name__)
 
 class FusionSolarOpenApi:
     def __init__(self, host: str, username: str, password: str):
+        self._token = None
+        self._last_station_list_current_time = None
         self._host = host
         self._username = username
         self._password = password
-        self._token = None
 
     def login(self) -> str:
         url = self._host + '/thirdData/login'
@@ -34,8 +36,6 @@ class FusionSolarOpenApi:
                 self._token = response.headers['xsrf-token']
                 return response.headers.get("xsrf-token")
 
-            _LOGGER.debug(response.json())
-            _LOGGER.debug(response.headers())
             raise FusionSolarOpenApiError(f'Could not login with given credentials')
         except Exception as error:
             raise FusionSolarOpenApiError(f'Could not login with given credentials')
@@ -44,6 +44,9 @@ class FusionSolarOpenApi:
         url = self._host + '/thirdData/getStationList'
         json = {}
         response = self._do_call(url, json)
+
+        if ATTR_PARAMS in response and ATTR_PARAMS_CURRENT_TIME in response[ATTR_PARAMS]:
+            self._last_station_list_current_time = response[ATTR_PARAMS][ATTR_PARAMS_CURRENT_TIME]
 
         data = []
         for station in response[ATTR_DATA]:
@@ -62,6 +65,19 @@ class FusionSolarOpenApi:
 
         return response[ATTR_DATA]
 
+    def get_kpi_station_year(self, station_codes: list):
+        if self._last_station_list_current_time is None:
+            self.get_station_list()
+
+        url = self._host + '/thirdData/getKpiStationYear'
+        json = {
+            'stationCodes': ','.join(station_codes),
+            'collectTime': self._last_station_list_current_time,
+        }
+        response = self._do_call(url, json)
+
+        return response[ATTR_DATA]
+
     def _do_call(self, url: str, json: dict):
         if self._token is None:
             self.login()
@@ -75,7 +91,7 @@ class FusionSolarOpenApi:
             response = post(url, headers=headers, json=json)
             response.raise_for_status()
             json_data = response.json()
-            _LOGGER.debug(json_data)
+            _LOGGER.debug(f'JSON data for {url}: {json_data}')
 
             if ATTR_FAIL_CODE in json_data and json_data[ATTR_FAIL_CODE] == 305:
                 _LOGGER.debug('Token expired, trying to login again')
