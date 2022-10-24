@@ -1,4 +1,4 @@
-# Fusion Solar Kiosk API response attributes
+# Fusion Solar API response attributes
 ATTR_DATA = 'data'
 ATTR_DATA_REALKPI = 'realKpi'
 ATTR_DATA_COLLECT_TIME = 'collectTime'

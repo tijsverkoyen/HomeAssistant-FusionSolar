@@ -14,7 +14,7 @@ from .fusion_solar.const import ATTR_DATA_REALKPI, ATTR_REALTIME_POWER, ATTR_TOT
     ATTR_STATION_CODE, ATTR_STATION_REAL_KPI_DATA_ITEM_MAP, ATTR_STATION_REAL_KPI_TOTAL_CURRENT_DAY_ENERGY, \
     ATTR_STATION_REAL_KPI_TOTAL_CURRENT_MONTH_ENERGY, ATTR_STATION_REAL_KPI_TOTAL_LIFETIME_ENERGY, \
     ATTR_DATA_COLLECT_TIME, ATTR_KPI_YEAR_INVERTER_POWER
-from .fusion_solar.kiosk.kiosk import Kiosk
+from .fusion_solar.kiosk.kiosk import FusionSolarKiosk
 from .fusion_solar.kiosk.kiosk_api import FusionSolarKioskApi
 from .fusion_solar.openapi.openapi_api import FusionSolarOpenApi
 from .fusion_solar.energy_sensor import FusionSolarEnergySensorTotalCurrentDay, \
@@ -44,7 +44,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 _LOGGER = logging.getLogger(__name__)
 
 
-async def add_entities_for_kiosk(hass, async_add_entities, kiosk: Kiosk):
+async def add_entities_for_kiosk(hass, async_add_entities, kiosk: FusionSolarKiosk):
     _LOGGER.debug(f'Adding entities for kiosk {kiosk.id}')
 
     async def async_update_data():
@@ -214,7 +214,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         config.update(config_entry.options)
 
     for kioskConfig in config[CONF_KIOSKS]:
-        kiosk = Kiosk(kioskConfig[CONF_URL], kioskConfig[CONF_NAME])
+        kiosk = FusionSolarKiosk(kioskConfig[CONF_URL], kioskConfig[CONF_NAME])
         await add_entities_for_kiosk(hass, async_add_entities, kiosk)
 
     if config[CONF_OPENAPI_CREDENTIALS]:
@@ -230,5 +230,5 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     for kioskConfig in config[CONF_KIOSKS]:
-        kiosk = Kiosk(kioskConfig[CONF_URL], kioskConfig[CONF_NAME])
+        kiosk = FusionSolarKiosk(kioskConfig[CONF_URL], kioskConfig[CONF_NAME])
         await add_entities_for_kiosk(hass, async_add_entities, kiosk)
