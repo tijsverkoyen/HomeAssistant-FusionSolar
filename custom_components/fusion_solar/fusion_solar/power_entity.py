@@ -13,7 +13,7 @@ class FusionSolarPowerEntity(CoordinatorEntity, Entity):
             name,
             attribute,
             data_name,
-            device_info
+            device_info=None
     ):
         """Initialize the entity"""
         super().__init__(coordinator)

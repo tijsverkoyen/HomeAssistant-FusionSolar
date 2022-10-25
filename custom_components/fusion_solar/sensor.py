@@ -52,9 +52,12 @@ async def add_entities_for_kiosk(hass, async_add_entities, kiosk: FusionSolarKio
         """Fetch data"""
         data = {}
         api = FusionSolarKioskApi(kiosk.apiUrl())
-        data[f'{DOMAIN}-{kiosk.id}'] = {
-            await hass.async_add_executor_job(api.getRealTimeKpi, kiosk.id)
-        }
+
+        _LOGGER.debug(DOMAIN)
+        _LOGGER.debug(kiosk.id)
+
+        data[f'{DOMAIN}-{kiosk.id}'] = await hass.async_add_executor_job(api.getRealTimeKpi, kiosk.id)
+
         return data
 
     coordinator = DataUpdateCoordinator(
@@ -68,6 +71,15 @@ async def add_entities_for_kiosk(hass, async_add_entities, kiosk: FusionSolarKio
     # Fetch initial data so we have data when entities subscribe
     await coordinator.async_refresh()
 
+    device_info = {
+        'identifiers': {
+            (DOMAIN, kiosk.id)
+        },
+        'name': kiosk.name,
+        'manufacturer': 'Huawei FusionSolar',
+        'model': 'Kiosk'
+    }
+
     async_add_entities([
         FusionSolarPowerEntityRealtime(
             coordinator,
@@ -75,6 +87,7 @@ async def add_entities_for_kiosk(hass, async_add_entities, kiosk: FusionSolarKio
             f'{kiosk.name} ({kiosk.id}) - {NAME_REALTIME_POWER}',
             ATTR_REALTIME_POWER,
             f'{DOMAIN}-{kiosk.id}',
+            device_info
         ),
 
         FusionSolarEnergySensorTotalCurrentDay(
@@ -83,6 +96,7 @@ async def add_entities_for_kiosk(hass, async_add_entities, kiosk: FusionSolarKio
             f'{kiosk.name} ({kiosk.id}) - {NAME_TOTAL_CURRENT_DAY_ENERGY}',
             ATTR_TOTAL_CURRENT_DAY_ENERGY,
             f'{DOMAIN}-{kiosk.id}',
+            device_info
         ),
         FusionSolarEnergySensorTotalCurrentMonth(
             coordinator,
@@ -90,6 +104,7 @@ async def add_entities_for_kiosk(hass, async_add_entities, kiosk: FusionSolarKio
             f'{kiosk.name} ({kiosk.id}) - {NAME_TOTAL_CURRENT_MONTH_ENERGY}',
             ATTR_TOTAL_CURRENT_MONTH_ENERGY,
             f'{DOMAIN}-{kiosk.id}',
+            device_info
         ),
         FusionSolarEnergySensorTotalCurrentYear(
             coordinator,
@@ -97,6 +112,7 @@ async def add_entities_for_kiosk(hass, async_add_entities, kiosk: FusionSolarKio
             f'{kiosk.name} ({kiosk.id}) - {NAME_TOTAL_CURRENT_YEAR_ENERGY}',
             ATTR_TOTAL_CURRENT_YEAR_ENERGY,
             f'{DOMAIN}-{kiosk.id}',
+            device_info
         ),
         FusionSolarEnergySensorTotalLifetime(
             coordinator,
@@ -104,6 +120,7 @@ async def add_entities_for_kiosk(hass, async_add_entities, kiosk: FusionSolarKio
             f'{kiosk.name} ({kiosk.id}) - {NAME_TOTAL_LIFETIME_ENERGY}',
             ATTR_TOTAL_LIFETIME_ENERGY,
             f'{DOMAIN}-{kiosk.id}',
+            device_info
         )
     ])
 
