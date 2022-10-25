@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 _LOGGER = logging.getLogger(__name__)
 
 
-class Kiosk:
+class FusionSolarKiosk:
     def __init__(self, url, name):
         self.url = url
         self.name = name

@@ -3,7 +3,7 @@
   "config": {
     "error": {
       "invalid_type": "Invalid type, only kiosk or openapi are allowed.",
-      "not_implemented": "OpenApi is not implemented yet."
+      "invalid_credentials": "Could not authenticate with the provided credentials."
     },
     "step": {
       "choose_type": {
@@ -18,6 +18,14 @@
           "name": "Name",
           "url": "Kiosk URL",
           "add_another": "Add another kiosk URL"
+        }
+      },
+      "openapi": {
+        "description": "Enter the OpenAPI credentials your received from Huawei FusionSolar below.",
+        "data": {
+          "host": "Host",
+          "username": "Username",
+          "password": "Password"
         }
       }
     }

@@ -4,6 +4,7 @@ DOMAIN = 'fusion_solar'
 
 # Configuration
 CONF_KIOSKS = 'kiosks'
+CONF_OPENAPI_CREDENTIALS = 'credentials'
 CONF_TYPE = 'type'
 CONF_TYPE_KIOSK = 'kiosk'
 CONF_TYPE_OPENAPI = 'openapi'

@@ -4,7 +4,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.components.sensor import STATE_CLASS_TOTAL_INCREASING, SensorEntity
 from homeassistant.const import DEVICE_CLASS_ENERGY, ENERGY_KILO_WATT_HOUR
 
-from .const import ATTR_TOTAL_LIFETIME_ENERGY, ATTR_DATA_REALKPI
+from .const import ATTR_TOTAL_LIFETIME_ENERGY, ATTR_STATION_REAL_KPI_TOTAL_LIFETIME_ENERGY
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -26,7 +26,8 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
             unique_id,
             name,
             attribute,
-            data_name
+            data_name,
+            device_info=None
     ):
         """Initialize the entity"""
         super().__init__(coordinator)
@@ -34,6 +35,7 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
         self._name = name
         self._attribute = attribute
         self._data_name = data_name
+        self._device_info = device_info
 
     @property
     def device_class(self) -> str:
@@ -57,7 +59,7 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
 
             if entity is not None:
                 current_value = entity.state
-                new_value = self.coordinator.data[self._data_name][ATTR_DATA_REALKPI][self._attribute]
+                new_value = self.coordinator.data[self._data_name][self._attribute]
 
                 if not isfloat(new_value):
                     _LOGGER.warning(f'{self.entity_id}: new value ({new_value}) is not a float, so not updating.')
@@ -72,13 +74,13 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
                         f'{self.entity_id}: new value ({new_value}) is smaller then current value ({entity.state}), so not updating.')
                     return float(current_value)
 
-        if ATTR_DATA_REALKPI not in self.coordinator.data[self._data_name]:
+        if self._data_name not in self.coordinator.data:
             return None
 
-        if self._attribute not in self.coordinator.data[self._data_name][ATTR_DATA_REALKPI]:
+        if self._attribute not in self.coordinator.data[self._data_name]:
             return None
 
-        return float(self.coordinator.data[self._data_name][ATTR_DATA_REALKPI][self._attribute])
+        return float(self.coordinator.data[self._data_name][self._attribute])
 
     @property
     def unit_of_measurement(self) -> str:
@@ -95,6 +97,10 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
     @property
     def native_unit_of_measurement(self) -> str:
         return self.unit_of_measurement
+
+    @property
+    def device_info(self) -> dict:
+        return self._device_info
 
 
 class FusionSolarEnergySensorTotalCurrentDay(FusionSolarEnergySensor):

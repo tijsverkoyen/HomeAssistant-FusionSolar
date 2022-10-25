@@ -3,7 +3,7 @@ import logging
 import html
 import json
 
-from .const import (
+from ..const import (
     ATTR_DATA,
     ATTR_FAIL_CODE,
     ATTR_SUCCESS,
@@ -15,7 +15,7 @@ from requests import get
 _LOGGER = logging.getLogger(__name__)
 
 
-class FusionSolarKioksApi:
+class FusionSolarKioskApi:
     def __init__(self, host):
         self._host = host
 
@@ -27,7 +27,6 @@ class FusionSolarKioksApi:
 
         try:
             response = get(url, headers=headers)
-            # _LOGGER.debug(response.text)
             jsonData = response.json()
 
             if not jsonData[ATTR_SUCCESS]:
