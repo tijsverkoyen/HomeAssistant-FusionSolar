@@ -27,7 +27,6 @@ class FusionSolarKioskApi:
 
         try:
             response = get(url, headers=headers)
-            # _LOGGER.debug(response.text)
             jsonData = response.json()
 
             if not jsonData[ATTR_SUCCESS]:
