@@ -14,7 +14,9 @@ from .fusion_solar.const import ATTR_DATA_REALKPI, ATTR_REALTIME_POWER, ATTR_TOT
     ATTR_STATION_CODE, ATTR_STATION_REAL_KPI_DATA_ITEM_MAP, ATTR_STATION_REAL_KPI_TOTAL_CURRENT_DAY_ENERGY, \
     ATTR_STATION_REAL_KPI_TOTAL_CURRENT_MONTH_ENERGY, ATTR_STATION_REAL_KPI_TOTAL_LIFETIME_ENERGY, \
     ATTR_DATA_COLLECT_TIME, ATTR_KPI_YEAR_INVERTER_POWER, ATTR_DEVICE_REAL_KPI_ACTIVE_POWER, \
-    PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER, ATTR_DEVICE_REAL_KPI_DEV_ID, ATTR_DEVICE_REAL_KPI_DATA_ITEM_MAP
+    PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_GRID_METER, PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER, \
+    PARAM_DEVICE_TYPE_ID_POWER_SENSOR, ATTR_DEVICE_REAL_KPI_DEV_ID, ATTR_DEVICE_REAL_KPI_DATA_ITEM_MAP, \
+    ATTR_DEVICE_TYPE_ID
 from .fusion_solar.kiosk.kiosk import FusionSolarKiosk
 from .fusion_solar.kiosk.kiosk_api import FusionSolarKioskApi
 from .fusion_solar.openapi.openapi_api import FusionSolarOpenApi
@@ -225,21 +227,30 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
         ])
 
     devices = await hass.async_add_executor_job(api.get_dev_list, station_codes)
-    device_ids = [str(device.device_id) for device in devices]
+    devices_grouped_per_type_id = {}
+    for device in devices:
+        if device.type_id not in [PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_GRID_METER,
+                                  PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER, PARAM_DEVICE_TYPE_ID_POWER_SENSOR]:
+            continue
+
+        if device.type_id not in devices_grouped_per_type_id:
+            devices_grouped_per_type_id[device.type_id] = []
+        devices_grouped_per_type_id[device.type_id].append(str(device.device_id))
 
     async def async_update_device_real_kpi_data():
         data = {}
-        response = await hass.async_add_executor_job(
-            api.get_dev_real_kpi,
-            device_ids,
-            PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER
-        )
+        for type_id in devices_grouped_per_type_id:
+            response = await hass.async_add_executor_job(
+                api.get_dev_real_kpi,
+                devices_grouped_per_type_id[type_id],
+                type_id
+            )
 
-        for response_data in response:
-            key = f'{DOMAIN}-{response_data[ATTR_DEVICE_REAL_KPI_DEV_ID]}'
-            data[key] = response_data[ATTR_DEVICE_REAL_KPI_DATA_ITEM_MAP];
+            for response_data in response:
+                key = f'{DOMAIN}-{response_data[ATTR_DEVICE_REAL_KPI_DEV_ID]}'
+                data[key] = response_data[ATTR_DEVICE_REAL_KPI_DATA_ITEM_MAP];
 
-        _LOGGER.debug(f'async_update_device_real_kpi_data: {data}')
+            _LOGGER.debug(f'async_update_device_real_kpi_data: {data}')
 
         return data
 
@@ -255,7 +266,8 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
     await coordinator.async_refresh()
 
     for device in devices:
-        if device.type_id != PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER:
+        if device.type_id not in [PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_GRID_METER,
+                                  PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER, PARAM_DEVICE_TYPE_ID_POWER_SENSOR]:
             continue
 
         async_add_entities([
