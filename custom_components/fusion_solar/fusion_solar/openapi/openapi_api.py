@@ -3,10 +3,11 @@ import logging
 
 from requests import post
 
-from ..const import ATTR_SUCCESS, ATTR_DATA, ATTR_FAIL_CODE, ATTR_MESSAGE, ATTR_STATION_CODE, \
-    ATTR_STATION_NAME, ATTR_PARAMS, ATTR_PARAMS_CURRENT_TIME, ATTR_DEVICE_ID, ATTR_DEVICE_NAME, \
-    ATTR_DEVICE_STATION_CODE, ATTR_DEVICE_ESN_CODE, ATTR_DEVICE_TYPE_ID, ATTR_DEVICE_INVERTER_TYPE, \
-    ATTR_DEVICE_SOFTWARE_VERSION
+from ..const import ATTR_SUCCESS, ATTR_DATA, ATTR_FAIL_CODE, ATTR_MESSAGE, ATTR_STATION_CODE, ATTR_STATION_NAME, \
+    ATTR_PARAMS, ATTR_PARAMS_CURRENT_TIME, ATTR_DEVICE_ID, ATTR_DEVICE_NAME, ATTR_DEVICE_STATION_CODE, \
+    ATTR_DEVICE_ESN_CODE, ATTR_DEVICE_TYPE_ID, ATTR_DEVICE_INVERTER_TYPE, ATTR_DEVICE_SOFTWARE_VERSION, \
+    ATTR_STATION_ADDRESS, ATTR_CAPACITY, ATTR_BUILD_STATE, ATTR_COMBINE_TYPE, ATTR_AID_TYPE, \
+    ATTR_STATION_CONTACT_PERSON, ATTR_CONTACT_PERSON_PHONE
 
 from .station import FusionSolarStation
 from .device import FusionSolarDevice
@@ -55,7 +56,17 @@ class FusionSolarOpenApi:
         data = []
         for station in response[ATTR_DATA]:
             data.append(
-                FusionSolarStation(station[ATTR_STATION_CODE], station[ATTR_STATION_NAME])
+                FusionSolarStation(
+                    station[ATTR_STATION_CODE],
+                    station[ATTR_STATION_NAME],
+                    station[ATTR_STATION_ADDRESS],
+                    station[ATTR_CAPACITY],
+                    station[ATTR_BUILD_STATE],
+                    station[ATTR_COMBINE_TYPE],
+                    station[ATTR_AID_TYPE],
+                    station[ATTR_STATION_CONTACT_PERSON],
+                    station[ATTR_CONTACT_PERSON_PHONE]
+                )
             )
 
         return data

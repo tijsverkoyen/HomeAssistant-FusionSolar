@@ -24,6 +24,8 @@ from .fusion_solar.energy_sensor import FusionSolarEnergySensorTotalCurrentDay, 
     FusionSolarEnergySensorTotalCurrentMonth, FusionSolarEnergySensorTotalCurrentYear, \
     FusionSolarEnergySensorTotalLifetime
 from .fusion_solar.power_entity import FusionSolarPowerEntityRealtime
+from .fusion_solar.station_attribute_entity import FusionSolarStationAttributeEntity, FusionSolarStationAddressEntity, \
+    FusionSolarStationCapacityEntity, FusionSolarStationContactPersonEntity, FusionSolarStationContactPersonPhoneEntity
 
 from .const import CONF_KIOSKS, CONF_OPENAPI_CREDENTIALS, DOMAIN, ID_REALTIME_POWER, NAME_REALTIME_POWER, \
     ID_TOTAL_CURRENT_DAY_ENERGY, NAME_TOTAL_CURRENT_DAY_ENERGY, \
@@ -156,6 +158,43 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
 
     for station in stations:
         async_add_entities([
+            FusionSolarStationAttributeEntity(
+                f'{DOMAIN}-{station.code}-station-code',
+                f'{station.name} ({station.code}) - Station Code',
+                station.code,
+                station.device_info()
+            ),
+            FusionSolarStationAttributeEntity(
+                f'{DOMAIN}-{station.code}-station-name',
+                f'{station.name} ({station.code}) - Station Name',
+                station.name,
+                station.device_info()
+            ),
+            FusionSolarStationAddressEntity(
+                f'{DOMAIN}-{station.code}-station-address',
+                f'{station.name} ({station.code}) - Station Address',
+                station.address,
+                station.device_info()
+            ),
+            FusionSolarStationCapacityEntity(
+                f'{DOMAIN}-{station.code}-capacity',
+                f'{station.name} ({station.code}) - Capacity',
+                station.capacity,
+                station.device_info()
+            ),
+            FusionSolarStationContactPersonEntity(
+                f'{DOMAIN}-{station.code}-contact-person',
+                f'{station.name} ({station.code}) - Contact Person',
+                station.contact_person,
+                station.device_info()
+            ),
+            FusionSolarStationContactPersonPhoneEntity(
+                f'{DOMAIN}-{station.code}-contact-phone',
+                f'{station.name} ({station.code}) - Contact Phone',
+                station.contact_phone,
+                station.device_info()
+            ),
+
             FusionSolarEnergySensorTotalCurrentDay(
                 coordinator,
                 f'{DOMAIN}-{station.code}-{ID_TOTAL_CURRENT_DAY_ENERGY}',
