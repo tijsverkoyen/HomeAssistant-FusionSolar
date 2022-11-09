@@ -7,6 +7,7 @@ from datetime import timedelta
 
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import CONF_NAME, CONF_URL, CONF_HOST, CONF_USERNAME, CONF_PASSWORD
+from homeassistant.exceptions import IntegrationError
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from .fusion_solar.const import ATTR_DATA_REALKPI, ATTR_REALTIME_POWER, ATTR_TOTAL_CURRENT_DAY_ENERGY, \
@@ -300,6 +301,11 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             config[CONF_OPENAPI_CREDENTIALS][CONF_PASSWORD],
         )
         stations = await hass.async_add_executor_job(api.get_station_list)
+
+        if not stations:
+            _LOGGER.error('No stations found')
+            raise IntegrationError("No stations found in OpenAPI")
+
         await add_entities_for_stations(hass, async_add_entities, stations, api)
 
 
