@@ -2,8 +2,18 @@ from ...const import DOMAIN
 
 
 class FusionSolarDevice:
-    def __init__(self, id: str, name: str, station_code: str, esn_code: str, type_id: str, inverter_type,
-                 software_version: str):
+    def __init__(
+            self,
+            id: str,
+            name: str,
+            station_code: str,
+            esn_code: str,
+            type_id: str,
+            inverter_type,
+            software_version: str,
+            longitude: float,
+            latitude: float
+    ):
         self.device_id = id
         self.name = name
         self.station_code = station_code
@@ -11,21 +21,54 @@ class FusionSolarDevice:
         self.type_id = type_id
         self.inverter_type = inverter_type
         self.software_version = software_version
+        self.longitude = longitude
+        self.latitude = latitude
 
     @property
     def model(self) -> str:
+        if self.type_id == 38:
+            return f'{self.device_type} {self.inverter_type}'
+
+        return self.device_type
+
+    @property
+    def device_type(self) -> str:
         if self.type_id == 1:
             return 'String inverter'
+        if self.type_id == 2:
+            return 'SmartLogger'
+        if self.type_id == 8:
+            return 'Transformer'
         if self.type_id == 10:
             return 'EMI'
+        if self.type_id == 13:
+            return 'Protocol converter'
+        if self.type_id == 16:
+            return 'General device'
         if self.type_id == 17:
             return 'Grid meter'
+        if self.type_id == 22:
+            return 'PID'
+        if self.type_id == 37:
+            return 'Pinnet data logger'
         if self.type_id == 38:
-            return f'Residential inverter {self.inverter_type}'
+            return 'Residential inverter'
         if self.type_id == 39:
             return 'Battery'
+        if self.type_id == 40:
+            return 'Backup box'
+        if self.type_id == 45:
+            return 'PLC'
+        if self.type_id == 46:
+            return 'Optimizer'
         if self.type_id == 47:
             return 'Power Sensor'
+        if self.type_id == 62:
+            return 'Dongle'
+        if self.type_id == 63:
+            return 'Distributed SmartLogger'
+        if self.type_id == 70:
+            return 'Safety box'
 
         return 'Unknown'
 
