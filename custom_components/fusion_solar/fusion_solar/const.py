@@ -24,6 +24,8 @@ ATTR_DEVICE_ESN_CODE = 'esnCode'
 ATTR_DEVICE_TYPE_ID = 'devTypeId'
 ATTR_DEVICE_INVERTER_TYPE = 'invType'
 ATTR_DEVICE_SOFTWARE_VERSION = 'softwareVersion'
+ATTR_DEVICE_LATITUDE = 'latitude'
+ATTR_DEVICE_LONGITUDE = 'longitude'
 
 # Data attributes
 ATTR_REALTIME_POWER = 'realTimePower'

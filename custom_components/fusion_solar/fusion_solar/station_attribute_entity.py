@@ -1,8 +1,8 @@
 from homeassistant.helpers.entity import Entity, EntityCategory
 
 
-class FusionSolarStationAttributeEntity(Entity):
-    """Base class for all FusionSolarStationAttributeEntity entities."""
+class FusionSolarAttributeEntity(Entity):
+    """Base class for all FusionSolarAttributeEntity entities."""
 
     def __init__(
             self,
@@ -42,17 +42,25 @@ class FusionSolarStationAttributeEntity(Entity):
         return False
 
 
-class FusionSolarStationCapacityEntity(FusionSolarStationAttributeEntity):
+class FusionSolarCapacityEntity(FusionSolarAttributeEntity):
     _attr_icon = 'mdi:lightning-bolt'
 
 
-class FusionSolarStationContactPersonEntity(FusionSolarStationAttributeEntity):
+class FusionSolarContactPersonEntity(FusionSolarAttributeEntity):
     _attr_icon = 'mdi:account'
 
 
-class FusionSolarStationContactPersonPhoneEntity(FusionSolarStationAttributeEntity):
+class FusionSolarContactPersonPhoneEntity(FusionSolarAttributeEntity):
     _attr_icon = 'mdi:card-account-phone'
 
 
-class FusionSolarStationAddressEntity(FusionSolarStationAttributeEntity):
+class FusionSolarAddressEntity(FusionSolarAttributeEntity):
     _attr_icon = 'mdi:map-marker'
+
+
+class FusionSolarLatitudeEntity(FusionSolarAttributeEntity):
+    _attr_icon = 'mdi:latitude'
+
+
+class FusionSolarLongitudeEntity(FusionSolarAttributeEntity):
+    _attr_icon = 'mdi:longitude'
