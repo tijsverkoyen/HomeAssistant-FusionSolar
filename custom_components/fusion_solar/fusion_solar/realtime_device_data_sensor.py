@@ -6,7 +6,7 @@ from homeassistant.components.binary_sensor import DEVICE_CLASS_CONNECTIVITY, Bi
 from homeassistant.const import DEVICE_CLASS_VOLTAGE, ELECTRIC_POTENTIAL_VOLT, DEVICE_CLASS_CURRENT, \
     ELECTRIC_CURRENT_AMPERE, DEVICE_CLASS_ENERGY, ENERGY_KILO_WATT_HOUR, DEVICE_CLASS_TEMPERATURE, TEMP_CELSIUS, \
     DEVICE_CLASS_POWER_FACTOR, PERCENTAGE, DEVICE_CLASS_FREQUENCY, FREQUENCY_HERTZ, DEVICE_CLASS_POWER, \
-    POWER_KILO_WATT, DEVICE_CLASS_TIMESTAMP
+    POWER_KILO_WATT, DEVICE_CLASS_TIMESTAMP, DEVICE_CLASS_BATTERY
 
 from .openapi.device import FusionSolarDevice
 from ..const import DOMAIN
@@ -44,6 +44,12 @@ class FusionSolarRealtimeDeviceDataSensor(CoordinatorEntity, SensorEntity):
             return None
 
         if self._attribute not in self.coordinator.data[self._data_name]:
+            return None
+
+        if self.coordinator.data[self._data_name][self._attribute] is None:
+            return None
+
+        if self.coordinator.data[self._data_name][self._attribute] is None:
             return None
 
         return float(self.coordinator.data[self._data_name][self._attribute])
@@ -233,6 +239,48 @@ class FusionSolarRealtimeDeviceDataReactivePowerSensor(FusionSolarRealtimeDevice
         return STATE_CLASS_MEASUREMENT
 
 
+class FusionSolarRealtimeDeviceDataApparentPowerSensor(FusionSolarRealtimeDeviceDataSensor):
+    @property
+    def device_class(self) -> str:
+        return 'apparent_power'
+
+    @property
+    def unit_of_measurement(self) -> str:
+        return 'kVA'
+
+    @property
+    def state_class(self) -> str:
+        return STATE_CLASS_MEASUREMENT
+
+
+class FusionSolarRealtimeDeviceDataWindSpeedSensor(FusionSolarRealtimeDeviceDataSensor):
+    @property
+    def device_class(self) -> str:
+        return 'wind_speed'
+
+    @property
+    def unit_of_measurement(self) -> str:
+        return 'm/s'
+
+    @property
+    def state_class(self) -> str:
+        return STATE_CLASS_MEASUREMENT
+
+
+class FusionSolarRealtimeDeviceDataBatterySensor(FusionSolarRealtimeDeviceDataSensor):
+    @property
+    def device_class(self) -> str:
+        return DEVICE_CLASS_BATTERY
+
+    @property
+    def unit_of_measurement(self) -> str:
+        return PERCENTAGE
+
+    @property
+    def state_class(self) -> str:
+        return STATE_CLASS_MEASUREMENT
+
+
 class FusionSolarRealtimeDeviceDataTimestampSensor(FusionSolarRealtimeDeviceDataSensor):
     @property
     def device_class(self) -> str:
@@ -248,7 +296,7 @@ class FusionSolarRealtimeDeviceDataTimestampSensor(FusionSolarRealtimeDeviceData
         return datetime.datetime.fromtimestamp(state / 1000)
 
 
-class FusionSolarRealtimeDeviceDataReadableStateSensor(FusionSolarRealtimeDeviceDataSensor):
+class FusionSolarRealtimeDeviceDataReadableRunStateSensor(FusionSolarRealtimeDeviceDataSensor):
     @property
     def unique_id(self) -> str:
         return f'{DOMAIN}-{self._device.esn_code}-readable-{self._attribute}'
@@ -264,6 +312,78 @@ class FusionSolarRealtimeDeviceDataReadableStateSensor(FusionSolarRealtimeDevice
             return "disconnected"
         if state == 1:
             return "connected"
+
+        return None
+
+
+class FusionSolarRealtimeDeviceDataReadableChargeDischargeModeSensor(FusionSolarRealtimeDeviceDataSensor):
+    @property
+    def unique_id(self) -> str:
+        return f'{DOMAIN}-{self._device.esn_code}-readable-{self._attribute}'
+
+    @property
+    def state(self) -> float:
+        state = super().state
+
+        if state is None:
+            return None
+
+        if state == 0:
+            return "none"
+        if state == 1:
+            return "forced charge/discharge"
+        if state == 2:
+            return "time-of-use price"
+        if state == 3:
+            return "fixed charge/discharge"
+        if state == 4:
+            return "automatic charge/discharge"
+
+        return None
+
+
+class FusionSolarRealtimeDeviceDataReadableBatteryStatusSensor(FusionSolarRealtimeDeviceDataSensor):
+    @property
+    def unique_id(self) -> str:
+        return f'{DOMAIN}-{self._device.esn_code}-readable-{self._attribute}'
+
+    @property
+    def state(self) -> float:
+        state = super().state
+
+        if state is None:
+            return None
+
+        if state == 0:
+            return "offline"
+        if state == 1:
+            return "standby"
+        if state == 2:
+            return "running"
+        if state == 3:
+            return "faulty"
+        if state == 4:
+            return "hibernation"
+
+        return None
+
+
+class FusionSolarRealtimeDeviceDataReadableMeterStatusSensor(FusionSolarRealtimeDeviceDataSensor):
+    @property
+    def unique_id(self) -> str:
+        return f'{DOMAIN}-{self._device.esn_code}-readable-{self._attribute}'
+
+    @property
+    def state(self) -> float:
+        state = super().state
+
+        if state is None:
+            return None
+
+        if state == 0:
+            return "offline"
+        if state == 1:
+            return "normal"
 
         return None
 
