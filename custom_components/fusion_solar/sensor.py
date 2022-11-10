@@ -24,6 +24,13 @@ from .fusion_solar.energy_sensor import FusionSolarEnergySensorTotalCurrentDay, 
     FusionSolarEnergySensorTotalCurrentMonth, FusionSolarEnergySensorTotalCurrentYear, \
     FusionSolarEnergySensorTotalLifetime
 from .fusion_solar.power_entity import FusionSolarPowerEntityRealtime
+from .fusion_solar.realtime_device_data_sensor import FusionSolarRealtimeDeviceDataSensor, \
+    FusionSolarRealtimeDeviceDataReadableInverterStateSensor, FusionSolarRealtimeDeviceDataVoltageSensor, \
+    FusionSolarRealtimeDeviceDataCurrentSensor, FusionSolarRealtimeDeviceDataEnergySensor, \
+    FusionSolarRealtimeDeviceDataTemperatureSensor, FusionSolarRealtimeDeviceDataPowerFactorSensor, \
+    FusionSolarRealtimeDeviceDataFrequencySensor, FusionSolarRealtimeDeviceDataPowerSensor, \
+    FusionSolarRealtimeDeviceDataReactivePowerSensor, FusionSolarRealtimeDeviceDataTimestampSensor, \
+    FusionSolarRealtimeDeviceDataReadableStateSensor, FusionSolarRealtimeDeviceDataStateBinarySensor
 from .fusion_solar.station_attribute_entity import FusionSolarAttributeEntity, FusionSolarAddressEntity, \
     FusionSolarCapacityEntity, FusionSolarContactPersonEntity, FusionSolarContactPersonPhoneEntity, \
     FusionSolarLatitudeEntity, FusionSolarLongitudeEntity
@@ -367,7 +374,7 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                     ATTR_DEVICE_REAL_KPI_ACTIVE_POWER,
                     f'{DOMAIN}-{device.device_id}',
                     device.device_info()
-                )
+                ),
             ])
 
         if device.type_id in [PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER]:
@@ -379,6 +386,185 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                     device.device_info()
                 ),
             ])
+
+        if device.type_id == PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER:
+            entities = []
+
+            entities.append(FusionSolarRealtimeDeviceDataSensor(
+                coordinator,
+                f'{DOMAIN}-{device.esn_code}-inverter_state',
+                f'{device.name} ({device.esn_code}) - Inverter State',
+                'inverter_state',
+                f'{DOMAIN}-{device.device_id}',
+                device.device_info()
+            ))
+            entities.append(FusionSolarRealtimeDeviceDataReadableInverterStateSensor(
+                coordinator,
+                f'{DOMAIN}-{device.esn_code}-readable-inverter_state',
+                f'{device.name} ({device.esn_code}) - Readable Inverter State',
+                'inverter_state',
+                f'{DOMAIN}-{device.device_id}',
+                device.device_info()
+            ))
+
+            voltages = [
+                {'attribute': 'ab_u', 'name': 'Grid AB Voltage'},
+                {'attribute': 'bc_u', 'name': 'Grid BC Voltage'},
+                {'attribute': 'ca_u', 'name': 'Grid CA Voltage'},
+                {'attribute': 'a_u', 'name': 'Phase A Voltage'},
+                {'attribute': 'b_u', 'name': 'Phase B Voltage'},
+                {'attribute': 'c_u', 'name': 'Phase C Voltage'},
+                {'attribute': 'pv1_u', 'name': 'PV1 Input Voltage'},
+                {'attribute': 'pv2_u', 'name': 'PV2 Input Voltage'},
+                {'attribute': 'pv3_u', 'name': 'PV3 Input Voltage'},
+                {'attribute': 'pv4_u', 'name': 'PV4 Input Voltage'},
+                {'attribute': 'pv5_u', 'name': 'PV5 Input Voltage'},
+                {'attribute': 'pv6_u', 'name': 'PV6 Input Voltage'},
+                {'attribute': 'pv7_u', 'name': 'PV7 Input Voltage'},
+                {'attribute': 'pv8_u', 'name': 'PV8 Input Voltage'},
+            ]
+            for item in voltages:
+                entities.append(FusionSolarRealtimeDeviceDataVoltageSensor(
+                    coordinator,
+                    f'{DOMAIN}-{device.esn_code}-{item["attribute"]}',
+                    f'{device.name} ({device.esn_code}) - {item["name"]}',
+                    item['attribute'],
+                    f'{DOMAIN}-{device.device_id}',
+                    device.device_info()
+                ))
+
+            currents = [
+                {'attribute': 'a_i', 'name': 'Phase A Current'},
+                {'attribute': 'b_i', 'name': 'Phase B Current'},
+                {'attribute': 'c_i', 'name': 'Phase C Current'},
+                {'attribute': 'pv1_i', 'name': 'PV1 Input Current'},
+                {'attribute': 'pv2_i', 'name': 'PV2 Input Current'},
+                {'attribute': 'pv3_i', 'name': 'PV3 Input Current'},
+                {'attribute': 'pv4_i', 'name': 'PV4 Input Current'},
+                {'attribute': 'pv5_i', 'name': 'PV5 Input Current'},
+                {'attribute': 'pv6_i', 'name': 'PV6 Input Current'},
+                {'attribute': 'pv7_i', 'name': 'PV7 Input Current'},
+                {'attribute': 'pv8_i', 'name': 'PV8 Input Current'},
+            ]
+            for item in currents:
+                entities.append(FusionSolarRealtimeDeviceDataCurrentSensor(
+                    coordinator,
+                    f'{DOMAIN}-{device.esn_code}-{item["attribute"]}',
+                    f'{device.name} ({device.esn_code}) - {item["name"]}',
+                    item['attribute'],
+                    f'{DOMAIN}-{device.device_id}',
+                    device.device_info()
+                ))
+
+            entities.append(FusionSolarRealtimeDeviceDataCurrentSensor(
+                coordinator,
+                f'{DOMAIN}-{device.esn_code}-efficiency',
+                f'{device.name} ({device.esn_code}) - Inverter efficiency % (manufacturer)',
+                'efficiency',
+                f'{DOMAIN}-{device.device_id}',
+                device.device_info()
+            ))
+
+            entities.append(FusionSolarRealtimeDeviceDataTemperatureSensor(
+                coordinator,
+                f'{DOMAIN}-{device.esn_code}-temperature',
+                f'{device.name} ({device.esn_code}) - Inverter internal temperature',
+                'temperature',
+                f'{DOMAIN}-{device.device_id}',
+                device.device_info()
+            ))
+
+            entities.append(FusionSolarRealtimeDeviceDataPowerFactorSensor(
+                coordinator,
+                f'{DOMAIN}-{device.esn_code}-power_factor',
+                f'{device.name} ({device.esn_code}) - Power factor',
+                'power_factor',
+                f'{DOMAIN}-{device.device_id}',
+                device.device_info()
+            ))
+
+            entities.append(FusionSolarRealtimeDeviceDataFrequencySensor(
+                coordinator,
+                f'{DOMAIN}-{device.esn_code}-elec_freq',
+                f'{device.name} ({device.esn_code}) - Grid frequency',
+                'elec_freq',
+                f'{DOMAIN}-{device.device_id}',
+                device.device_info()
+            ))
+
+            powers = [
+                {'attribute': 'active_power', 'name': 'Active Power'},
+                {'attribute': 'mppt_power', 'name': 'MPPT total input power'},
+            ]
+            for item in powers:
+                entities.append(FusionSolarRealtimeDeviceDataPowerSensor(
+                    coordinator,
+                    f'{DOMAIN}-{device.esn_code}-{item["attribute"]}',
+                    f'{device.name} ({device.esn_code}) - {item["name"]}',
+                    item['attribute'],
+                    f'{DOMAIN}-{device.device_id}',
+                    device.device_info()
+                ))
+
+            entities.append(FusionSolarRealtimeDeviceDataReactivePowerSensor(
+                coordinator,
+                f'{DOMAIN}-{device.esn_code}-reactive_power',
+                f'{device.name} ({device.esn_code}) - Reactive output power',
+                'reactive_power',
+                f'{DOMAIN}-{device.device_id}',
+                device.device_info()
+            ))
+
+            energies = [
+                {'attribute': 'day_cap', 'name': 'Yield Today'},
+                {'attribute': 'total_cap', 'name': 'Total Yield'},
+                {'attribute': 'mppt_1_cap', 'name': 'MPPT 1 DC total yield'},
+                {'attribute': 'mppt_2_cap', 'name': 'MPPT 2 DC total yield'},
+                {'attribute': 'mppt_3_cap', 'name': 'MPPT 3 DC total yield'},
+                {'attribute': 'mppt_4_cap', 'name': 'MPPT 4 DC total yield'},
+            ]
+            for item in energies:
+                entities.append(FusionSolarRealtimeDeviceDataEnergySensor(
+                    coordinator,
+                    f'{DOMAIN}-{device.esn_code}-{item["attribute"]}',
+                    f'{device.name} ({device.esn_code}) - {item["name"]}',
+                    item['attribute'],
+                    f'{DOMAIN}-{device.device_id}',
+                    device.device_info()
+                ))
+
+            timestamps = [
+                {'attribute': 'open_time', 'name': 'Inverter startup time'},
+                {'attribute': 'close_time', 'name': 'Inverter shutdown time'},
+            ]
+            for item in timestamps:
+                entities.append(FusionSolarRealtimeDeviceDataTimestampSensor(
+                    coordinator,
+                    f'{DOMAIN}-{device.esn_code}-{item["attribute"]}',
+                    f'{device.name} ({device.esn_code}) - {item["name"]}',
+                    item['attribute'],
+                    f'{DOMAIN}-{device.device_id}',
+                    device.device_info()
+                ))
+
+            entities.append(FusionSolarRealtimeDeviceDataReadableStateSensor(
+                coordinator,
+                f'{DOMAIN}-{device.esn_code}-readable-run_state',
+                f'{device.name} ({device.esn_code}) - Readable status',
+                'run_state',
+                f'{DOMAIN}-{device.device_id}',
+                device.device_info()
+            ))
+            entities.append(FusionSolarRealtimeDeviceDataStateBinarySensor(
+                coordinator,
+                f'{DOMAIN}-{device.esn_code}-run_state',
+                f'{device.name} ({device.esn_code}) - Status',
+                'run_state',
+                f'{DOMAIN}-{device.device_id}',
+                device.device_info()
+            ))
+
+            async_add_entities(entities)
 
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
