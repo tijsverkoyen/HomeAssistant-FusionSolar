@@ -8,9 +8,8 @@ from homeassistant.const import DEVICE_CLASS_VOLTAGE, ELECTRIC_POTENTIAL_VOLT, D
     DEVICE_CLASS_POWER_FACTOR, PERCENTAGE, DEVICE_CLASS_FREQUENCY, FREQUENCY_HERTZ, DEVICE_CLASS_POWER, \
     POWER_KILO_WATT, DEVICE_CLASS_TIMESTAMP
 
-import logging
-
-_LOGGER = logging.getLogger(__name__)
+from .openapi.device import FusionSolarDevice
+from ..const import DOMAIN
 
 
 class FusionSolarRealtimeDeviceDataSensor(CoordinatorEntity, SensorEntity):
@@ -19,27 +18,25 @@ class FusionSolarRealtimeDeviceDataSensor(CoordinatorEntity, SensorEntity):
     def __init__(
             self,
             coordinator,
-            unique_id,
-            name,
-            attribute,
-            data_name,
-            device_info=None
+            device: FusionSolarDevice,
+            name: str,
+            attribute: str
     ):
         """Initialize the entity"""
         super().__init__(coordinator)
-        self._unique_id = unique_id
+        self._device = device
         self._name = name
         self._attribute = attribute
-        self._data_name = data_name
-        self._device_info = device_info
+        self._data_name = f'{DOMAIN}-{device.device_id}'
+        self._device_info = device.device_info()
 
     @property
     def unique_id(self) -> str:
-        return self._unique_id
+        return f'{DOMAIN}-{self._device.esn_code}-{self._attribute}'
 
     @property
     def name(self) -> str:
-        return self._name
+        return f'{self._device.name} - {self._name}'
 
     @property
     def state(self) -> float:
@@ -58,14 +55,15 @@ class FusionSolarRealtimeDeviceDataSensor(CoordinatorEntity, SensorEntity):
 
 class FusionSolarRealtimeDeviceDataReadableInverterStateSensor(FusionSolarRealtimeDeviceDataSensor):
     @property
+    def unique_id(self) -> str:
+        return f'{DOMAIN}-{self._device.esn_code}-readable-{self._attribute}'
+
+    @property
     def state(self) -> str:
-        if self._data_name not in self.coordinator.data:
-            return None
+        state = super().state
 
-        if self._attribute not in self.coordinator.data[self._data_name]:
+        if state is None:
             return None
-
-        state = self.coordinator.data[self._data_name][self._attribute]
 
         if state == 0:
             return "Standby: initializing"
@@ -241,26 +239,26 @@ class FusionSolarRealtimeDeviceDataTimestampSensor(FusionSolarRealtimeDeviceData
         return DEVICE_CLASS_TIMESTAMP
 
     @property
-    def state(self) -> float:
-        if self._data_name not in self.coordinator.data:
+    def state(self) -> datetime:
+        state = super().state
+
+        if state is None:
             return None
 
-        if self._attribute not in self.coordinator.data[self._data_name]:
-            return None
-
-        return datetime.datetime.fromtimestamp(float(self.coordinator.data[self._data_name][self._attribute]) / 1000)
+        return datetime.datetime.fromtimestamp(state / 1000)
 
 
 class FusionSolarRealtimeDeviceDataReadableStateSensor(FusionSolarRealtimeDeviceDataSensor):
     @property
+    def unique_id(self) -> str:
+        return f'{DOMAIN}-{self._device.esn_code}-readable-{self._attribute}'
+
+    @property
     def state(self) -> float:
-        if self._data_name not in self.coordinator.data:
-            return None
+        state = super().state
 
-        if self._attribute not in self.coordinator.data[self._data_name]:
+        if state is None:
             return None
-
-        state = self.coordinator.data[self._data_name][self._attribute]
 
         if state == 0:
             return "disconnected"
@@ -271,32 +269,30 @@ class FusionSolarRealtimeDeviceDataReadableStateSensor(FusionSolarRealtimeDevice
 
 
 class FusionSolarRealtimeDeviceDataBinarySensor(CoordinatorEntity, BinarySensorEntity):
-    """Base class for all FusionSolarRealtimeDeviceDataSensor sensors."""
+    """Base class for all FusionSolarRealtimeDeviceDataBinarySensor sensors."""
 
     def __init__(
             self,
             coordinator,
-            unique_id,
-            name,
-            attribute,
-            data_name,
-            device_info=None
+            device: FusionSolarDevice,
+            name: str,
+            attribute: str
     ):
         """Initialize the entity"""
         super().__init__(coordinator)
-        self._unique_id = unique_id
+        self._device = device
         self._name = name
         self._attribute = attribute
-        self._data_name = data_name
-        self._device_info = device_info
+        self._data_name = f'{DOMAIN}-{device.device_id}'
+        self._device_info = device.device_info()
 
     @property
     def unique_id(self) -> str:
-        return self._unique_id
+        return f'{DOMAIN}-{self._device.esn_code}-{self._attribute}'
 
     @property
     def name(self) -> str:
-        return self._name
+        return f'{self._device.name} - {self._name}'
 
     @property
     def device_info(self) -> dict:

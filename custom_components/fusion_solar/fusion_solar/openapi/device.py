@@ -4,7 +4,7 @@ from ...const import DOMAIN
 class FusionSolarDevice:
     def __init__(
             self,
-            id: str,
+            device_id: str,
             name: str,
             station_code: str,
             esn_code: str,
@@ -14,7 +14,7 @@ class FusionSolarDevice:
             longitude: float,
             latitude: float
     ):
-        self.device_id = id
+        self.device_id = device_id
         self.name = name
         self.station_code = station_code
         self.esn_code = esn_code
