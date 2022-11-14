@@ -52,6 +52,9 @@ class FusionSolarRealtimeDeviceDataSensor(CoordinatorEntity, SensorEntity):
         if self.coordinator.data[self._data_name][self._attribute] is None:
             return None
 
+        if self.coordinator.data[self._data_name][self._attribute] == 'N/A':
+            return None
+
         return float(self.coordinator.data[self._data_name][self._attribute])
 
     @property
