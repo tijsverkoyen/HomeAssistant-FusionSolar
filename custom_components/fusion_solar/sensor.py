@@ -311,49 +311,49 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
     for device in devices:
         async_add_entities([
             FusionSolarAttributeEntity(
-                f'{DOMAIN}-{device.esn_code}-device-id',
+                f'{DOMAIN}-{device.device_id}-device-id',
                 f'{device.name} ({device.esn_code}) - Device ID',
                 device.device_id,
                 device.device_info()
             ),
             FusionSolarAttributeEntity(
-                f'{DOMAIN}-{device.esn_code}-device-name',
+                f'{DOMAIN}-{device.device_id}-device-name',
                 f'{device.name} ({device.esn_code}) - Device Name',
                 device.name,
                 device.device_info()
             ),
             FusionSolarAttributeEntity(
-                f'{DOMAIN}-{device.esn_code}-station-code',
+                f'{DOMAIN}-{device.device_id}-station-code',
                 f'{device.name} ({device.esn_code}) - Station Code',
                 device.station_code,
                 device.device_info()
             ),
             FusionSolarAttributeEntity(
-                f'{DOMAIN}-{device.esn_code}-esn-code',
+                f'{DOMAIN}-{device.device_id}-esn-code',
                 f'{device.name} ({device.esn_code}) - Serial Number',
                 device.esn_code,
                 device.device_info()
             ),
             FusionSolarAttributeEntity(
-                f'{DOMAIN}-{device.esn_code}-device-type-id',
+                f'{DOMAIN}-{device.device_id}-device-type-id',
                 f'{device.name} ({device.esn_code}) - Device Type ID',
                 device.type_id,
                 device.device_info()
             ),
             FusionSolarAttributeEntity(
-                f'{DOMAIN}-{device.esn_code}-device-type',
+                f'{DOMAIN}-{device.device_id}-device-type',
                 f'{device.name} ({device.esn_code}) - Device Type',
                 device.device_type,
                 device.device_info()
             ),
             FusionSolarLatitudeEntity(
-                f'{DOMAIN}-{device.esn_code}-latitude',
+                f'{DOMAIN}-{device.device_id}-latitude',
                 f'{device.name} ({device.esn_code}) - Latitude',
                 device.latitude,
                 device.device_info()
             ),
             FusionSolarLongitudeEntity(
-                f'{DOMAIN}-{device.esn_code}-longitude',
+                f'{DOMAIN}-{device.device_id}-longitude',
                 f'{device.name} ({device.esn_code}) - Longitude',
                 device.longitude,
                 device.device_info()
@@ -365,7 +365,7 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
             async_add_entities([
                 FusionSolarPowerEntityRealtime(
                     coordinator,
-                    f'{DOMAIN}-{device.esn_code}-{ID_REALTIME_POWER}',
+                    f'{DOMAIN}-{device.device_id}-{ID_REALTIME_POWER}',
                     f'{device.name} ({device.esn_code}) - {NAME_REALTIME_POWER}',
                     ATTR_DEVICE_REAL_KPI_ACTIVE_POWER,
                     f'{DOMAIN}-{device.device_id}',
@@ -376,7 +376,7 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
         if device.type_id in [PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER]:
             async_add_entities([
                 FusionSolarAttributeEntity(
-                    f'{DOMAIN}-{device.esn_code}-inverter_type',
+                    f'{DOMAIN}-{device.device_id}-inverter_type',
                     f'{device.name} ({device.esn_code}) - Inverter Type',
                     device.inverter_type,
                     device.device_info()

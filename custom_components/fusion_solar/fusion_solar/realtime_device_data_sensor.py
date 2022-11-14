@@ -32,7 +32,7 @@ class FusionSolarRealtimeDeviceDataSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def unique_id(self) -> str:
-        return f'{DOMAIN}-{self._device.esn_code}-{self._attribute}'
+        return f'{DOMAIN}-{self._device.device_id}-{self._attribute}'
 
     @property
     def name(self) -> str:
@@ -62,7 +62,7 @@ class FusionSolarRealtimeDeviceDataSensor(CoordinatorEntity, SensorEntity):
 class FusionSolarRealtimeDeviceDataReadableInverterStateSensor(FusionSolarRealtimeDeviceDataSensor):
     @property
     def unique_id(self) -> str:
-        return f'{DOMAIN}-{self._device.esn_code}-readable-{self._attribute}'
+        return f'{DOMAIN}-{self._device.device_id}-readable-{self._attribute}'
 
     @property
     def state(self) -> str:
@@ -299,7 +299,7 @@ class FusionSolarRealtimeDeviceDataTimestampSensor(FusionSolarRealtimeDeviceData
 class FusionSolarRealtimeDeviceDataReadableRunStateSensor(FusionSolarRealtimeDeviceDataSensor):
     @property
     def unique_id(self) -> str:
-        return f'{DOMAIN}-{self._device.esn_code}-readable-{self._attribute}'
+        return f'{DOMAIN}-{self._device.device_id}-readable-{self._attribute}'
 
     @property
     def state(self) -> float:
@@ -319,7 +319,7 @@ class FusionSolarRealtimeDeviceDataReadableRunStateSensor(FusionSolarRealtimeDev
 class FusionSolarRealtimeDeviceDataReadableChargeDischargeModeSensor(FusionSolarRealtimeDeviceDataSensor):
     @property
     def unique_id(self) -> str:
-        return f'{DOMAIN}-{self._device.esn_code}-readable-{self._attribute}'
+        return f'{DOMAIN}-{self._device.device_id}-readable-{self._attribute}'
 
     @property
     def state(self) -> float:
@@ -345,7 +345,7 @@ class FusionSolarRealtimeDeviceDataReadableChargeDischargeModeSensor(FusionSolar
 class FusionSolarRealtimeDeviceDataReadableBatteryStatusSensor(FusionSolarRealtimeDeviceDataSensor):
     @property
     def unique_id(self) -> str:
-        return f'{DOMAIN}-{self._device.esn_code}-readable-{self._attribute}'
+        return f'{DOMAIN}-{self._device.device_id}-readable-{self._attribute}'
 
     @property
     def state(self) -> float:
@@ -371,7 +371,7 @@ class FusionSolarRealtimeDeviceDataReadableBatteryStatusSensor(FusionSolarRealti
 class FusionSolarRealtimeDeviceDataReadableMeterStatusSensor(FusionSolarRealtimeDeviceDataSensor):
     @property
     def unique_id(self) -> str:
-        return f'{DOMAIN}-{self._device.esn_code}-readable-{self._attribute}'
+        return f'{DOMAIN}-{self._device.device_id}-readable-{self._attribute}'
 
     @property
     def state(self) -> float:
@@ -408,7 +408,7 @@ class FusionSolarRealtimeDeviceDataBinarySensor(CoordinatorEntity, BinarySensorE
 
     @property
     def unique_id(self) -> str:
-        return f'{DOMAIN}-{self._device.esn_code}-{self._attribute}'
+        return f'{DOMAIN}-{self._device.device_id}-{self._attribute}'
 
     @property
     def name(self) -> str:
