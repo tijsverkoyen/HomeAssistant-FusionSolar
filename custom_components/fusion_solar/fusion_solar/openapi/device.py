@@ -83,3 +83,13 @@ class FusionSolarDevice:
             'sw_version': self.software_version,
             'via_device': (DOMAIN, self.station_code)
         }
+
+    @property
+    def readable_name(self):
+        if self.name == self.esn_code:
+            return self.name
+
+        if self.esn_code is not None and self.esn_code != '':
+            return f'{self.name} ({self.esn_code})'
+
+        return self.name

@@ -186,7 +186,7 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
             FusionSolarEnergySensorTotalCurrentDay(
                 coordinator,
                 f'{DOMAIN}-{station.code}-{ID_TOTAL_CURRENT_DAY_ENERGY}',
-                f'{station.name} ({station.code}) - {NAME_TOTAL_CURRENT_DAY_ENERGY}',
+                f'{station.readable_name} - {NAME_TOTAL_CURRENT_DAY_ENERGY}',
                 ATTR_STATION_REAL_KPI_TOTAL_CURRENT_DAY_ENERGY,
                 f'{DOMAIN}-{station.code}',
                 station.device_info()
@@ -194,7 +194,7 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
             FusionSolarEnergySensorTotalCurrentMonth(
                 coordinator,
                 f'{DOMAIN}-{station.code}-{ID_TOTAL_CURRENT_MONTH_ENERGY}',
-                f'{station.name} ({station.code}) - {NAME_TOTAL_CURRENT_MONTH_ENERGY}',
+                f'{station.readable_name} - {NAME_TOTAL_CURRENT_MONTH_ENERGY}',
                 ATTR_STATION_REAL_KPI_TOTAL_CURRENT_MONTH_ENERGY,
                 f'{DOMAIN}-{station.code}',
                 station.device_info()
@@ -202,7 +202,7 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
             FusionSolarEnergySensorTotalLifetime(
                 coordinator,
                 f'{DOMAIN}-{station.code}-{ID_TOTAL_LIFETIME_ENERGY}',
-                f'{station.name} ({station.code}) - {NAME_TOTAL_LIFETIME_ENERGY}',
+                f'{station.readable_name} - {NAME_TOTAL_LIFETIME_ENERGY}',
                 ATTR_STATION_REAL_KPI_TOTAL_LIFETIME_ENERGY,
                 f'{DOMAIN}-{station.code}',
                 station.device_info()
@@ -246,7 +246,7 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
             FusionSolarEnergySensorTotalCurrentYear(
                 coordinator,
                 f'{DOMAIN}-{station.code}-{ID_TOTAL_CURRENT_YEAR_ENERGY}',
-                f'{station.name} ({station.code}) - {NAME_TOTAL_CURRENT_YEAR_ENERGY}',
+                f'{station.readable_name} - {NAME_TOTAL_CURRENT_YEAR_ENERGY}',
                 ATTR_KPI_YEAR_INVERTER_POWER,
                 f'{DOMAIN}-{station.code}',
                 station.device_info()
@@ -297,15 +297,15 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
         entities_to_create = [
             {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Device ID', 'suffix': 'device_id',
              'value': device.device_id},
-            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Device Name', 'suffix': 'device_name',
+            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Device name', 'suffix': 'device_name',
              'value': device.name},
-            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Station Code', 'suffix': 'station_code',
+            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Station code', 'suffix': 'station_code',
              'value': device.station_code},
-            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Serial Number', 'suffix': 'esn_code',
+            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Serial number', 'suffix': 'esn_code',
              'value': device.esn_code},
-            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Device Type ID', 'suffix': 'device_type_id',
+            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Device type ID', 'suffix': 'device_type_id',
              'value': device.type_id},
-            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Device Type', 'suffix': 'device_type',
+            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Device type', 'suffix': 'device_type',
              'value': device.device_type},
             {'class': 'FusionSolarDeviceLatitudeEntity', 'name': 'Latitude', 'suffix': 'latitude',
              'value': device.latitude},
@@ -315,7 +315,7 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
 
         if device.type_id in [PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER]:
             entity_to_create.update({
-                'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Inverter Type', 'suffix': 'inverter_type',
+                'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Inverter model', 'suffix': 'inverter_type',
                 'value': device.inverter_type
             })
 
@@ -333,7 +333,7 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                 FusionSolarPowerEntityRealtime(
                     coordinator,
                     f'{DOMAIN}-{device.device_id}-{ID_REALTIME_POWER}',
-                    f'{device.name} ({device.esn_code}) - {NAME_REALTIME_POWER}',
+                    f'{device.readable_name} - {NAME_REALTIME_POWER}',
                     ATTR_DEVICE_REAL_KPI_ACTIVE_POWER,
                     f'{DOMAIN}-{device.device_id}',
                     device.device_info()

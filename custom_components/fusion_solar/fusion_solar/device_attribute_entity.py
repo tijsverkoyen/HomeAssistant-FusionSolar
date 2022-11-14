@@ -25,10 +25,7 @@ class FusionSolarDeviceAttributeEntity(Entity):
 
     @property
     def name(self):
-        if not self._device.esn_code:
-            return f'{self._device.name} ({self._device.esn_code}) - {self._name}'
-
-        return f'{self._device.name} - {self._name}'
+        return f'{self._device.readable_name} - {self._name}'
 
     @property
     def state(self):

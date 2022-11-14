@@ -3,7 +3,6 @@ from homeassistant.helpers.entity import Entity, EntityCategory
 from .openapi.station import FusionSolarStation
 from ..const import DOMAIN
 
-
 class FusionSolarStationAttributeEntity(Entity):
     def __init__(
             self,
@@ -25,7 +24,7 @@ class FusionSolarStationAttributeEntity(Entity):
 
     @property
     def name(self):
-        return f'{self._station.name} ({self._station.code}) - {self._name}'
+        return f'{self._station.readable_name} - {self._name}'
 
     @property
     def state(self):

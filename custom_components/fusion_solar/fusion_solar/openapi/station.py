@@ -33,3 +33,10 @@ class FusionSolarStation:
             'manufacturer': 'Huawei FusionSolar',
             'model': 'Station'
         }
+
+    @property
+    def readable_name(self):
+        if self.name is not None and self.name != '':
+            return self.name
+
+        return self.code
