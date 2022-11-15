@@ -199,6 +199,15 @@ class FusionSolarRealtimeDeviceDataPowerFactorSensor(FusionSolarRealtimeDeviceDa
     def state_class(self) -> str:
         return STATE_CLASS_MEASUREMENT
 
+    @property
+    def state(self) -> str:
+        state = super().state
+
+        if state is None:
+            return None
+
+        return state * 100
+
 
 class FusionSolarRealtimeDeviceDataFrequencySensor(FusionSolarRealtimeDeviceDataSensor):
     @property
