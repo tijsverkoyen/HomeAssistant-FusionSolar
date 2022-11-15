@@ -6,7 +6,7 @@ from homeassistant.components.binary_sensor import DEVICE_CLASS_CONNECTIVITY, Bi
 from homeassistant.const import DEVICE_CLASS_VOLTAGE, ELECTRIC_POTENTIAL_VOLT, DEVICE_CLASS_CURRENT, \
     ELECTRIC_CURRENT_AMPERE, DEVICE_CLASS_ENERGY, ENERGY_KILO_WATT_HOUR, DEVICE_CLASS_TEMPERATURE, TEMP_CELSIUS, \
     DEVICE_CLASS_POWER_FACTOR, PERCENTAGE, DEVICE_CLASS_FREQUENCY, FREQUENCY_HERTZ, DEVICE_CLASS_POWER, \
-    POWER_KILO_WATT, DEVICE_CLASS_TIMESTAMP, DEVICE_CLASS_BATTERY
+    POWER_WATT, POWER_KILO_WATT, DEVICE_CLASS_TIMESTAMP, DEVICE_CLASS_BATTERY
 
 from .openapi.device import FusionSolarDevice
 from ..const import DOMAIN
@@ -237,6 +237,12 @@ class FusionSolarRealtimeDeviceDataPowerSensor(FusionSolarRealtimeDeviceDataSens
         return STATE_CLASS_MEASUREMENT
 
 
+class FusionSolarRealtimeDeviceDataPowerInWattSensor(FusionSolarRealtimeDeviceDataPowerSensor):
+    @property
+    def unit_of_measurement(self) -> str:
+        return POWER_WATT
+
+
 class FusionSolarRealtimeDeviceDataReactivePowerSensor(FusionSolarRealtimeDeviceDataSensor):
     @property
     def device_class(self) -> str:
@@ -249,6 +255,12 @@ class FusionSolarRealtimeDeviceDataReactivePowerSensor(FusionSolarRealtimeDevice
     @property
     def state_class(self) -> str:
         return STATE_CLASS_MEASUREMENT
+
+
+class FusionSolarRealtimeDeviceDataReactivePowerInVarSensor(FusionSolarRealtimeDeviceDataReactivePowerSensor):
+    @property
+    def unit_of_measurement(self) -> str:
+        return 'Var'
 
 
 class FusionSolarRealtimeDeviceDataApparentPowerSensor(FusionSolarRealtimeDeviceDataSensor):
