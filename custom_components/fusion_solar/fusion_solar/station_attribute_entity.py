@@ -1,29 +1,30 @@
 from homeassistant.helpers.entity import Entity, EntityCategory
 
+from .openapi.station import FusionSolarStation
+from ..const import DOMAIN
 
-class FusionSolarAttributeEntity(Entity):
-    """Base class for all FusionSolarAttributeEntity entities."""
-
+class FusionSolarStationAttributeEntity(Entity):
     def __init__(
             self,
-            unique_id,
+            station: FusionSolarStation,
             name,
-            value,
-            device_info=None
+            attribute,
+            value
     ):
         """Initialize the entity"""
-        self._unique_id = unique_id
+        self._station = station
         self._name = name
+        self._attribute = attribute
+        self._device_info = station.device_info()
         self._value = value
-        self._device_info = device_info
 
     @property
     def unique_id(self) -> str:
-        return self._unique_id
+        return f'{DOMAIN}-{self._station.code}-{self._attribute}'
 
     @property
     def name(self):
-        return self._name
+        return f'{self._station.readable_name} - {self._name}'
 
     @property
     def state(self):
@@ -42,25 +43,17 @@ class FusionSolarAttributeEntity(Entity):
         return False
 
 
-class FusionSolarCapacityEntity(FusionSolarAttributeEntity):
+class FusionSolarStationCapacityEntity(FusionSolarStationAttributeEntity):
     _attr_icon = 'mdi:lightning-bolt'
 
 
-class FusionSolarContactPersonEntity(FusionSolarAttributeEntity):
+class FusionSolarStationContactPersonEntity(FusionSolarStationAttributeEntity):
     _attr_icon = 'mdi:account'
 
 
-class FusionSolarContactPersonPhoneEntity(FusionSolarAttributeEntity):
+class FusionSolarStationContactPersonPhoneEntity(FusionSolarStationAttributeEntity):
     _attr_icon = 'mdi:card-account-phone'
 
 
-class FusionSolarAddressEntity(FusionSolarAttributeEntity):
+class FusionSolarStationAddressEntity(FusionSolarStationAttributeEntity):
     _attr_icon = 'mdi:map-marker'
-
-
-class FusionSolarLatitudeEntity(FusionSolarAttributeEntity):
-    _attr_icon = 'mdi:latitude'
-
-
-class FusionSolarLongitudeEntity(FusionSolarAttributeEntity):
-    _attr_icon = 'mdi:longitude'
