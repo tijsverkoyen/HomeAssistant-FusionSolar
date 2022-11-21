@@ -1,7 +1,7 @@
 import datetime
 
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from homeassistant.components.sensor import STATE_CLASS_MEASUREMENT, SensorEntity
+from homeassistant.components.sensor import STATE_CLASS_MEASUREMENT, STATE_CLASS_TOTAL_INCREASING, SensorEntity
 from homeassistant.components.binary_sensor import DEVICE_CLASS_CONNECTIVITY, BinarySensorEntity
 from homeassistant.const import DEVICE_CLASS_VOLTAGE, ELECTRIC_POTENTIAL_VOLT, DEVICE_CLASS_CURRENT, \
     ELECTRIC_CURRENT_AMPERE, DEVICE_CLASS_ENERGY, DEVICE_CLASS_TEMPERATURE, \
@@ -170,6 +170,10 @@ class FusionSolarRealtimeDeviceDataEnergySensor(FusionSolarRealtimeDeviceDataSen
     @property
     def state_class(self) -> str:
         return STATE_CLASS_MEASUREMENT
+class FusionSolarRealtimeDeviceDataEnergyTotalIncreasingSensor(FusionSolarRealtimeDeviceDataEnergySensor):
+    @property
+    def state_class(self) -> str:
+        return STATE_CLASS_TOTAL_INCREASING
 
 
 class FusionSolarRealtimeDeviceDataTemperatureSensor(FusionSolarRealtimeDeviceDataSensor):
