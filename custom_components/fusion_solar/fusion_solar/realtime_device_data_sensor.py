@@ -4,9 +4,9 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.components.sensor import STATE_CLASS_MEASUREMENT, SensorEntity
 from homeassistant.components.binary_sensor import DEVICE_CLASS_CONNECTIVITY, BinarySensorEntity
 from homeassistant.const import DEVICE_CLASS_VOLTAGE, ELECTRIC_POTENTIAL_VOLT, DEVICE_CLASS_CURRENT, \
-    ELECTRIC_CURRENT_AMPERE, DEVICE_CLASS_ENERGY, ENERGY_KILO_WATT_HOUR, DEVICE_CLASS_TEMPERATURE, TEMP_CELSIUS, \
+    ELECTRIC_CURRENT_AMPERE, DEVICE_CLASS_ENERGY, DEVICE_CLASS_TEMPERATURE, \
     DEVICE_CLASS_POWER_FACTOR, PERCENTAGE, DEVICE_CLASS_FREQUENCY, FREQUENCY_HERTZ, DEVICE_CLASS_POWER, \
-    POWER_WATT, POWER_KILO_WATT, DEVICE_CLASS_TIMESTAMP, DEVICE_CLASS_BATTERY
+    DEVICE_CLASS_TIMESTAMP, DEVICE_CLASS_BATTERY, UnitOfEnergy, UnitOfPower, UnitOfTemperature
 
 from .openapi.device import FusionSolarDevice
 from ..const import DOMAIN
@@ -165,7 +165,7 @@ class FusionSolarRealtimeDeviceDataEnergySensor(FusionSolarRealtimeDeviceDataSen
 
     @property
     def unit_of_measurement(self) -> str:
-        return ENERGY_KILO_WATT_HOUR
+        return UnitOfEnergy.KILO_WATT_HOUR
 
     @property
     def state_class(self) -> str:
@@ -179,7 +179,7 @@ class FusionSolarRealtimeDeviceDataTemperatureSensor(FusionSolarRealtimeDeviceDa
 
     @property
     def unit_of_measurement(self) -> str:
-        return TEMP_CELSIUS
+        return UnitOfTemperature.CELSIUS
 
     @property
     def state_class(self) -> str:
@@ -230,7 +230,7 @@ class FusionSolarRealtimeDeviceDataPowerSensor(FusionSolarRealtimeDeviceDataSens
 
     @property
     def unit_of_measurement(self) -> str:
-        return POWER_KILO_WATT
+        return UnitOfPower.KILO_WATT
 
     @property
     def state_class(self) -> str:
@@ -240,7 +240,7 @@ class FusionSolarRealtimeDeviceDataPowerSensor(FusionSolarRealtimeDeviceDataSens
 class FusionSolarRealtimeDeviceDataPowerInWattSensor(FusionSolarRealtimeDeviceDataPowerSensor):
     @property
     def unit_of_measurement(self) -> str:
-        return POWER_WATT
+        return UnitOfPower.WATT
 
 
 class FusionSolarRealtimeDeviceDataReactivePowerSensor(FusionSolarRealtimeDeviceDataSensor):

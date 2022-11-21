@@ -2,7 +2,7 @@ import logging
 
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.components.sensor import STATE_CLASS_TOTAL_INCREASING, SensorEntity
-from homeassistant.const import DEVICE_CLASS_ENERGY, ENERGY_KILO_WATT_HOUR
+from homeassistant.const import DEVICE_CLASS_ENERGY, UnitOfEnergy
 
 from .const import ATTR_TOTAL_LIFETIME_ENERGY, ATTR_STATION_REAL_KPI_TOTAL_LIFETIME_ENERGY
 
@@ -84,7 +84,7 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
 
     @property
     def unit_of_measurement(self) -> str:
-        return ENERGY_KILO_WATT_HOUR
+        return UnitOfEnergy.KILO_WATT_HOUR
 
     @property
     def state_class(self) -> str:
