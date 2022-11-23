@@ -3,8 +3,8 @@
   "name": "FusionSolar",
   "version": "2.1.0",
   "integration_type": "hub",
-  "documentation": "https://github.com/tijsverkoyen/Home-Assistant-FusionSolar",
-  "issue_tracker": "https://github.com/tijsverkoyen/Home-Assistant-FusionSolar/issues",
+  "documentation": "https://github.com/tijsverkoyen/HomeAssistant-FusionSolar",
+  "issue_tracker": "https://github.com/tijsverkoyen/HomeAssistant-FusionSolar/issues",
   "dependencies": [],
   "codeowners": [
     "@tijsVerkoyen"
