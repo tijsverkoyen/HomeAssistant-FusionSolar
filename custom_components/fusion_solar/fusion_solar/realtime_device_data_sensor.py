@@ -170,6 +170,12 @@ class FusionSolarRealtimeDeviceDataEnergySensor(FusionSolarRealtimeDeviceDataSen
     @property
     def state_class(self) -> str:
         return STATE_CLASS_MEASUREMENT
+
+    @property
+    def last_reset(self) -> datetime | None:
+        return None
+
+
 class FusionSolarRealtimeDeviceDataEnergyTotalIncreasingSensor(FusionSolarRealtimeDeviceDataEnergySensor):
     @property
     def state_class(self) -> str:
