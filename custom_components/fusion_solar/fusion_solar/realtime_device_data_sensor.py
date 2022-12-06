@@ -172,7 +172,7 @@ class FusionSolarRealtimeDeviceDataEnergySensor(FusionSolarRealtimeDeviceDataSen
         return STATE_CLASS_MEASUREMENT
 
     @property
-    def last_reset(self) -> datetime | None:
+    def last_reset(self) -> None:
         return None
 
 
