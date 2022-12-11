@@ -1,5 +1,5 @@
 # Home Assistant FusionSolar Integration
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
+[![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/integration)
 
 Integrate FusionSolar into you Home Assistant.
 
