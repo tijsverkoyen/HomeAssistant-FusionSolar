@@ -152,9 +152,10 @@ class FusionSolarOpenApi:
                 self._token = None
                 return self._do_call(url, json)
 
-            if ATTR_SUCCESS in json_data and not json_data[ATTR_SUCCESS]:
+            if ATTR_FAIL_CODE in json_data and json_data[ATTR_FAIL_CODE] != 0:
+                _LOGGER.debug(f'Error calling {url}: {json_data[ATTR_DATA]}, failcode: {json_data[ATTR_FAIL_CODE]}')
                 raise FusionSolarOpenApiError(
-                    f'Retrieving the data failed with failCode: {json_data[ATTR_FAIL_CODE]}, message: {json_data[ATTR_MESSAGE]}'
+                    f'Retrieving the data for {url} failed with failCode: {json_data[ATTR_FAIL_CODE]}, message: {json_data[ATTR_DATA]}'
                 )
 
             return json_data
