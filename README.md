@@ -38,10 +38,12 @@ The devices that support realtime information (getDevRealKpi api call):
 * Battery
 * Power Sensor
 
-The exposed entities can be different per device. These are documented in the "Interface reference" that you can 
-request from Huawei. But the names are pretty self explanatory.
+The exposed entities can be different per device. These are documented in the "Interface reference" that you can
+request from Huawei. But the names are pretty self-explanatory.
 
-The realtime data is updated every minute.
+The realtime data is updated every minute per device group. As the API only allows 1 call per minute to each
+endpoint and the same endpoint is needed for each device group. So the more different devices you have the slower
+the update will be.
 
 ### Total yields
 The integration updates the total yields (current day, current month, current year, lifetime) every 10 minutes. 
