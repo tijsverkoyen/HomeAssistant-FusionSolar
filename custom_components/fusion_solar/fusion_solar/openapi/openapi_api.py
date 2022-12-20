@@ -152,6 +152,13 @@ class FusionSolarOpenApi:
                 self._token = None
                 return self._do_call(url, json)
 
+            if ATTR_FAIL_CODE in json_data and json_data[ATTR_FAIL_CODE] == 407:
+                _LOGGER.debug(
+                    f'Access frequency to high, while calling {url}: {json_data[ATTR_DATA]}, failcode: {json_data[ATTR_FAIL_CODE]}')
+                raise FusionSolarOpenApiAccessFrequencyTooHighError(
+                    f'Access frequency to high. failCode: {json_data[ATTR_FAIL_CODE]}, message: {json_data[ATTR_DATA]}'
+                )
+
             if ATTR_FAIL_CODE in json_data and json_data[ATTR_FAIL_CODE] != 0:
                 _LOGGER.debug(f'Error calling {url}: {json_data[ATTR_DATA]}, failcode: {json_data[ATTR_FAIL_CODE]}')
                 raise FusionSolarOpenApiError(
@@ -166,4 +173,8 @@ class FusionSolarOpenApi:
 
 
 class FusionSolarOpenApiError(Exception):
+    pass
+
+
+class FusionSolarOpenApiAccessFrequencyTooHighError(Exception):
     pass
