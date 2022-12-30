@@ -6,10 +6,9 @@ Integrate FusionSolar into you Home Assistant.
 The integration is able to work with Kiosk mode, or with an OpenAPI account, see below for more details.
 
 ## Installation
-At this point the integration is not part of the default HACS repositories, so
-you will need to add this repository as a custom repository in HACS.
+This integration is part of the default HACS repositories, so can add it directly from HACS or add this repository as a custom repository in HACS.
 
-When this is done, just install the repository.
+When the integration is installed in HACS, you need to add it in Home Assistant: Settings → Devices & Services → Add Integration → Search for FusionSolar.
 
 The configuration happens in the configuration flow when you add the integration.
 
