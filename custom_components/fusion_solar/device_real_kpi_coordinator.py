@@ -2,6 +2,8 @@ from datetime import timedelta
 import math
 import logging
 
+from homeassistant.core import callback
+
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .const import DOMAIN
@@ -21,7 +23,7 @@ class DeviceRealKpiDataCoordinator(DataUpdateCoordinator):
             hass,
             _LOGGER,
             name=self.name,
-            update_interval=timedelta(minutes=1),
+            update_interval=timedelta(seconds=63),
         )
 
         self.api = api
@@ -32,10 +34,12 @@ class DeviceRealKpiDataCoordinator(DataUpdateCoordinator):
 
     async def _async_update_data(self):
         if self.should_skip:
-            self.skip_counter += 1
             _LOGGER.warning(
-                f'{self.name} Skipped call due to rate limiting. Wait for {self.skip_for} seconds. {self.skip_counter}/{self.counter_limit}')
-            raise UpdateFailed(f'Skipped call due to rate limiting. Wait for {self.skip_for} seconds.')
+                f'{self.name} Skipped call due to rate limiting. Wait for {self.skip_for} seconds. ' +
+                f'{self.skip_counter}/{self.counter_limit}'
+            )
+            self.skip_counter += 1
+            return False
 
         data = {}
         device_ids_grouped_per_type_id = self.device_ids_grouped_per_type_id()
@@ -45,6 +49,7 @@ class DeviceRealKpiDataCoordinator(DataUpdateCoordinator):
         self.counter += 1
 
         try:
+            _LOGGER.debug(f'{self.name} Fetching data for {type_id_to_fetch}')
             response = await self.hass.async_add_executor_job(
                 self.api.get_dev_real_kpi,
                 device_ids_grouped_per_type_id[type_id_to_fetch],
@@ -54,13 +59,11 @@ class DeviceRealKpiDataCoordinator(DataUpdateCoordinator):
             self.skip_counter = 0
         except FusionSolarOpenApiAccessFrequencyTooHighError as e:
             self.skip = True
-            raise UpdateFailed(f'Error fetching data: {e}') from e
+            return False
 
         for response_data in response:
             key = f'{DOMAIN}-{response_data[ATTR_DEVICE_REAL_KPI_DEV_ID]}'
             data[key] = response_data[ATTR_DEVICE_REAL_KPI_DATA_ITEM_MAP]
-
-        _LOGGER.debug(f'async_update_device_real_kpi_data: {data}')
 
         return data
 
