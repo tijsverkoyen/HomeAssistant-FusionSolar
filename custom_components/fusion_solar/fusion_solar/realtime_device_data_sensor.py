@@ -5,10 +5,10 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.components.sensor import STATE_CLASS_MEASUREMENT, STATE_CLASS_TOTAL_INCREASING, STATE_CLASS_TOTAL, \
     SensorEntity
 from homeassistant.components.binary_sensor import DEVICE_CLASS_CONNECTIVITY, BinarySensorEntity
-from homeassistant.const import DEVICE_CLASS_VOLTAGE, ELECTRIC_POTENTIAL_VOLT, DEVICE_CLASS_CURRENT, \
-    ELECTRIC_CURRENT_AMPERE, DEVICE_CLASS_ENERGY, DEVICE_CLASS_TEMPERATURE, \
-    DEVICE_CLASS_POWER_FACTOR, PERCENTAGE, DEVICE_CLASS_FREQUENCY, FREQUENCY_HERTZ, DEVICE_CLASS_POWER, \
-    DEVICE_CLASS_TIMESTAMP, DEVICE_CLASS_BATTERY, UnitOfEnergy, UnitOfPower, UnitOfTemperature
+from homeassistant.const import DEVICE_CLASS_VOLTAGE, DEVICE_CLASS_CURRENT, DEVICE_CLASS_ENERGY, \
+    DEVICE_CLASS_TEMPERATURE, DEVICE_CLASS_POWER_FACTOR, PERCENTAGE, DEVICE_CLASS_FREQUENCY, DEVICE_CLASS_POWER, \
+    DEVICE_CLASS_TIMESTAMP, DEVICE_CLASS_BATTERY, UnitOfEnergy, UnitOfPower, UnitOfTemperature, UnitOfElectricCurrent, \
+    UnitOfElectricPotential, UnitOfFrequency
 
 from .openapi.device import FusionSolarDevice
 from ..const import DOMAIN
@@ -150,7 +150,7 @@ class FusionSolarRealtimeDeviceDataVoltageSensor(FusionSolarRealtimeDeviceDataSe
 
     @property
     def unit_of_measurement(self) -> str:
-        return ELECTRIC_POTENTIAL_VOLT
+        return UnitOfElectricPotential.VOLT
 
     @property
     def state_class(self) -> str:
@@ -164,7 +164,7 @@ class FusionSolarRealtimeDeviceDataCurrentSensor(FusionSolarRealtimeDeviceDataSe
 
     @property
     def unit_of_measurement(self) -> str:
-        return ELECTRIC_CURRENT_AMPERE
+        return UnitOfElectricCurrent.AMPERE
 
     @property
     def state_class(self) -> str:
@@ -235,7 +235,7 @@ class FusionSolarRealtimeDeviceDataFrequencySensor(FusionSolarRealtimeDeviceData
 
     @property
     def unit_of_measurement(self) -> str:
-        return FREQUENCY_HERTZ
+        return UnitOfFrequency.HERTZ
 
     @property
     def state_class(self) -> str:
