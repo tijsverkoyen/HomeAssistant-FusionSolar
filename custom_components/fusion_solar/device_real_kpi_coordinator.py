@@ -49,7 +49,7 @@ class DeviceRealKpiDataCoordinator(DataUpdateCoordinator):
         self.counter += 1
 
         try:
-            _LOGGER.debug(f'{self.name} Fetching data for {type_id_to_fetch}')
+            _LOGGER.debug(f'{self.name} Fetching data for type ID: {type_id_to_fetch}')
             response = await self.hass.async_add_executor_job(
                 self.api.get_dev_real_kpi,
                 device_ids_grouped_per_type_id[type_id_to_fetch],

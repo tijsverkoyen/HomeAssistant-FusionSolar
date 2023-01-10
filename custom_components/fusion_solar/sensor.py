@@ -588,8 +588,6 @@ async def _add_entities_for_stations_real_kpi_data(hass, async_add_entities, sta
         for response_data in response:
             data[f'{DOMAIN}-{response_data[ATTR_STATION_CODE]}'] = response_data[ATTR_STATION_REAL_KPI_DATA_ITEM_MAP]
 
-        _LOGGER.debug(f'async_update_station_real_kpi_data: {data}')
-
         return data
 
     coordinator = DataUpdateCoordinator(
