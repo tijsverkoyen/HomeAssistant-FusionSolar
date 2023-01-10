@@ -177,10 +177,8 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
 
         if device.type_id == PARAM_DEVICE_TYPE_ID_STRING_INVERTER:
             entities_to_create = [
-                {'class': 'FusionSolarRealtimeDeviceDataSensor', 'attribute': 'inverter_state',
+                {'class': 'FusionSolarRealtimeDeviceDataTranslatedSensor', 'attribute': 'inverter_state',
                  'name': 'Inverter status'},
-                {'class': 'FusionSolarRealtimeDeviceDataReadableInverterStateSensor', 'attribute': 'inverter_state',
-                 'name': 'Readable inverter status'},
                 {'class': 'FusionSolarRealtimeDeviceDataVoltageSensor', 'attribute': 'ab_u', 'name': 'Grid AB voltage'},
                 {'class': 'FusionSolarRealtimeDeviceDataVoltageSensor', 'attribute': 'bc_u', 'name': 'Grid BC voltage'},
                 {'class': 'FusionSolarRealtimeDeviceDataVoltageSensor', 'attribute': 'ca_u', 'name': 'Grid CA voltage'},
@@ -329,8 +327,6 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                 {'class': 'FusionSolarRealtimeDeviceDataEnergySensor', 'attribute': 'mppt_10_cap',
                  'name': 'MPPT 10 DC total yield'},
                 {'class': 'FusionSolarRealtimeDeviceDataStateBinarySensor', 'attribute': 'run_state', 'name': 'Status'},
-                {'class': 'FusionSolarRealtimeDeviceDataReadableRunStateSensor', 'attribute': 'run_state',
-                 'name': 'Readable status'},
             ]
 
         if device.type_id == PARAM_DEVICE_TYPE_ID_EMI:
@@ -351,8 +347,6 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                 {'class': 'FusionSolarRealtimeDeviceDataSensor', 'attribute': 'horiz_radiant_total',
                  'name': 'Horizontal irradiation'},
                 {'class': 'FusionSolarRealtimeDeviceDataStateBinarySensor', 'attribute': 'run_state', 'name': 'Status'},
-                {'class': 'FusionSolarRealtimeDeviceDataReadableRunStateSensor', 'attribute': 'run_state',
-                 'name': 'Readable status'},
             ]
 
         if device.type_id == PARAM_DEVICE_TYPE_ID_GRID_METER:
@@ -432,10 +426,8 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
 
         if device.type_id == PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER:
             entities_to_create = [
-                {'class': 'FusionSolarRealtimeDeviceDataSensor', 'attribute': 'inverter_state',
+                {'class': 'FusionSolarRealtimeDeviceDataTranslatedSensor', 'attribute': 'inverter_state',
                  'name': 'Inverter status'},
-                {'class': 'FusionSolarRealtimeDeviceDataReadableInverterStateSensor', 'attribute': 'inverter_state',
-                 'name': 'Readable inverter status'},
                 {'class': 'FusionSolarRealtimeDeviceDataVoltageSensor', 'attribute': 'ab_u', 'name': 'Grid AB voltage'},
                 {'class': 'FusionSolarRealtimeDeviceDataVoltageSensor', 'attribute': 'bc_u', 'name': 'Grid BC voltage'},
                 {'class': 'FusionSolarRealtimeDeviceDataVoltageSensor', 'attribute': 'ca_u', 'name': 'Grid CA voltage'},
@@ -508,16 +500,12 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                 {'class': 'FusionSolarRealtimeDeviceDataEnergySensor', 'attribute': 'mppt_4_cap',
                  'name': 'MPPT 4 DC total yield'},
                 {'class': 'FusionSolarRealtimeDeviceDataStateBinarySensor', 'attribute': 'run_state', 'name': 'Status'},
-                {'class': 'FusionSolarRealtimeDeviceDataReadableRunStateSensor', 'attribute': 'run_state',
-                 'name': 'Readable status'},
             ]
 
         if device.type_id == PARAM_DEVICE_TYPE_ID_BATTERY:
             entities_to_create = [
-                {'class': 'FusionSolarRealtimeDeviceDataSensor', 'attribute': 'battery_status',
+                {'class': 'FusionSolarRealtimeDeviceDataTranslatedSensor', 'attribute': 'battery_status',
                  'name': 'Battery running status'},
-                {'class': 'FusionSolarRealtimeDeviceDataReadableBatteryStatusSensor', 'attribute': 'battery_status',
-                 'name': 'Readable battery running status'},
                 {'class': 'FusionSolarRealtimeDeviceDataPowerInWattSensor', 'attribute': 'max_charge_power',
                  'name': 'Maximum charge power'},
                 {'class': 'FusionSolarRealtimeDeviceDataPowerInWattSensor', 'attribute': 'max_discharge_power',
@@ -530,24 +518,18 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                  'name': 'Battery state of charge (SOC)'},
                 {'class': 'FusionSolarRealtimeDeviceDataSensor', 'attribute': 'battery_soh',
                  'name': 'Battery state of health (SOH)'},
-                {'class': 'FusionSolarRealtimeDeviceDataSensor', 'attribute': 'ch_discharge_model',
+                {'class': 'FusionSolarRealtimeDeviceDataTranslatedSensor', 'attribute': 'ch_discharge_model',
                  'name': 'Charge/Discharge mode'},
-                {'class': 'FusionSolarRealtimeDeviceDataReadableChargeDischargeModeSensor',
-                 'attribute': 'ch_discharge_model', 'name': 'Readable charge/Discharge mode'},
                 {'class': 'FusionSolarRealtimeDeviceDataEnergySensor', 'attribute': 'charge_cap',
                  'name': 'Charging capacity'},
                 {'class': 'FusionSolarRealtimeDeviceDataEnergySensor', 'attribute': 'discharge_cap',
                  'name': 'Discharging capacity'},
                 {'class': 'FusionSolarRealtimeDeviceDataStateBinarySensor', 'attribute': 'run_state', 'name': 'Status'},
-                {'class': 'FusionSolarRealtimeDeviceDataReadableRunStateSensor', 'attribute': 'run_state',
-                 'name': 'Readable status'},
             ]
 
         if device.type_id == PARAM_DEVICE_TYPE_ID_POWER_SENSOR:
             entities_to_create = [
-                {'class': 'FusionSolarRealtimeDeviceDataSensor', 'attribute': 'meter_status', 'name': 'Meter status'},
-                {'class': 'FusionSolarRealtimeDeviceDataReadableMeterStatusSensor', 'attribute': 'meter_status',
-                 'name': 'Meter status'},
+                {'class': 'FusionSolarRealtimeDeviceDataTranslatedSensor', 'attribute': 'meter_status', 'name': 'Meter status'},
                 {'class': 'FusionSolarRealtimeDeviceDataVoltageSensor', 'attribute': 'meter_u', 'name': 'Grid voltage'},
                 {'class': 'FusionSolarRealtimeDeviceDataCurrentSensor', 'attribute': 'meter_i', 'name': 'Grid current'},
                 {'class': 'FusionSolarRealtimeDeviceDataPowerInWattSensor', 'attribute': 'active_power',
@@ -563,8 +545,6 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                 {'class': 'FusionSolarRealtimeDeviceDataEnergySensor', 'attribute': 'reverse_active_cap',
                  'name': 'Reverse active energy'},
                 {'class': 'FusionSolarRealtimeDeviceDataStateBinarySensor', 'attribute': 'run_state', 'name': 'Status'},
-                {'class': 'FusionSolarRealtimeDeviceDataReadableRunStateSensor', 'attribute': 'run_state',
-                 'name': 'Readable status'},
             ]
 
         entities = []

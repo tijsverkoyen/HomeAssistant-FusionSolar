@@ -75,72 +75,10 @@ class FusionSolarRealtimeDeviceDataSensor(CoordinatorEntity, SensorEntity):
         self.async_write_ha_state()
 
 
-class FusionSolarRealtimeDeviceDataReadableInverterStateSensor(FusionSolarRealtimeDeviceDataSensor):
+class FusionSolarRealtimeDeviceDataTranslatedSensor(FusionSolarRealtimeDeviceDataSensor):
     @property
-    def unique_id(self) -> str:
-        return f'{DOMAIN}-{self._device.device_id}-readable-{self._attribute}'
-
-    @property
-    def state(self) -> str:
-        state = super().state
-
-        if state is None:
-            return None
-
-        if state == 0:
-            return "Standby: initializing"
-        if state == 1:
-            return "Standby: insulation resistance detection"
-        if state == 2:
-            return "Standby: sunlight detection"
-        if state == 3:
-            return "Standby: power grid detection"
-        if state == 256:
-            return "Start"
-        if state == 512:
-            return "Grid connection"
-        if state == 513:
-            return "Grid connection: limited power"
-        if state == 514:
-            return "Grid connection: self-derating"
-        if state == 768:
-            return "Shutdown: unexpected shutdown"
-        if state == 769:
-            return "Shutdown: commanded shutdown"
-        if state == 770:
-            return "Shutdown: OVGR"
-        if state == 771:
-            return "Shutdown: communication disconnection"
-        if state == 772:
-            return "Shutdown: limited power"
-        if state == 773:
-            return "Shutdown: manual startup is required"
-        if state == 774:
-            return "Shutdown: DC switch disconnected"
-        if state == 1025:
-            return "Grid scheduling: cosψ-P curve"
-        if state == 1026:
-            return "Grid scheduling: Q-U curve"
-        if state == 1280:
-            return "Spot-check ready"
-        if state == 1281:
-            return "Spot-checking"
-        if state == 1536:
-            return "Inspecting"
-        if state == 1792:
-            return "AFCI self-check"
-        if state == 2048:
-            return "I-V scanning"
-        if state == 2304:
-            return "DC input detection"
-        if state == 40960:
-            return "Standby: no sunlight"
-        if state == 45056:
-            return "Communication disconnection (written by the SmartLogger)"
-        if state == 49152:
-            return "Loading (written by the SmartLogger)"
-
-        return state
+    def translation_key(self) -> str:
+        return self._attribute
 
 
 class FusionSolarRealtimeDeviceDataVoltageSensor(FusionSolarRealtimeDeviceDataSensor):
@@ -337,98 +275,6 @@ class FusionSolarRealtimeDeviceDataTimestampSensor(FusionSolarRealtimeDeviceData
             return None
 
         return datetime.datetime.fromtimestamp(state / 1000)
-
-
-class FusionSolarRealtimeDeviceDataReadableRunStateSensor(FusionSolarRealtimeDeviceDataSensor):
-    @property
-    def unique_id(self) -> str:
-        return f'{DOMAIN}-{self._device.device_id}-readable-{self._attribute}'
-
-    @property
-    def state(self) -> float:
-        state = super().state
-
-        if state is None:
-            return None
-
-        if state == 0:
-            return "disconnected"
-        if state == 1:
-            return "connected"
-
-        return None
-
-
-class FusionSolarRealtimeDeviceDataReadableChargeDischargeModeSensor(FusionSolarRealtimeDeviceDataSensor):
-    @property
-    def unique_id(self) -> str:
-        return f'{DOMAIN}-{self._device.device_id}-readable-{self._attribute}'
-
-    @property
-    def state(self) -> float:
-        state = super().state
-
-        if state is None:
-            return None
-
-        if state == 0:
-            return "none"
-        if state == 1:
-            return "forced charge/discharge"
-        if state == 2:
-            return "time-of-use price"
-        if state == 3:
-            return "fixed charge/discharge"
-        if state == 4:
-            return "automatic charge/discharge"
-
-        return None
-
-
-class FusionSolarRealtimeDeviceDataReadableBatteryStatusSensor(FusionSolarRealtimeDeviceDataSensor):
-    @property
-    def unique_id(self) -> str:
-        return f'{DOMAIN}-{self._device.device_id}-readable-{self._attribute}'
-
-    @property
-    def state(self) -> float:
-        state = super().state
-
-        if state is None:
-            return None
-
-        if state == 0:
-            return "offline"
-        if state == 1:
-            return "standby"
-        if state == 2:
-            return "running"
-        if state == 3:
-            return "faulty"
-        if state == 4:
-            return "hibernation"
-
-        return None
-
-
-class FusionSolarRealtimeDeviceDataReadableMeterStatusSensor(FusionSolarRealtimeDeviceDataSensor):
-    @property
-    def unique_id(self) -> str:
-        return f'{DOMAIN}-{self._device.device_id}-readable-{self._attribute}'
-
-    @property
-    def state(self) -> float:
-        state = super().state
-
-        if state is None:
-            return None
-
-        if state == 0:
-            return "offline"
-        if state == 1:
-            return "normal"
-
-        return None
 
 
 class FusionSolarRealtimeDeviceDataBinarySensor(CoordinatorEntity, BinarySensorEntity):
