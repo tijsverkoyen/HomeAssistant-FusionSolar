@@ -1,5 +1,6 @@
 import datetime
 
+from homeassistant.core import callback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.components.sensor import STATE_CLASS_MEASUREMENT, STATE_CLASS_TOTAL_INCREASING, STATE_CLASS_TOTAL, \
     SensorEntity
@@ -30,6 +31,7 @@ class FusionSolarRealtimeDeviceDataSensor(CoordinatorEntity, SensorEntity):
         self._attribute = attribute
         self._data_name = f'{DOMAIN}-{device.device_id}'
         self._device_info = device.device_info()
+        self._state = '__NOT_INITIALIZED__'
 
     @property
     def unique_id(self) -> str:
@@ -41,26 +43,36 @@ class FusionSolarRealtimeDeviceDataSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def state(self) -> float:
-        if self._data_name not in self.coordinator.data:
+        if self._state == '__NOT_INITIALIZED__':
+            # check if data is available
+            self._handle_coordinator_update()
+
+        if self._state is None or self._state == '__NOT_INITIALIZED__':
             return None
 
-        if self._attribute not in self.coordinator.data[self._data_name]:
-            return None
-
-        if self.coordinator.data[self._data_name][self._attribute] is None:
-            return None
-
-        if self.coordinator.data[self._data_name][self._attribute] is None:
-            return None
-
-        if self.coordinator.data[self._data_name][self._attribute] == 'N/A':
-            return None
-
-        return float(self.coordinator.data[self._data_name][self._attribute])
+        return float(self._state)
 
     @property
     def device_info(self) -> dict:
         return self._device_info
+
+    @callback
+    def _handle_coordinator_update(self):
+        if self.coordinator.data is False:
+            return
+        if self._data_name not in self.coordinator.data:
+            return
+        if self._attribute not in self.coordinator.data[self._data_name]:
+            return
+
+        if self.coordinator.data[self._data_name][self._attribute] is None:
+            self._state = None
+        elif self.coordinator.data[self._data_name][self._attribute] == 'N/A':
+            self._state = None
+        else:
+            self._state = float(self.coordinator.data[self._data_name][self._attribute])
+
+        self.async_write_ha_state()
 
 
 class FusionSolarRealtimeDeviceDataReadableInverterStateSensor(FusionSolarRealtimeDeviceDataSensor):
@@ -436,6 +448,7 @@ class FusionSolarRealtimeDeviceDataBinarySensor(CoordinatorEntity, BinarySensorE
         self._attribute = attribute
         self._data_name = f'{DOMAIN}-{device.device_id}'
         self._device_info = device.device_info()
+        self._state = '__NOT_INITIALIZED__'
 
     @property
     def unique_id(self) -> str:
@@ -449,6 +462,22 @@ class FusionSolarRealtimeDeviceDataBinarySensor(CoordinatorEntity, BinarySensorE
     def device_info(self) -> dict:
         return self._device_info
 
+    @callback
+    def _handle_coordinator_update(self):
+        if self.coordinator.data is False:
+            return
+        if self._data_name not in self.coordinator.data:
+            return
+        if self._attribute not in self.coordinator.data[self._data_name]:
+            return
+
+        if self.coordinator.data[self._data_name][self._attribute] is None:
+            self._state = None
+        else:
+            self._state = float(self.coordinator.data[self._data_name][self._attribute])
+
+        self.async_write_ha_state()
+
 
 class FusionSolarRealtimeDeviceDataStateBinarySensor(FusionSolarRealtimeDeviceDataBinarySensor):
     @property
@@ -457,17 +486,16 @@ class FusionSolarRealtimeDeviceDataStateBinarySensor(FusionSolarRealtimeDeviceDa
 
     @property
     def is_on(self) -> bool:
-        if self._data_name not in self.coordinator.data:
+        if self._state == '__NOT_INITIALIZED__':
+            # check if data is available
+            self._handle_coordinator_update()
+
+        if self._state is None or self._state == '__NOT_INITIALIZED__':
             return None
 
-        if self._attribute not in self.coordinator.data[self._data_name]:
-            return None
-
-        state = self.coordinator.data[self._data_name][self._attribute]
-
-        if state == 0:
+        if self._state == 0:
             return False
-        if state == 1:
+        if self._state == 1:
             return True
 
         return None

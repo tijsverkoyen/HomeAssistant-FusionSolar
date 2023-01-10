@@ -16,9 +16,7 @@ from .fusion_solar.const import ATTR_REALTIME_POWER, ATTR_TOTAL_CURRENT_DAY_ENER
     ATTR_STATION_REAL_KPI_TOTAL_CURRENT_MONTH_ENERGY, ATTR_STATION_REAL_KPI_TOTAL_LIFETIME_ENERGY, \
     ATTR_DATA_COLLECT_TIME, ATTR_KPI_YEAR_INVERTER_POWER, ATTR_DEVICE_REAL_KPI_ACTIVE_POWER, \
     PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_GRID_METER, PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER, \
-    PARAM_DEVICE_TYPE_ID_POWER_SENSOR, PARAM_DEVICE_TYPE_ID_EMI, PARAM_DEVICE_TYPE_ID_BATTERY, \
-    ATTR_DEVICE_REAL_KPI_DEV_ID, \
-    ATTR_DEVICE_REAL_KPI_DATA_ITEM_MAP
+    PARAM_DEVICE_TYPE_ID_POWER_SENSOR, PARAM_DEVICE_TYPE_ID_EMI, PARAM_DEVICE_TYPE_ID_BATTERY
 from .fusion_solar.kiosk.kiosk import FusionSolarKiosk
 from .fusion_solar.kiosk.kiosk_api import FusionSolarKioskApi
 from .fusion_solar.openapi.openapi_api import FusionSolarOpenApi
@@ -26,9 +24,12 @@ from .fusion_solar.energy_sensor import FusionSolarEnergySensorTotalCurrentDay, 
     FusionSolarEnergySensorTotalCurrentMonth, FusionSolarEnergySensorTotalCurrentYear, \
     FusionSolarEnergySensorTotalLifetime
 from .fusion_solar.power_entity import FusionSolarPowerEntityRealtime
+
 from .fusion_solar.device_attribute_entity import *
 from .fusion_solar.realtime_device_data_sensor import *
 from .fusion_solar.station_attribute_entity import *
+
+from .device_real_kpi_coordinator import DeviceRealKpiDataCoordinator
 
 from .const import CONF_KIOSKS, CONF_OPENAPI_CREDENTIALS, DOMAIN, ID_REALTIME_POWER, NAME_REALTIME_POWER, \
     ID_TOTAL_CURRENT_DAY_ENERGY, NAME_TOTAL_CURRENT_DAY_ENERGY, \
@@ -136,123 +137,8 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
     _LOGGER.debug(f'Adding entities for stations')
     station_codes = [station.code for station in stations]
 
-    async def async_update_station_real_kpi_data():
-        """Fetch data"""
-        data = {}
-        response = await hass.async_add_executor_job(api.get_station_real_kpi, station_codes)
-
-        for response_data in response:
-            data[f'{DOMAIN}-{response_data[ATTR_STATION_CODE]}'] = response_data[ATTR_STATION_REAL_KPI_DATA_ITEM_MAP]
-
-        _LOGGER.debug(f'async_update_station_real_kpi_data: {data}')
-
-        return data
-
-    coordinator = DataUpdateCoordinator(
-        hass,
-        _LOGGER,
-        name='FusionSolarOpenAPIStationRealKpi',
-        update_method=async_update_station_real_kpi_data,
-        update_interval=timedelta(seconds=600),
-    )
-
-    # Fetch initial data so we have data when entities subscribe
-    await coordinator.async_refresh()
-
-    for station in stations:
-        entities_to_create = [
-            {'class': 'FusionSolarStationAttributeEntity', 'name': 'Station Code', 'suffix': 'station_code',
-             'value': station.code},
-            {'class': 'FusionSolarStationAttributeEntity', 'name': 'Station Name', 'suffix': 'station_name',
-             'value': station.name},
-            {'class': 'FusionSolarStationAddressEntity', 'name': 'Station Address', 'suffix': 'station_address',
-             'value': station.address},
-            {'class': 'FusionSolarStationCapacityEntity', 'name': 'Capacity', 'suffix': 'capacity',
-             'value': station.capacity},
-            {'class': 'FusionSolarStationContactPersonEntity', 'name': 'Contact Person', 'suffix': 'contact_person',
-             'value': station.contact_person},
-            {'class': 'FusionSolarStationContactPersonPhoneEntity', 'name': 'Contact Phone', 'suffix': 'contact_phone',
-             'value': station.contact_phone},
-        ]
-
-        entities = []
-        for entity_to_create in entities_to_create:
-            class_name = globals()[entity_to_create['class']]
-            entities.append(
-                class_name(station, entity_to_create['name'], entity_to_create['suffix'], entity_to_create['value'], )
-            )
-        async_add_entities(entities)
-
-        async_add_entities([
-            FusionSolarEnergySensorTotalCurrentDay(
-                coordinator,
-                f'{DOMAIN}-{station.code}-{ID_TOTAL_CURRENT_DAY_ENERGY}',
-                f'{station.readable_name} - {NAME_TOTAL_CURRENT_DAY_ENERGY}',
-                ATTR_STATION_REAL_KPI_TOTAL_CURRENT_DAY_ENERGY,
-                f'{DOMAIN}-{station.code}',
-                station.device_info()
-            ),
-            FusionSolarEnergySensorTotalCurrentMonth(
-                coordinator,
-                f'{DOMAIN}-{station.code}-{ID_TOTAL_CURRENT_MONTH_ENERGY}',
-                f'{station.readable_name} - {NAME_TOTAL_CURRENT_MONTH_ENERGY}',
-                ATTR_STATION_REAL_KPI_TOTAL_CURRENT_MONTH_ENERGY,
-                f'{DOMAIN}-{station.code}',
-                station.device_info()
-            ),
-            FusionSolarEnergySensorTotalLifetime(
-                coordinator,
-                f'{DOMAIN}-{station.code}-{ID_TOTAL_LIFETIME_ENERGY}',
-                f'{station.readable_name} - {NAME_TOTAL_LIFETIME_ENERGY}',
-                ATTR_STATION_REAL_KPI_TOTAL_LIFETIME_ENERGY,
-                f'{DOMAIN}-{station.code}',
-                station.device_info()
-            )
-        ])
-
-    async def async_update_station_year_kpi_data():
-        data = {}
-        collect_times = {}
-        response = await hass.async_add_executor_job(api.get_kpi_station_year, station_codes)
-
-        for response_data in response:
-            key = f'{DOMAIN}-{response_data[ATTR_STATION_CODE]}'
-
-            if key in collect_times and key in data:
-                # Only update if the collectTime is newer
-                if response_data[ATTR_DATA_COLLECT_TIME] > collect_times[key]:
-                    data[key] = response_data[ATTR_STATION_REAL_KPI_DATA_ITEM_MAP]
-                    collect_times[key] = response_data[ATTR_DATA_COLLECT_TIME]
-            else:
-                data[key] = response_data[ATTR_STATION_REAL_KPI_DATA_ITEM_MAP]
-                collect_times[key] = response_data[ATTR_DATA_COLLECT_TIME]
-
-        _LOGGER.debug(f'async_update_station_year_kpi_data: {data}')
-
-        return data
-
-    coordinator = DataUpdateCoordinator(
-        hass,
-        _LOGGER,
-        name='FusionSolarOpenAPIStationYearKpi',
-        update_method=async_update_station_year_kpi_data,
-        update_interval=timedelta(seconds=600),
-    )
-
-    # Fetch initial data so we have data when entities subscribe
-    await coordinator.async_refresh()
-
-    for station in stations:
-        async_add_entities([
-            FusionSolarEnergySensorTotalCurrentYear(
-                coordinator,
-                f'{DOMAIN}-{station.code}-{ID_TOTAL_CURRENT_YEAR_ENERGY}',
-                f'{station.readable_name} - {NAME_TOTAL_CURRENT_YEAR_ENERGY}',
-                ATTR_KPI_YEAR_INVERTER_POWER,
-                f'{DOMAIN}-{station.code}',
-                station.device_info()
-            )
-        ])
+    await _add_entities_for_stations_real_kpi_data(hass, async_add_entities, stations, api)
+    await _add_entities_for_stations_year_kpi_data(hass, async_add_entities, stations, api)
 
     devices = await hass.async_add_executor_job(api.get_dev_list, station_codes)
     devices_grouped_per_type_id = {}
@@ -266,68 +152,14 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
             devices_grouped_per_type_id[device.type_id] = []
         devices_grouped_per_type_id[device.type_id].append(str(device.device_id))
 
-    async def async_update_device_real_kpi_data():
-        data = {}
-        for type_id in devices_grouped_per_type_id:
-            response = await hass.async_add_executor_job(
-                api.get_dev_real_kpi,
-                devices_grouped_per_type_id[type_id],
-                type_id
-            )
+    await _add_static_entities_for_devices(async_add_entities, devices)
 
-            for response_data in response:
-                key = f'{DOMAIN}-{response_data[ATTR_DEVICE_REAL_KPI_DEV_ID]}'
-                data[key] = response_data[ATTR_DEVICE_REAL_KPI_DATA_ITEM_MAP];
-
-            _LOGGER.debug(f'async_update_device_real_kpi_data: {data}')
-
-        return data
-
-    coordinator = DataUpdateCoordinator(
-        hass,
-        _LOGGER,
-        name='FusionSolarOpenAPIDeviceRealKpi',
-        update_method=async_update_device_real_kpi_data,
-        update_interval=timedelta(seconds=60),
-    )
+    coordinator = DeviceRealKpiDataCoordinator(hass, api, devices)
 
     # Fetch initial data so we have data when entities subscribe
     await coordinator.async_refresh()
 
     for device in devices:
-        entities_to_create = [
-            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Device ID', 'suffix': 'device_id',
-             'value': device.device_id},
-            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Device name', 'suffix': 'device_name',
-             'value': device.name},
-            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Station code', 'suffix': 'station_code',
-             'value': device.station_code},
-            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Serial number', 'suffix': 'esn_code',
-             'value': device.esn_code},
-            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Device type ID', 'suffix': 'device_type_id',
-             'value': device.type_id},
-            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Device type', 'suffix': 'device_type',
-             'value': device.device_type},
-            {'class': 'FusionSolarDeviceLatitudeEntity', 'name': 'Latitude', 'suffix': 'latitude',
-             'value': device.latitude},
-            {'class': 'FusionSolarDeviceLongitudeEntity', 'name': 'Longitude', 'suffix': 'longitude',
-             'value': device.longitude},
-        ]
-
-        if device.type_id in [PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER]:
-            entity_to_create.update({
-                'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Inverter model', 'suffix': 'inverter_type',
-                'value': device.inverter_type
-            })
-
-        entities = []
-        for entity_to_create in entities_to_create:
-            class_name = globals()[entity_to_create['class']]
-            entities.append(
-                class_name(device, entity_to_create['name'], entity_to_create['suffix'], entity_to_create['value'], )
-            )
-        async_add_entities(entities)
-
         if device.type_id in [PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_GRID_METER,
                               PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER, PARAM_DEVICE_TYPE_ID_POWER_SENSOR]:
             async_add_entities([
@@ -370,7 +202,8 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                  'name': 'Active power'},
                 {'class': 'FusionSolarRealtimeDeviceDataReactivePowerSensor', 'attribute': 'reactive_power',
                  'name': 'Reactive output power'},
-                {'class': 'FusionSolarRealtimeDeviceDataEnergyTotalIncreasingSensor', 'attribute': 'day_cap', 'name': 'Yield Today'},
+                {'class': 'FusionSolarRealtimeDeviceDataEnergyTotalIncreasingSensor', 'attribute': 'day_cap',
+                 'name': 'Yield Today'},
                 {'class': 'FusionSolarRealtimeDeviceDataPowerSensor', 'attribute': 'mppt_power',
                  'name': 'MPPT total input power'},
                 {'class': 'FusionSolarRealtimeDeviceDataVoltageSensor', 'attribute': 'pv1_u',
@@ -469,7 +302,8 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                  'name': 'PV23 input current'},
                 {'class': 'FusionSolarRealtimeDeviceDataCurrentSensor', 'attribute': 'pv24_i',
                  'name': 'PV24 input current'},
-                {'class': 'FusionSolarRealtimeDeviceDataEnergyTotalIncreasingSensor', 'attribute': 'total_cap', 'name': 'Total yield'},
+                {'class': 'FusionSolarRealtimeDeviceDataEnergyTotalIncreasingSensor', 'attribute': 'total_cap',
+                 'name': 'Total yield'},
                 {'class': 'FusionSolarRealtimeDeviceDataTimestampSensor', 'attribute': 'open_time',
                  'name': 'Inverter startup time'},
                 {'class': 'FusionSolarRealtimeDeviceDataTimestampSensor', 'attribute': 'close_time',
@@ -623,7 +457,8 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                  'name': 'Active power'},
                 {'class': 'FusionSolarRealtimeDeviceDataReactivePowerSensor', 'attribute': 'reactive_power',
                  'name': 'Reactive output power'},
-                {'class': 'FusionSolarRealtimeDeviceDataEnergyTotalIncreasingSensor', 'attribute': 'day_cap', 'name': 'Yield Today'},
+                {'class': 'FusionSolarRealtimeDeviceDataEnergyTotalIncreasingSensor', 'attribute': 'day_cap',
+                 'name': 'Yield Today'},
                 {'class': 'FusionSolarRealtimeDeviceDataPowerSensor', 'attribute': 'mppt_power',
                  'name': 'MPPT total input power'},
                 {'class': 'FusionSolarRealtimeDeviceDataVoltageSensor', 'attribute': 'pv1_u',
@@ -658,7 +493,8 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                  'name': 'PV7 input current'},
                 {'class': 'FusionSolarRealtimeDeviceDataCurrentSensor', 'attribute': 'pv8_i',
                  'name': 'PV8 input current'},
-                {'class': 'FusionSolarRealtimeDeviceDataEnergyTotalIncreasingSensor', 'attribute': 'total_cap', 'name': 'Total yield'},
+                {'class': 'FusionSolarRealtimeDeviceDataEnergyTotalIncreasingSensor', 'attribute': 'total_cap',
+                 'name': 'Total yield'},
                 {'class': 'FusionSolarRealtimeDeviceDataTimestampSensor', 'attribute': 'open_time',
                  'name': 'Inverter startup time'},
                 {'class': 'FusionSolarRealtimeDeviceDataTimestampSensor', 'attribute': 'close_time',
@@ -736,6 +572,167 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
             class_name = globals()[entity_to_create['class']]
             entities.append(
                 class_name(coordinator, device, entity_to_create['name'], entity_to_create['attribute'])
+            )
+
+        async_add_entities(entities)
+
+
+async def _add_entities_for_stations_real_kpi_data(hass, async_add_entities, stations, api: FusionSolarOpenApi):
+    station_codes = [station.code for station in stations]
+
+    async def async_update_station_real_kpi_data():
+        """Fetch data"""
+        data = {}
+        response = await hass.async_add_executor_job(api.get_station_real_kpi, station_codes)
+
+        for response_data in response:
+            data[f'{DOMAIN}-{response_data[ATTR_STATION_CODE]}'] = response_data[ATTR_STATION_REAL_KPI_DATA_ITEM_MAP]
+
+        return data
+
+    coordinator = DataUpdateCoordinator(
+        hass,
+        _LOGGER,
+        name='FusionSolarOpenAPIStationRealKpi',
+        update_method=async_update_station_real_kpi_data,
+        update_interval=timedelta(seconds=600),
+    )
+
+    # Fetch initial data so we have data when entities subscribe
+    await coordinator.async_refresh()
+
+    for station in stations:
+        entities_to_create = [
+            {'class': 'FusionSolarStationAttributeEntity', 'name': 'Station Code', 'suffix': 'station_code',
+             'value': station.code},
+            {'class': 'FusionSolarStationAttributeEntity', 'name': 'Station Name', 'suffix': 'station_name',
+             'value': station.name},
+            {'class': 'FusionSolarStationAddressEntity', 'name': 'Station Address', 'suffix': 'station_address',
+             'value': station.address},
+            {'class': 'FusionSolarStationCapacityEntity', 'name': 'Capacity', 'suffix': 'capacity',
+             'value': station.capacity},
+            {'class': 'FusionSolarStationContactPersonEntity', 'name': 'Contact Person', 'suffix': 'contact_person',
+             'value': station.contact_person},
+            {'class': 'FusionSolarStationContactPersonPhoneEntity', 'name': 'Contact Phone', 'suffix': 'contact_phone',
+             'value': station.contact_phone},
+        ]
+
+        entities = []
+        for entity_to_create in entities_to_create:
+            class_name = globals()[entity_to_create['class']]
+            entities.append(
+                class_name(station, entity_to_create['name'], entity_to_create['suffix'], entity_to_create['value'], )
+            )
+        async_add_entities(entities)
+
+        async_add_entities([
+            FusionSolarEnergySensorTotalCurrentDay(
+                coordinator,
+                f'{DOMAIN}-{station.code}-{ID_TOTAL_CURRENT_DAY_ENERGY}',
+                f'{station.readable_name} - {NAME_TOTAL_CURRENT_DAY_ENERGY}',
+                ATTR_STATION_REAL_KPI_TOTAL_CURRENT_DAY_ENERGY,
+                f'{DOMAIN}-{station.code}',
+                station.device_info()
+            ),
+            FusionSolarEnergySensorTotalCurrentMonth(
+                coordinator,
+                f'{DOMAIN}-{station.code}-{ID_TOTAL_CURRENT_MONTH_ENERGY}',
+                f'{station.readable_name} - {NAME_TOTAL_CURRENT_MONTH_ENERGY}',
+                ATTR_STATION_REAL_KPI_TOTAL_CURRENT_MONTH_ENERGY,
+                f'{DOMAIN}-{station.code}',
+                station.device_info()
+            ),
+            FusionSolarEnergySensorTotalLifetime(
+                coordinator,
+                f'{DOMAIN}-{station.code}-{ID_TOTAL_LIFETIME_ENERGY}',
+                f'{station.readable_name} - {NAME_TOTAL_LIFETIME_ENERGY}',
+                ATTR_STATION_REAL_KPI_TOTAL_LIFETIME_ENERGY,
+                f'{DOMAIN}-{station.code}',
+                station.device_info()
+            )
+        ])
+
+
+async def _add_entities_for_stations_year_kpi_data(hass, async_add_entities, stations, api: FusionSolarOpenApi):
+    station_codes = [station.code for station in stations]
+
+    async def async_update_station_year_kpi_data():
+        data = {}
+        collect_times = {}
+        response = await hass.async_add_executor_job(api.get_kpi_station_year, station_codes)
+
+        for response_data in response:
+            key = f'{DOMAIN}-{response_data[ATTR_STATION_CODE]}'
+
+            if key in collect_times and key in data:
+                # Only update if the collectTime is newer
+                if response_data[ATTR_DATA_COLLECT_TIME] > collect_times[key]:
+                    data[key] = response_data[ATTR_STATION_REAL_KPI_DATA_ITEM_MAP]
+                    collect_times[key] = response_data[ATTR_DATA_COLLECT_TIME]
+            else:
+                data[key] = response_data[ATTR_STATION_REAL_KPI_DATA_ITEM_MAP]
+                collect_times[key] = response_data[ATTR_DATA_COLLECT_TIME]
+
+        _LOGGER.debug(f'async_update_station_year_kpi_data: {data}')
+
+        return data
+
+    coordinator = DataUpdateCoordinator(
+        hass,
+        _LOGGER,
+        name='FusionSolarOpenAPIStationYearKpi',
+        update_method=async_update_station_year_kpi_data,
+        update_interval=timedelta(seconds=600),
+    )
+
+    # Fetch initial data so we have data when entities subscribe
+    await coordinator.async_refresh()
+
+    for station in stations:
+        async_add_entities([
+            FusionSolarEnergySensorTotalCurrentYear(
+                coordinator,
+                f'{DOMAIN}-{station.code}-{ID_TOTAL_CURRENT_YEAR_ENERGY}',
+                f'{station.readable_name} - {NAME_TOTAL_CURRENT_YEAR_ENERGY}',
+                ATTR_KPI_YEAR_INVERTER_POWER,
+                f'{DOMAIN}-{station.code}',
+                station.device_info()
+            )
+        ])
+
+
+async def _add_static_entities_for_devices(async_add_entities, devices):
+    for device in devices:
+        entities_to_create = [
+            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Device ID', 'suffix': 'device_id',
+             'value': device.device_id},
+            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Device name', 'suffix': 'device_name',
+             'value': device.name},
+            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Station code', 'suffix': 'station_code',
+             'value': device.station_code},
+            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Serial number', 'suffix': 'esn_code',
+             'value': device.esn_code},
+            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Device type ID', 'suffix': 'device_type_id',
+             'value': device.type_id},
+            {'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Device type', 'suffix': 'device_type',
+             'value': device.device_type},
+            {'class': 'FusionSolarDeviceLatitudeEntity', 'name': 'Latitude', 'suffix': 'latitude',
+             'value': device.latitude},
+            {'class': 'FusionSolarDeviceLongitudeEntity', 'name': 'Longitude', 'suffix': 'longitude',
+             'value': device.longitude},
+        ]
+
+        if device.type_id in [PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER]:
+            entities_to_create.append({
+                'class': 'FusionSolarDeviceAttributeEntity', 'name': 'Inverter model', 'suffix': 'inverter_type',
+                'value': device.inverter_type
+            })
+
+        entities = []
+        for entity_to_create in entities_to_create:
+            class_name = globals()[entity_to_create['class']]
+            entities.append(
+                class_name(device, entity_to_create['name'], entity_to_create['suffix'], entity_to_create['value'], )
             )
         async_add_entities(entities)
 
