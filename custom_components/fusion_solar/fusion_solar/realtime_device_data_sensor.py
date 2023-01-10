@@ -8,7 +8,7 @@ from homeassistant.components.binary_sensor import DEVICE_CLASS_CONNECTIVITY, Bi
 from homeassistant.const import DEVICE_CLASS_VOLTAGE, DEVICE_CLASS_CURRENT, DEVICE_CLASS_ENERGY, \
     DEVICE_CLASS_TEMPERATURE, DEVICE_CLASS_POWER_FACTOR, PERCENTAGE, DEVICE_CLASS_FREQUENCY, DEVICE_CLASS_POWER, \
     DEVICE_CLASS_TIMESTAMP, DEVICE_CLASS_BATTERY, UnitOfEnergy, UnitOfPower, UnitOfTemperature, UnitOfElectricCurrent, \
-    UnitOfElectricPotential
+    UnitOfElectricPotential, UnitOfFrequency
 
 from .openapi.device import FusionSolarDevice
 from ..const import DOMAIN
