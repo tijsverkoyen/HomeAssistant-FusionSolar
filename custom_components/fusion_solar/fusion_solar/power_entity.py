@@ -72,6 +72,8 @@ class FusionSolarPowerEntity(CoordinatorEntity, Entity):
         else:
             self._state = float(self.coordinator.data[self._data_name][self._attribute])
 
+        self.async_write_ha_state()
+
 
 class FusionSolarPowerEntityRealtime(FusionSolarPowerEntity):
     pass
