@@ -77,6 +77,17 @@ class FusionSolarRealtimeDeviceDataSensor(CoordinatorEntity, SensorEntity):
 
 class FusionSolarRealtimeDeviceDataTranslatedSensor(FusionSolarRealtimeDeviceDataSensor):
     @property
+    def state(self) -> int:
+        if self._state == '__NOT_INITIALIZED__':
+            # check if data is available
+            self._handle_coordinator_update()
+
+        if self._state is None or self._state == '__NOT_INITIALIZED__':
+            return None
+
+        return int(self._state)
+
+    @property
     def translation_key(self) -> str:
         return self._attribute
 

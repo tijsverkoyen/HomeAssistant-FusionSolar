@@ -34,56 +34,56 @@
     "sensor": {
       "battery_status": {
         "state": {
-          "0.0": "offline",
-          "1.0": "standby",
-          "2.0": "running",
-          "3.0": "faulty",
-          "4.0": "hibernation"
+          "0": "offline",
+          "1": "standby",
+          "2": "running",
+          "3": "faulty",
+          "4": "hibernation"
         }
       },
       "ch_discharge_model": {
         "state": {
-          "0.0": "none",
-          "1.0": "forced charge/discharge",
-          "2.0": "time-of-use price",
-          "3.0": "fixed charge/discharge",
-          "4.0": "automatic charge/discharge"
+          "0": "none",
+          "1": "forced charge/discharge",
+          "2": "time-of-use price",
+          "3": "fixed charge/discharge",
+          "4": "automatic charge/discharge"
         }
       },
       "meter_status": {
         "state": {
-          "0.0": "offline",
-          "1.0": "normal"
+          "0": "offline",
+          "1": "normal"
         }
       },
       "inverter_state": {
         "state": {
-          "0.0": "Standby: initializing",
-          "1.0": "Standby: insulation resistance detection",
-          "2.0": "Standby: sunlight detection",
-          "3.0": "Standby: power grid detection",
-          "256.0": "Start",
-          "512.0": "Grid connection",
-          "513.0": "Grid connection: limited power",
-          "514.0": "Grid connection: self-derating",
-          "768.0": "Shutdown: unexpected shutdown",
-          "769.0": "Shutdown: commanded shutdown",
-          "770.0": "Shutdown: OVGR",
-          "771.0": "Shutdown: communication disconnection",
-          "772.0": "Shutdown: limited power",
-          "773.0": "Shutdown: manual startup is required",
-          "774.0": "Shutdown: DC switch disconnected",
-          "1025.0": "Grid scheduling: cosψ-P curve",
-          "1026.0": "Grid scheduling: Q-U curve",
-          "1280.0": "Spot-check ready",
-          "1281.0": "Spot-checking",
-          "1536.0": "Inspecting",
-          "1792.0": "AFCI self-check",
-          "2048.0": "I-V scanning",
-          "2304.0": "DC input detection",
-          "40960.0": "Standby: no sunlight",
-          "45056.0": "Communication disconnection (written by the SmartLogger)",
-          "49152.0": "Loading (written by the SmartLogger)"
+          "0": "Standby: initializing",
+          "1": "Standby: insulation resistance detection",
+          "2": "Standby: sunlight detection",
+          "3": "Standby: power grid detection",
+          "256": "Start",
+          "512": "Grid connection",
+          "513": "Grid connection: limited power",
+          "514": "Grid connection: self-derating",
+          "768": "Shutdown: unexpected shutdown",
+          "769": "Shutdown: commanded shutdown",
+          "770": "Shutdown: OVGR",
+          "771": "Shutdown: communication disconnection",
+          "772": "Shutdown: limited power",
+          "773": "Shutdown: manual startup is required",
+          "774": "Shutdown: DC switch disconnected",
+          "1025": "Grid scheduling: cosψ-P curve",
+          "1026": "Grid scheduling: Q-U curve",
+          "1280": "Spot-check ready",
+          "1281": "Spot-checking",
+          "1536": "Inspecting",
+          "1792": "AFCI self-check",
+          "2048": "I-V scanning",
+          "2304": "DC input detection",
+          "40960": "Standby: no sunlight",
+          "45056": "Communication disconnection (written by the SmartLogger)",
+          "49152": "Loading (written by the SmartLogger)"
         }
       }
     }
