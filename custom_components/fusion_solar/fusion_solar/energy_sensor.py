@@ -4,7 +4,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.components.sensor import STATE_CLASS_TOTAL_INCREASING, SensorEntity
 from homeassistant.const import DEVICE_CLASS_ENERGY, UnitOfEnergy
 
-from .const import ATTR_TOTAL_LIFETIME_ENERGY, ATTR_STATION_REAL_KPI_TOTAL_LIFETIME_ENERGY
+from .const import ATTR_TOTAL_LIFETIME_ENERGY, ATTR_REALTIME_POWER
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -60,6 +60,12 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
             if entity is not None:
                 current_value = entity.state
                 new_value = self.coordinator.data[self._data_name][self._attribute]
+                realtime_power = self.coordinator.data[self._data_name][ATTR_REALTIME_POWER]
+
+                if realtime_power == '0.00':
+                    _LOGGER.warning(
+                        f'{self.entity_id}: not producing any power, so not updating to prevent positive glitched.')
+                    return float(current_value)
 
                 if not isfloat(new_value):
                     _LOGGER.warning(f'{self.entity_id}: new value ({new_value}) is not a float, so not updating.')
