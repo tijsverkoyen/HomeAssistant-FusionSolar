@@ -61,10 +61,6 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
                 current_value = entity.state
                 new_value = self.coordinator.data[self._data_name][self._attribute]
 
-                if new_value == '0.00':
-                    _LOGGER.debug(f'{self.entity_id}: new value ({new_value}) is 0, so not updating.')
-                    return float(current_value)
-
                 if not isfloat(new_value):
                     _LOGGER.warning(f'{self.entity_id}: new value ({new_value}) is not a float, so not updating.')
                     return float(current_value)
