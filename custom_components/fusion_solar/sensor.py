@@ -23,7 +23,7 @@ from .fusion_solar.openapi.openapi_api import FusionSolarOpenApi
 from .fusion_solar.energy_sensor import FusionSolarEnergySensorTotalCurrentDay, \
     FusionSolarEnergySensorTotalCurrentMonth, FusionSolarEnergySensorTotalCurrentYear, \
     FusionSolarEnergySensorTotalLifetime
-from .fusion_solar.power_entity import FusionSolarPowerEntityRealtime
+from .fusion_solar.power_entity import FusionSolarPowerEntityRealtime, FusionSolarPowerEntityRealtimeInWatt
 
 from .fusion_solar.device_attribute_entity import *
 from .fusion_solar.realtime_device_data_sensor import *
@@ -161,9 +161,21 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
 
     for device in devices:
         if device.type_id in [PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_GRID_METER,
-                              PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER, PARAM_DEVICE_TYPE_ID_POWER_SENSOR]:
+                              PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER]:
             async_add_entities([
                 FusionSolarPowerEntityRealtime(
+                    coordinator,
+                    f'{DOMAIN}-{device.device_id}-{ID_REALTIME_POWER}',
+                    f'{device.readable_name} - {NAME_REALTIME_POWER}',
+                    ATTR_DEVICE_REAL_KPI_ACTIVE_POWER,
+                    f'{DOMAIN}-{device.device_id}',
+                    device.device_info()
+                ),
+            ])
+
+        if device.type_id in [PARAM_DEVICE_TYPE_ID_POWER_SENSOR]:
+            async_add_entities([
+                FusionSolarPowerEntityRealtimeInWatt(
                     coordinator,
                     f'{DOMAIN}-{device.device_id}-{ID_REALTIME_POWER}',
                     f'{device.readable_name} - {NAME_REALTIME_POWER}',
@@ -529,7 +541,8 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
 
         if device.type_id == PARAM_DEVICE_TYPE_ID_POWER_SENSOR:
             entities_to_create = [
-                {'class': 'FusionSolarRealtimeDeviceDataTranslatedSensor', 'attribute': 'meter_status', 'name': 'Meter status'},
+                {'class': 'FusionSolarRealtimeDeviceDataTranslatedSensor', 'attribute': 'meter_status',
+                 'name': 'Meter status'},
                 {'class': 'FusionSolarRealtimeDeviceDataVoltageSensor', 'attribute': 'meter_u', 'name': 'Grid voltage'},
                 {'class': 'FusionSolarRealtimeDeviceDataCurrentSensor', 'attribute': 'meter_i', 'name': 'Grid current'},
                 {'class': 'FusionSolarRealtimeDeviceDataPowerInWattSensor', 'attribute': 'active_power',

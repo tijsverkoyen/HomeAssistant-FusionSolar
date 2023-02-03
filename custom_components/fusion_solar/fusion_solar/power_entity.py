@@ -77,3 +77,9 @@ class FusionSolarPowerEntity(CoordinatorEntity, Entity):
 
 class FusionSolarPowerEntityRealtime(FusionSolarPowerEntity):
     pass
+
+
+class FusionSolarPowerEntityRealtimeInWatt(FusionSolarPowerEntity):
+    @property
+    def unit_of_measurement(self):
+        return UnitOfPower.WATT
