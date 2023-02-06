@@ -69,3 +69,11 @@ The integration updates the total yields (current day, current month, current ye
 6. Copy the url from the browser
 
 If you don't see the kiosk button, you are probably logged in with an installer account.
+
+### Energy Dashboard: Active Power not showing in the list of available entities
+
+Active Power is the current power production in Watt (W) or kilo Watt (kW). The Energy dashboard expects a value in *
+*kWh**.
+Your plant, inverter(s), batteries, ... expose a lot of entities, you can see them all: Settings → Devices &
+Integrations → Click on the "x devices" on the Fusion Solar Integration. Click on the device you want to see the
+entities for.
