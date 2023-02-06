@@ -77,3 +77,10 @@ Active Power is the current power production in Watt (W) or kilo Watt (kW). The 
 Your plant, inverter(s), batteries, ... expose a lot of entities, you can see them all: Settings → Devices &
 Integrations → Click on the "x devices" on the Fusion Solar Integration. Click on the device you want to see the
 entities for.
+
+### What does all entities mean?
+
+As I don't own an installation with all possible devices this integration is mostly based on
+the [Northbound Interface Reference](/docs/smartpvms-v500r007c00-northbound-interface-reference.pdf).
+
+The entity names are based on the names in the interface reference.
