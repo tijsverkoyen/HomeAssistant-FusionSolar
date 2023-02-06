@@ -34,7 +34,7 @@ class DeviceRealKpiDataCoordinator(DataUpdateCoordinator):
 
     async def _async_update_data(self):
         if self.should_skip:
-            _LOGGER.warning(
+            _LOGGER.info(
                 f'{self.name} Skipped call due to rate limiting. Wait for {self.skip_for} seconds. ' +
                 f'{self.skip_counter}/{self.counter_limit}'
             )
