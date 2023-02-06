@@ -533,9 +533,9 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                 {'class': 'FusionSolarRealtimeDeviceDataTranslatedSensor', 'attribute': 'ch_discharge_model',
                  'name': 'Charge/Discharge mode'},
                 {'class': 'FusionSolarRealtimeDeviceDataEnergyTotalIncreasingSensor', 'attribute': 'charge_cap',
-                 'name': 'Energy charged today'},
+                 'name': 'Charging capacity'},
                 {'class': 'FusionSolarRealtimeDeviceDataEnergyTotalIncreasingSensor', 'attribute': 'discharge_cap',
-                 'name': 'Energy discharged today'},
+                 'name': 'Discharging capacity'},
                 {'class': 'FusionSolarRealtimeDeviceDataStateBinarySensor', 'attribute': 'run_state', 'name': 'Status'},
             ]
 
