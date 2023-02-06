@@ -59,7 +59,6 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
 
             if entity is not None:
                 current_value = entity.state
-                new_value = self.coordinator.data[self._data_name][self._attribute]
                 realtime_power = self.coordinator.data[self._data_name][ATTR_REALTIME_POWER]
 
                 if realtime_power == '0.00':
