@@ -66,6 +66,11 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
                         f'{self.entity_id}: not producing any power, so not updating to prevent positive glitched.')
                     return float(current_value)
 
+                if current_value == 'unavailable':
+                    _LOGGER.info(
+                        f'{self.entity_id}: not available.')
+                    return
+
         if self._data_name not in self.coordinator.data:
             return None
 
