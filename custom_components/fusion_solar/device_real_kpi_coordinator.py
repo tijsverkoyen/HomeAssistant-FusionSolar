@@ -3,6 +3,7 @@ import math
 import logging
 
 from homeassistant.core import callback
+from homeassistant.helpers import device_registry as dr
 
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
@@ -68,6 +69,7 @@ class DeviceRealKpiDataCoordinator(DataUpdateCoordinator):
         return data
 
     def device_ids_grouped_per_type_id(self):
+        device_registry = dr.async_get(self.hass)
         device_ids_grouped_per_type_id = {}
 
         for device in self.devices:
@@ -75,6 +77,11 @@ class DeviceRealKpiDataCoordinator(DataUpdateCoordinator):
             if device.type_id not in [PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_EMI,
                                       PARAM_DEVICE_TYPE_ID_GRID_METER, PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER,
                                       PARAM_DEVICE_TYPE_ID_BATTERY, PARAM_DEVICE_TYPE_ID_POWER_SENSOR]:
+                continue
+
+            device_from_registry = device_registry.async_get_device(identifiers={(DOMAIN, device.device_id)})
+            if device_from_registry is not None and device_from_registry.disabled:
+                _LOGGER.debug(f'Device {device.name} ({device.device_id}) is disabled by the user.')
                 continue
 
             if device.type_id not in device_ids_grouped_per_type_id:

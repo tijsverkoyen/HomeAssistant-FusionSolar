@@ -51,7 +51,7 @@ request from Huawei. But the names are pretty self-explanatory.
 
 The realtime data is updated every minute per device group. As the API only allows 1 call per minute to each
 endpoint and the same endpoint is needed for each device group. So the more different devices you have the slower
-the update will be.
+the update will be. See [Disabling devices](#disabling-devices)
 
 ### Total yields
 
@@ -78,9 +78,18 @@ Your plant, inverter(s), batteries, ... expose a lot of entities, you can see th
 Integrations → Click on the "x devices" on the Fusion Solar Integration. Click on the device you want to see the
 entities for.
 
-### What does all entities mean?
+### What do all entities mean?
 
 As I don't own an installation with all possible devices this integration is mostly based on
 the [Northbound Interface Reference](/docs/smartpvms-v500r007c00-northbound-interface-reference.pdf).
 
 The entity names are based on the names in the interface reference.
+
+### Disabling devices
+
+If you have a lot of devices wherefor you don't want to use the data. You can disable them through the interface:
+Settings → Devices & Integrations → Click on the "x devices" on the Fusion Solar Integration. Click on the device you
+want to disable. Click on the pencil icon in the upper right corner. Switch off "Enable device".
+
+This can speed up the updating of the other devices. Keep in mind that a call is made per device type. So if you have
+multiple devices from the same time you need to disable them all to have effect.
