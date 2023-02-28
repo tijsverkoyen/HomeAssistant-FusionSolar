@@ -59,17 +59,16 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
 
             if entity is not None:
                 current_value = entity.state
-                realtime_power = self.coordinator.data[self._data_name][ATTR_REALTIME_POWER]
-
-                if realtime_power == '0.00':
-                    _LOGGER.info(
-                        f'{self.entity_id}: not producing any power, so not updating to prevent positive glitched.')
-                    return float(current_value)
-
                 if current_value == 'unavailable':
                     _LOGGER.info(
                         f'{self.entity_id}: not available.')
                     return
+
+                realtime_power = self.coordinator.data[self._data_name][ATTR_REALTIME_POWER]
+                if realtime_power == '0.00':
+                    _LOGGER.info(
+                        f'{self.entity_id}: not producing any power, so not updating to prevent positive glitched.')
+                    return float(current_value)
 
         if self._data_name not in self.coordinator.data:
             return None
