@@ -1,13 +1,15 @@
 """API client for FusionSolar OpenAPI."""
 import logging
+import time
 
 from requests import post
 
-from ..const import ATTR_SUCCESS, ATTR_DATA, ATTR_FAIL_CODE, ATTR_MESSAGE, ATTR_STATION_CODE, ATTR_STATION_NAME, \
-    ATTR_PARAMS, ATTR_PARAMS_CURRENT_TIME, ATTR_DEVICE_ID, ATTR_DEVICE_NAME, ATTR_DEVICE_STATION_CODE, \
-    ATTR_DEVICE_ESN_CODE, ATTR_DEVICE_TYPE_ID, ATTR_DEVICE_INVERTER_TYPE, ATTR_DEVICE_SOFTWARE_VERSION, \
-    ATTR_DEVICE_LATITUDE, ATTR_DEVICE_LONGITUDE, ATTR_STATION_ADDRESS, ATTR_CAPACITY, ATTR_BUILD_STATE, \
-    ATTR_COMBINE_TYPE, ATTR_AID_TYPE, ATTR_STATION_CONTACT_PERSON, ATTR_CONTACT_PERSON_PHONE
+from ..const import ATTR_DATA, ATTR_LIST, ATTR_FAIL_CODE, ATTR_STATION_CODE, ATTR_STATION_NAME, ATTR_PARAMS, \
+    ATTR_PARAMS_CURRENT_TIME, ATTR_DEVICE_ID, ATTR_DEVICE_NAME, ATTR_DEVICE_STATION_CODE, ATTR_DEVICE_ESN_CODE, \
+    ATTR_DEVICE_TYPE_ID, ATTR_DEVICE_INVERTER_TYPE, ATTR_DEVICE_SOFTWARE_VERSION, ATTR_DEVICE_LATITUDE, \
+    ATTR_DEVICE_LONGITUDE, ATTR_STATION_ADDRESS, ATTR_CAPACITY, ATTR_BUILD_STATE, ATTR_COMBINE_TYPE, ATTR_AID_TYPE, \
+    ATTR_STATION_CONTACT_PERSON, ATTR_CONTACT_PERSON_PHONE, ATTR_PLANT_CODE, ATTR_PLANT_NAME, ATTR_PLANT_ADDRESS, \
+    ATTR_STATION_LINKMAN
 
 from .station import FusionSolarStation
 from .device import FusionSolarDevice
@@ -22,6 +24,12 @@ class FusionSolarOpenApi:
         self._host = host
         self._username = username
         self._password = password
+
+    def _should_use_stations(self) -> bool:
+        if self._host.startswith('https://au5.'):
+            return True
+
+        return False
 
     def login(self) -> str:
         url = self._host + '/thirdData/login'
@@ -46,6 +54,9 @@ class FusionSolarOpenApi:
             raise FusionSolarOpenApiError(f'Could not login with given credentials')
 
     def get_station_list(self):
+        if self._should_use_stations():
+            return self.stations()
+
         url = self._host + '/thirdData/getStationList'
         json = {}
         response = self._do_call(url, json)
@@ -64,8 +75,35 @@ class FusionSolarOpenApi:
                     station[ATTR_BUILD_STATE],
                     station[ATTR_COMBINE_TYPE],
                     station[ATTR_AID_TYPE],
-                    station[ATTR_STATION_CONTACT_PERSON],
+                    station[ATTR_STATION_LINKMAN],
                     station[ATTR_CONTACT_PERSON_PHONE]
+                )
+            )
+
+        return data
+
+    def stations(self):
+        url = self._host + '/thirdData/stations'
+        json = {
+            'pageNo': 1,
+        }
+        response = self._do_call(url, json)
+
+        self._last_station_list_current_time = round(time.time() * 1000)
+
+        data = []
+        for station in response[ATTR_DATA][ATTR_LIST]:
+            data.append(
+                FusionSolarStation(
+                    station[ATTR_PLANT_CODE],
+                    station[ATTR_PLANT_NAME],
+                    station[ATTR_PLANT_ADDRESS],
+                    station[ATTR_CAPACITY],
+                    None,
+                    None,
+                    None,
+                    station[ATTR_STATION_CONTACT_PERSON],
+                    None
                 )
             )
 
