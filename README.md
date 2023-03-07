@@ -4,7 +4,7 @@
 
 Integrate FusionSolar into you Home Assistant.
 
-The integration is able to work with Kiosk mode, or with an OpenAPI account, see below for more details.
+The integration is able to work with Kiosk mode, or with a Northbound API account, see below for more details.
 
 ## Installation
 
@@ -25,13 +25,55 @@ The integration updates the data every 10 minutes.
 
 **In kiosk mode the "realtime" data is not really realtime, it is cached at FusionSolars end for 30 minutes.**
 
-If you need more accurate information you should use the OpenAPI mode.
+If you need more accurate information you should use the API mode.
 
-## OpenAPI
+## Northbound API
 
-You will need an OpenAPI account from Huawei for this to
-work. [More information](https://forum.huawei.com/enterprise/en/communicate-with-fusionsolar-through-an-openapi-account/thread/591478-100027)
+You will need a Northbound API account from your Huawei installer for this to work. 
 
+### If you know your installer
+Please pass them the following guide:
+
+[How to create a Northbound API Account](https://forum.huawei.com/enterprise/en/smart-pv-encyclopedia-how-to-create-a-northbound-api-account-through-the-fusionsolar/thread/1025182-100027)
+
+They will need to grant the following permissions:
+- Plant List (Select appropriate plant/company)
+- Real Time Plant Data (Select **All**)
+- Hourly, Daily, Monthly and Yearly Plant Data (Select **All**)
+- Device List
+- Real Time Device Data (See Below)
+- Daily, Monthly and Yearly Device Data (See Below)
+
+#### Device Data
+For each of the Device Data permissions, there is a choice of the following device types. Ensure your installer gives you access to each device type, and all data under each device type, based on your installation:
+- String Inverter
+- Residential Inverter
+- Battery
+- ESS
+- Power Sensor
+- Grid Meter
+- EMI
+
+### If you know your current installer, but would like to manage the devices on your own
+There is a plant transfer process, which keeps all data. This can be found under ***Plants -> Plant Migration*** in the installer interface. You will need your own installer account and you will need to supply the losing installer with your company name and code.
+
+This can be found here: ***System > System > Company Management > Company Info***
+### If you do not know your installer
+There is a process to create your own installer account, but there are caveats:
+- It will lose all history in FusioSolar for your plant.
+- If you are not comfortable resetting devices and/or possibly losing access entirely, please stick with the Kiosk option or engage a new installer to take control of your plant.
+- Please contact Huawei for details.
+### API testing
+
+[How to login to the API](https://support.huawei.com/enterprise/en/doc/EDOC1100261860/9e1a18d2/login-interface)
+
+An example of the API url is: ```https://intl.fusionsolar.huawei.com/thirdData/``` where ```intl``` is the prefix on your own FusionSolar login page.
+
+The Northbound API has very strict rate limits on endpoints, as well as a single login session limit. If you wish to do your own testing or development alongside running this integration, it is recommended to get your installer to create 2 identical accounts.
+
+If you try to use the same account in Postman and the integration, you will experience issues such as constant directions to log back in using  Postman, returned data not being complete etc.
+
+### Exposed Devices
 The integration will expose the different devices (Residential inverter, String inverter, Battery, Dongle, ...) in
 your plant/station.
 
@@ -39,15 +81,15 @@ your plant/station.
 
 The devices that support realtime information (getDevRealKpi api call):
 
-* String inverter
-* EMI
-* Grid meter
-* Residential inverter
-* Battery
-* Power Sensor
+- String inverter
+- EMI
+- Grid meter
+- Residential inverter
+- Residential Battery
+- Power Sensor
+- C&I and Utility ESS
 
-The exposed entities can be different per device. These are documented in the "Interface reference" that you can
-request from Huawei. But the names are pretty self-explanatory.
+The exposed entities can be different per device. [These are documented here](https://support.huawei.com/enterprise/en/doc/EDOC1100261860/3557ba96/real-time-device-data-interface). But the names are pretty self-explanatory.
 
 The realtime data is updated every minute per device group. As the API only allows 1 call per minute to each
 endpoint and the same endpoint is needed for each device group. So the more different devices you have the slower
@@ -81,7 +123,7 @@ entities for.
 ### What do all entities mean?
 
 As I don't own an installation with all possible devices this integration is mostly based on
-the [Northbound Interface Reference](/docs/smartpvms-v500r007c00-northbound-interface-reference.pdf).
+the [Northbound Interface Reference](https://support.huawei.com/enterprise/en/doc/EDOC1100261860/d4ee355a/v6-interface-reference).
 
 The entity names are based on the names in the interface reference.
 
