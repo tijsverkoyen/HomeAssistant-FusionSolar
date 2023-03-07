@@ -1,0 +1,762 @@
+{
+	"info": {
+		"_postman_id": "873e67d1-523d-4f36-8223-5c1746a4ecfb",
+		"name": "FusionSolar Northbound API v6",
+		"description": "Huawei FusionSolar Northbound API\n\n[V6 Interface Reference - iMaster NetEco V600R023C00 Northbound Interface Reference-V6(SmartPVMS) - Huawei](https://support.huawei.com/enterprise/en/doc/EDOC1100261860/d4ee355a/v6-interface-reference)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2468684"
+	},
+	"item": [
+		{
+			"name": "Devices",
+			"item": [
+				{
+					"name": "Daily Device Data Interface",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "XSRF-TOKEN",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"devIds\":\"{{DeviceCode}}\",\r\n    \"devTypeId\":38\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://intl.fusionsolar.huawei.com/thirdData/getDevKpiDay",
+							"protocol": "https",
+							"host": [
+								"intl",
+								"fusionsolar",
+								"huawei",
+								"com"
+							],
+							"path": [
+								"thirdData",
+								"getDevKpiDay"
+							]
+						},
+						"description": "[Daily Device Data Interface](https://support.huawei.com/enterprise/en/doc/EDOC1100261860?section=j016#EN-US_TOPIC_0000001174747372:~:text=Reference-V6(SmartPVMS)-,About%20This%20Document,Daily%20Device%20Data%20Interface,-Interface%20Description)"
+					},
+					"response": []
+				},
+				{
+					"name": "Real-Time Device Data Interface",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "XSRF-TOKEN",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"devIds\":\"{{DeviceCode}}\",\r\n    \"devTypeId\":38\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://intl.fusionsolar.huawei.com/thirdData/getDevRealKpi",
+							"protocol": "https",
+							"host": [
+								"intl",
+								"fusionsolar",
+								"huawei",
+								"com"
+							],
+							"path": [
+								"thirdData",
+								"getDevRealKpi"
+							]
+						},
+						"description": "[Real-Time Device Data Interface](https://support.huawei.com/enterprise/en/doc/EDOC1100261860?section=j016#EN-US_TOPIC_0000001220545681)"
+					},
+					"response": [
+						{
+							"name": "Meter - Real-Time Device Data Interface",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "XSRF-TOKEN",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"devIds\": \"0\",\r\n    \"devTypeId\": 47\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://intl.fusionsolar.huawei.com/thirdData/getDevRealKpi",
+									"protocol": "https",
+									"host": [
+										"intl",
+										"fusionsolar",
+										"huawei",
+										"com"
+									],
+									"path": [
+										"thirdData",
+										"getDevRealKpi"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"data\": [\n        {\n            \"devId\": 0,\n            \"dataItemMap\": {\n                \"meter_status\": 1,\n                \"active_cap\": 18814.75,\n                \"meter_i\": -10.44,\n                \"power_factor\": -0.995,\n                \"c_i\": \"N/A\",\n                \"b_i\": \"N/A\",\n                \"meter_u\": 236.6,\n                \"reverse_reactive_valley\": null,\n                \"positive_reactive_peak\": null,\n                \"reverse_reactive_peak\": null,\n                \"positive_active_peak\": null,\n                \"reverse_active_peak\": null,\n                \"reactive_power\": 256,\n                \"total_apparent_power\": null,\n                \"c_u\": \"N/A\",\n                \"bc_u\": \"N/A\",\n                \"b_u\": \"N/A\",\n                \"positive_reactive_top\": null,\n                \"reverse_reactive_power\": null,\n                \"reverse_active_cap\": 11474.33,\n                \"active_power_b\": \"N/A\",\n                \"active_power_a\": \"N/A\",\n                \"positive_active_top\": null,\n                \"reverse_reactive_cap\": null,\n                \"positive_active_valley\": null,\n                \"positive_active_power\": null,\n                \"run_state\": 1,\n                \"reverse_reactive_top\": null,\n                \"reverse_active_power\": null,\n                \"reverse_active_top\": null,\n                \"reactive_power_a\": null,\n                \"reactive_power_b\": null,\n                \"forward_reactive_cap\": null,\n                \"reactive_power_c\": null,\n                \"reverse_active_valley\": null,\n                \"active_power\": -2403,\n                \"positive_reactive_power\": null,\n                \"ca_u\": \"N/A\",\n                \"ab_u\": \"N/A\",\n                \"active_power_c\": \"N/A\",\n                \"positive_reactive_valley\": null,\n                \"grid_frequency\": 49.99\n            },\n            \"sn\": \"XXXXXX\"\n        }\n    ],\n    \"failCode\": 0,\n    \"message\": null,\n    \"params\": {\n        \"currentTime\": 1677677143689,\n        \"devIds\": \"0\",\n        \"devTypeId\": 47\n    },\n    \"success\": true\n}"
+						},
+						{
+							"name": "Inverter - Real-Time Device Data Interface",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "XSRF-TOKEN",
+										"value": "{{Token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"devIds\":\"0\",\r\n    \"devTypeId\":38\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://intl.fusionsolar.huawei.com/thirdData/getDevRealKpi",
+									"protocol": "https",
+									"host": [
+										"intl",
+										"fusionsolar",
+										"huawei",
+										"com"
+									],
+									"path": [
+										"thirdData",
+										"getDevRealKpi"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"data\": [\n        {\n            \"devId\": 0,\n            \"dataItemMap\": {\n                \"pv1_u\": 0,\n                \"pv2_u\": 0,\n                \"pv3_u\": 0,\n                \"pv4_u\": 0,\n                \"pv5_u\": 0,\n                \"power_factor\": 0,\n                \"pv6_u\": 0,\n                \"pv7_u\": 0,\n                \"pv8_u\": 0,\n                \"inverter_state\": 40960,\n                \"open_time\": 1677535511000,\n                \"a_i\": 0,\n                \"total_cap\": 27152.37,\n                \"c_i\": 0,\n                \"b_i\": 0,\n                \"mppt_3_cap\": 0,\n                \"a_u\": 0,\n                \"reactive_power\": 0,\n                \"c_u\": 0,\n                \"temperature\": 0,\n                \"b_u\": 0.2,\n                \"bc_u\": 0,\n                \"elec_freq\": 0,\n                \"mppt_4_cap\": 0,\n                \"efficiency\": 0,\n                \"day_cap\": 40.39,\n                \"mppt_power\": 0,\n                \"run_state\": 1,\n                \"mppt_1_cap\": 17173.91,\n                \"close_time\": 1677582876000,\n                \"pv1_i\": 0,\n                \"pv2_i\": 0,\n                \"pv3_i\": 0,\n                \"mppt_2_cap\": 10733.1,\n                \"active_power\": 0,\n                \"pv4_i\": 0,\n                \"pv5_i\": 0,\n                \"ca_u\": 0,\n                \"ab_u\": 0,\n                \"pv6_i\": 0,\n                \"pv7_i\": 0,\n                \"pv8_i\": 0\n            },\n            \"sn\": \"XXXXXX\"\n        }\n    ],\n    \"failCode\": 0,\n    \"message\": null,\n    \"params\": {\n        \"currentTime\": 1677594613626,\n        \"devIds\": \"0\",\n        \"devTypeId\": 38\n    },\n    \"success\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Device List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "XSRF-TOKEN",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"stationCodes\":\"{{PlantCode}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://intl.fusionsolar.huawei.com/thirdData/getDevList",
+							"protocol": "https",
+							"host": [
+								"intl",
+								"fusionsolar",
+								"huawei",
+								"com"
+							],
+							"path": [
+								"thirdData",
+								"getDevList"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Device List",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "XSRF-TOKEN",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"stationCodes\":\"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://intl.fusionsolar.huawei.com/thirdData/getDevList",
+									"protocol": "https",
+									"host": [
+										"intl",
+										"fusionsolar",
+										"huawei",
+										"com"
+									],
+									"path": [
+										"thirdData",
+										"getDevList"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"data\": [\n        {\n            \"devName\": \"Inverter-1\",\n            \"devTypeId\": 38,\n            \"esnCode\": \"XXXXXX\",\n            \"id\": 0,\n            \"invType\": \"SUN2000-5KTL-L1\",\n            \"latitude\": 0,\n            \"longitude\": 0,\n            \"optimizerNumber\": 0,\n            \"softwareVersion\": \"V200R001C00SPC114\",\n            \"stationCode\": \"{{PlantCode}}\"\n        },\n        {\n            \"devName\": \"Meter-1\",\n            \"devTypeId\": 47,\n            \"esnCode\": null,\n            \"id\": 0,\n            \"invType\": null,\n            \"latitude\": 0,\n            \"longitude\": 0,\n            \"optimizerNumber\": null,\n            \"softwareVersion\": null,\n            \"stationCode\": \"{{PlantCode}}\"\n        }\n    ],\n    \"failCode\": 0,\n    \"message\": null,\n    \"params\": {\n        \"currentTime\": 1677421739295,\n        \"stationCodes\": \"{{PlantCode}}\"\n    },\n    \"success\": true\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Plant",
+			"item": [
+				{
+					"name": "Get Station List",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "XSRF-TOKEN",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"pageNo\":1,\r\n  \"pageSize\":100\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://intl.fusionsolar.huawei.com/thirdData/stations",
+							"protocol": "https",
+							"host": [
+								"intl",
+								"fusionsolar",
+								"huawei",
+								"com"
+							],
+							"path": [
+								"thirdData",
+								"stations"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Station List",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "XSRF-TOKEN",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"pageNo\":1,\r\n  \"pageSize\":100\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://intl.fusionsolar.huawei.com/thirdData/stations",
+									"protocol": "https",
+									"host": [
+										"intl",
+										"fusionsolar",
+										"huawei",
+										"com"
+									],
+									"path": [
+										"thirdData",
+										"stations"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"list\": [\n            {\n                \"capacity\": 6.6,\n                \"contactMethod\": \"\",\n                \"contactPerson\": \"\",\n                \"gridConnectionDate\": \"2020-11-06T13:14:45+08:00\",\n                \"latitude\": \"0\",\n                \"longitude\": \"0\",\n                \"plantAddress\": \"XXXXXX\",\n                \"plantCode\": \"XXXXXX\",\n                \"plantName\": \"Home\"\n            }\n        ],\n        \"pageCount\": 1,\n        \"pageNo\": 1,\n        \"pageSize\": 100,\n        \"total\": 1\n    },\n    \"failCode\": 0,\n    \"message\": \"get plant list success\",\n    \"success\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Yearly Station KPI",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "XSRF-TOKEN",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"stationCodes\":\"{{PlantCode}}\",\r\n\"collectTime\": 1677590038219\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://intl.fusionsolar.huawei.com/thirdData/getKpiStationYear",
+							"protocol": "https",
+							"host": [
+								"intl",
+								"fusionsolar",
+								"huawei",
+								"com"
+							],
+							"path": [
+								"thirdData",
+								"getKpiStationYear"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Yearly Station KPI",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "XSRF-TOKEN",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"stationCodes\":\"\",\r\n\"collectTime\": 1677590038219\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://intl.fusionsolar.huawei.com/thirdData/getKpiStationYear",
+									"protocol": "https",
+									"host": [
+										"intl",
+										"fusionsolar",
+										"huawei",
+										"com"
+									],
+									"path": [
+										"thirdData",
+										"getKpiStationYear"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"data\": [\n        {\n            \"collectTime\": 1640966400000,\n            \"stationCode\": \"XXXXXX\",\n            \"dataItemMap\": {\n                \"radiation_intensity\": null,\n                \"installed_capacity\": null,\n                \"use_power\": null,\n                \"inverter_power\": null,\n                \"reduction_total_tree\": null,\n                \"power_profit\": null,\n                \"theory_power\": null,\n                \"reduction_total_coal\": null,\n                \"perpower_ratio\": null,\n                \"reduction_total_co2\": null,\n                \"ongrid_power\": null,\n                \"performance_ratio\": null\n            }\n        },\n        {\n            \"collectTime\": 1672502400000,\n            \"stationCode\": \"XXXXXX\",\n            \"dataItemMap\": {\n                \"radiation_intensity\": null,\n                \"installed_capacity\": 6.6,\n                \"use_power\": 239.88,\n                \"inverter_power\": 310.93,\n                \"reduction_total_tree\": 0.202,\n                \"power_profit\": 42.779,\n                \"theory_power\": null,\n                \"reduction_total_coal\": 0.124,\n                \"perpower_ratio\": 47.111,\n                \"reduction_total_co2\": 0.148,\n                \"ongrid_power\": 176.86,\n                \"performance_ratio\": null\n            }\n        }\n    ],\n    \"failCode\": 0,\n    \"message\": null,\n    \"params\": {\n        \"currentTime\": 1677593155620,\n        \"collectTime\": 1677590038219,\n        \"stationCodes\": \"XXXXXX\"\n    },\n    \"success\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Daily Station KPI",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "XSRF-TOKEN",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"stationCodes\":\"{{PlantCode}}\",\r\n\"collectTime\": 1677680656831\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://intl.fusionsolar.huawei.com/thirdData/getKpiStationDay",
+							"protocol": "https",
+							"host": [
+								"intl",
+								"fusionsolar",
+								"huawei",
+								"com"
+							],
+							"path": [
+								"thirdData",
+								"getKpiStationDay"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Daily Station KPI",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "XSRF-TOKEN",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"stationCodes\":\"\",\r\n\"collectTime\": 1677680656831\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://intl.fusionsolar.huawei.com/thirdData/getKpiStationDay",
+									"protocol": "https",
+									"host": [
+										"intl",
+										"fusionsolar",
+										"huawei",
+										"com"
+									],
+									"path": [
+										"thirdData",
+										"getKpiStationDay"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"data\": [\n        {\n            \"collectTime\": 1677600000000,\n            \"stationCode\": \"XXXXXX\",\n            \"dataItemMap\": {\n                \"radiation_intensity\": null,\n                \"installed_capacity\": 6.6,\n                \"use_power\": 30.27,\n                \"inverter_power\": 31.49,\n                \"reduction_total_tree\": null,\n                \"power_profit\": 5.92,\n                \"theory_power\": null,\n                \"reduction_total_coal\": 0.013,\n                \"perpower_ratio\": 4.771,\n                \"reduction_total_co2\": 0.015,\n                \"ongrid_power\": 10.84,\n                \"performance_ratio\": null\n            }\n        }\n    ],\n    \"failCode\": 0,\n    \"message\": null,\n    \"params\": {\n        \"currentTime\": 1677681125142,\n        \"collectTime\": 1677680656831,\n        \"stationCodes\": \"XXXXXX\"\n    },\n    \"success\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Real-Time Station KPI",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "XSRF-TOKEN",
+								"value": "{{Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"stationCodes\":\"{{PlantCode}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://intl.fusionsolar.huawei.com/thirdData/getStationRealKpi",
+							"protocol": "https",
+							"host": [
+								"intl",
+								"fusionsolar",
+								"huawei",
+								"com"
+							],
+							"path": [
+								"thirdData",
+								"getStationRealKpi"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Real-Time Station KPI",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "XSRF-TOKEN",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"stationCodes\":\"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://intl.fusionsolar.huawei.com/thirdData/getStationRealKpi",
+									"protocol": "https",
+									"host": [
+										"intl",
+										"fusionsolar",
+										"huawei",
+										"com"
+									],
+									"path": [
+										"thirdData",
+										"getStationRealKpi"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"data\": [\n        {\n            \"stationCode\": \"XXXXXX\",\n            \"dataItemMap\": {\n                \"total_income\": 42.779,\n                \"total_power\": 310.93,\n                \"day_power\": 40.39,\n                \"day_income\": 6.24,\n                \"real_health_state\": 3,\n                \"month_power\": 310.93\n            }\n        }\n    ],\n    \"failCode\": 0,\n    \"message\": null,\n    \"params\": {\n        \"currentTime\": 1677595004580,\n        \"stationCodes\": \"XXXXXX\"\n    },\n    \"success\": true\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userName\": \"{{UserName}}\",\r\n    \"systemCode\": \"{{Password}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://intl.fusionsolar.huawei.com/thirdData/login",
+					"protocol": "https",
+					"host": [
+						"intl",
+						"fusionsolar",
+						"huawei",
+						"com"
+					],
+					"path": [
+						"thirdData",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \r\n \"xsrfToken\":\"{{Token}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://intl.fusionsolar.huawei.com/thirdData/logout",
+					"protocol": "https",
+					"host": [
+						"intl",
+						"fusionsolar",
+						"huawei",
+						"com"
+					],
+					"path": [
+						"thirdData",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"const XSRFTokenRequest = {",
+					"  method: 'POST',",
+					"  url: `${pm.collectionVariables.get(\"ApiUrl\")}/login`,",
+					"  header: {",
+					"        'Content-Type': 'application/json'",
+					"      },",
+					"  body: {",
+					"      mode: 'raw',",
+					"      raw: `{\"userName\": \"${pm.collectionVariables.get(\"UserName\")}\",\"systemCode\": \"${pm.collectionVariables.get(\"Password\")}\"}`",
+					"    }",
+					"  };",
+					"",
+					"function getXSRFToken(){",
+					"pm.sendRequest(XSRFTokenRequest, (err, response) => {",
+					"        if (err === null) {",
+					"            pm.collectionVariables.set(\"Token\",response.headers.get(\"XSRF-TOKEN\"));",
+					"        }",
+					"    });",
+					"}",
+					"",
+					"var getToken = true;",
+					"",
+					"if (!pm.collectionVariables.get('Token')) {",
+					"    console.log('Token is missing.')",
+					"} else {",
+					"    getToken = false;",
+					"}",
+					"",
+					"if (getToken === true) {",
+					"    getXSRFToken()",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"    var loginCounter = 1",
+					"    var jsonData = pm.response.json();",
+					"    if(jsonData.failCode == 305 && loginCounter <= 1)",
+					"    {",
+					"        console.warn('User Must Re-login')",
+					"        var sleepDuration = 1000;",
+					"        var waitUntilTime = new Date().getTime() + sleepDuration;",
+					"        loginCounter++",
+					"        getXSRFToken()",
+					"        postman.setNextRequest(request.name);",
+					"    }"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "PlantCode",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "UserName",
+			"value": "postman",
+			"type": "string"
+		},
+		{
+			"key": "Password",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "ApiUrl",
+			"value": "https://intl.fusionsolar.huawei.com/thirdData",
+			"type": "string"
+		},
+		{
+			"key": "DeviceCode",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "Token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
