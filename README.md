@@ -155,3 +155,15 @@ want to disable. Click on the pencil icon in the upper right corner. Switch off 
 
 This can speed up the updating of the other devices. Keep in mind that a call is made per device type. So if you have
 multiple devices from the same time you need to disable them all to have effect.
+
+### Can I work with the API myself?
+
+Yes. There is a [Postman] Collection available. You can import it in Postman and start working with it.
+The collection is available
+under [docs/postman_collection](https://github.com/tijsverkoyen/HomeAssistant-FusionSolar/tree/master/docs/postman_collection.json).
+
+You will need to create an environment in Postman with the following variables:
+
+* `USERNAME`, your Northbound API / OpenAPI username
+* `SYSTEMCODE`, your Northbound API / OpenAPI password
+* `URL`, the url you will query

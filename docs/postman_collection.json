@@ -1,0 +1,756 @@
+{
+	"info": {
+		"_postman_id": "34276b21-5c16-49da-9369-23e28183ee63",
+		"name": "FusionSolar",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6404377"
+	},
+	"item": [
+		{
+			"name": "thirdData/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"postman.setEnvironmentVariable('XSRF-TOKEN', responseHeaders[\"xsrf-token\"])"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"{{USERNAME}}\",\n    \"systemCode\": \"{{SYSTEMCODE}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/thirdData/login",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"thirdData",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "thirdData/logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"postman.setEnvironmentVariable('XSRF-TOKEN', responseHeaders[\"xsrf-token\"])"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"xsrfToken\": \"{{XSRF-TOKEN}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/thirdData/logout",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"thirdData",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "thirdData/getStationList",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable('stationCode', jsonData.data[0].stationCode);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "XSRF-TOKEN",
+						"value": "{{XSRF-TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/thirdData/getStationList",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"thirdData",
+						"getStationList"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "thirdData/stations",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable('stationCode', jsonData.data.list[0].plantCode);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "XSRF-TOKEN",
+						"value": "{{XSRF-TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"pageNo\": 1,\n    \"pageSize\": 100\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/thirdData/stations",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"thirdData",
+						"stations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "thirdData/getStationRealKpi",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "XSRF-TOKEN",
+						"value": "{{XSRF-TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"stationCodes\": \"{{stationCode}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/thirdData/getStationRealKpi",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"thirdData",
+						"getStationRealKpi"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "thirdData/getKpiStationHour",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "XSRF-TOKEN",
+						"value": "{{XSRF-TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"stationCodes\": \"{{stationCode}}\",\n  \"collectTime\": {{$timestamp}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/thirdData/getKpiStationHour",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"thirdData",
+						"getKpiStationHour"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "thirdData/getKpiStationDay",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "XSRF-TOKEN",
+						"value": "{{XSRF-TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"stationCodes\": \"{{stationCode}}\",\n  \"collectTime\": 1501862400000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/thirdData/getKpiStationDay",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"thirdData",
+						"getKpiStationDay"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "thirdData/getKpiStationMonth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "XSRF-TOKEN",
+						"value": "{{XSRF-TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"stationCodes\": \"{{stationCode}}\",\n  \"collectTime\": 1483200000000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/thirdData/getKpiStationMonth",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"thirdData",
+						"getKpiStationMonth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "thirdData/getKpiStationYear",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "XSRF-TOKEN",
+						"value": "{{XSRF-TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"stationCodes\": \"{{stationCode}}\",\n  \"collectTime\": 1666617789319\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/thirdData/getKpiStationYear",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"thirdData",
+						"getKpiStationYear"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "thirdData/getAlarmList",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "XSRF-TOKEN",
+						"value": "{{XSRF-TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"stationCodes\": \"{{stationCode}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/thirdData/getAlarmList",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"thirdData",
+						"getAlarmList"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "thirdData/getDevList",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = JSON.parse(responseBody);",
+							"console.log(jsonData)",
+							"postman.setEnvironmentVariable('devId', jsonData.data[0].id);",
+							"postman.setEnvironmentVariable('devTypeId', jsonData.data[0].devTypeId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "XSRF-TOKEN",
+						"value": "{{XSRF-TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"stationCodes\": \"{{stationCode}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/thirdData/getDevList",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"thirdData",
+						"getDevList"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "thirdData/getDevRealKpi",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "XSRF-TOKEN",
+						"value": "{{XSRF-TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"devIds\": \"{{devId}}\",\n  \"devTypeId\": \"{{devTypeId}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/thirdData/getDevRealKpi",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"thirdData",
+						"getDevRealKpi"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "thirdData/getDevFiveMinutes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "XSRF-TOKEN",
+						"value": "{{XSRF-TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"devIds\": \"{{devId}}\",\n  \"devTypeId\": \"{{devTypeId}}\",\n  \"collectTime\": 1501862400000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/thirdData/getDevFiveMinutes",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"thirdData",
+						"getDevFiveMinutes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "thirdData/getDevKpiDay",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "XSRF-TOKEN",
+						"value": "{{XSRF-TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"devIds\": \"{{devId}}\",\n  \"devTypeId\": \"{{devTypeId}}\",\n  \"collectTime\": 1501862400000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/thirdData/getDevKpiDay",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"thirdData",
+						"getDevKpiDay"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "thirdData/getDevKpiMonth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "XSRF-TOKEN",
+						"value": "{{XSRF-TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"devIds\": \"{{devId}}\",\n  \"devTypeId\": \"{{devTypeId}}\",\n  \"collectTime\": 1501862400000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/thirdData/getDevKpiMonth",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"thirdData",
+						"getDevKpiMonth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "thirdData/getDevKpiYear",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "XSRF-TOKEN",
+						"value": "{{XSRF-TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"devIds\": \"{{devId}}\",\n  \"devTypeId\": \"{{devTypeId}}\",\n  \"collectTime\": 1501862400000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/thirdData/getDevKpiYear",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"thirdData",
+						"getDevKpiYear"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
