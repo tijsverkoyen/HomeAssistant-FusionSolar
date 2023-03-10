@@ -9,7 +9,7 @@ from ..const import ATTR_AID_TYPE, ATTR_BUILD_STATE, ATTR_CAPACITY, ATTR_COMBINE
     ATTR_DEVICE_LONGITUDE, ATTR_DEVICE_NAME, ATTR_DEVICE_SOFTWARE_VERSION, ATTR_DEVICE_STATION_CODE, \
     ATTR_DEVICE_TYPE_ID, ATTR_FAIL_CODE, ATTR_LIST, ATTR_PARAMS, ATTR_PARAMS_CURRENT_TIME, ATTR_PLANT_ADDRESS, \
     ATTR_PLANT_CODE, ATTR_PLANT_NAME, ATTR_STATION_ADDRESS, ATTR_STATION_CODE, ATTR_STATION_CONTACT_PERSON, \
-    ATTR_STATION_LINKMAN, ATTR_STATION_NAME
+    ATTR_STATION_LINKMAN, ATTR_STATION_NAME, ATTR_MESSAGE
 
 from .station import FusionSolarStation
 from .device import FusionSolarDevice
@@ -24,12 +24,6 @@ class FusionSolarOpenApi:
         self._host = host
         self._username = username
         self._password = password
-
-    def _should_use_stations(self) -> bool:
-        if self._host.startswith('https://au5.'):
-            return True
-
-        return False
 
     def login(self) -> str:
         url = self._host + '/thirdData/login'
@@ -54,12 +48,13 @@ class FusionSolarOpenApi:
             raise FusionSolarOpenApiError(f'Could not login with given credentials')
 
     def get_station_list(self):
-        if self._should_use_stations():
-            return self.stations()
-
         url = self._host + '/thirdData/getStationList'
         json = {}
-        response = self._do_call(url, json)
+        try:
+            response = self._do_call(url, json)
+        except FusionSolarOpenApiErrorInvalidAccessToCurrentInterfaceError as error:
+            _LOGGER.debug(f'Could not use getStationList, trying stations: {error}')
+            return self.stations()
 
         if ATTR_PARAMS in response and ATTR_PARAMS_CURRENT_TIME in response[ATTR_PARAMS]:
             self._last_station_list_current_time = response[ATTR_PARAMS][ATTR_PARAMS_CURRENT_TIME]
@@ -190,6 +185,9 @@ class FusionSolarOpenApi:
                 self._token = None
                 return self._do_call(url, json)
 
+            if ATTR_FAIL_CODE in json_data and json_data[ATTR_FAIL_CODE] == 401:
+                raise FusionSolarOpenApiErrorInvalidAccessToCurrentInterfaceError(json_data[ATTR_MESSAGE])
+
             if ATTR_FAIL_CODE in json_data and json_data[ATTR_FAIL_CODE] == 407:
                 _LOGGER.debug(
                     f'Access frequency to high, while calling {url}: {json_data[ATTR_DATA]}, failcode: {json_data[ATTR_FAIL_CODE]}')
@@ -215,4 +213,8 @@ class FusionSolarOpenApiError(Exception):
 
 
 class FusionSolarOpenApiAccessFrequencyTooHighError(Exception):
+    pass
+
+
+class FusionSolarOpenApiErrorInvalidAccessToCurrentInterfaceError(Exception):
     pass
