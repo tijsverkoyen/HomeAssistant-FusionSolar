@@ -2,17 +2,36 @@
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/integration)
 
-Integrate FusionSolar into you Home Assistant.
+Integrate FusionSolar into your Home Assistant.
+
+- [Home Assistant FusionSolar Integration](#home-assistant-fusionsolar-integration)
+  - [Installation](#installation)
+  - [Kiosk](#kiosk)
+  - [Northbound API / OpenAPI](#northbound-api--openapi)
+    - [If you know your installer](#if-you-know-your-installer)
+      - [Device Data](#device-data)
+    - [If you know your current installer, but would like to manage the devices on your own](#if-you-know-your-current-installer-but-would-like-to-manage-the-devices-on-your-own)
+    - [If you do not know your installer](#if-you-do-not-know-your-installer)
+    - [API testing](#api-testing)
+    - [Exposed Devices](#exposed-devices)
+    - [Realtime data](#realtime-data)
+    - [Total yields](#total-yields)
+  - [Integration with the Energy dashboard](#integration-with-the-energy-dashboard)
+  - [FAQ](#faq)
+    - [Where can I find the kiosk url?](#where-can-i-find-the-kiosk-url)
+    - [Energy Dashboard: Active Power not showing in the list of available entities](#energy-dashboard-active-power-not-showing-in-the-list-of-available-entities)
+    - [What do all entities mean?](#what-do-all-entities-mean)
+    - [Disabling devices](#disabling-devices)
+    - [Can I work with the API myself?](#can-i-work-with-the-api-myself)
+
 
 The integration is able to work with Kiosk mode, or with a Northbound API / OpenAPI account, see below for more details.
 
 ## Installation
 
-This integration is part of the default HACS repositories, so can add it directly from HACS or add this repository as a
-custom repository in HACS.
+This integration is part of the default HACS repositories, so can add it directly from HACS or add this repository as a custom repository in HACS.
 
-When the integration is installed in HACS, you need to add it in Home Assistant: Settings → Devices & Services → Add
-Integration → Search for FusionSolar.
+When the integration is installed in HACS, you need to add it in Home Assistant: Settings → Devices & Services → Add Integration → Search for FusionSolar.
 
 The configuration happens in the configuration flow when you add the integration.
 
@@ -48,8 +67,7 @@ They will need to grant the following permissions:
 
 #### Device Data
 
-For each of the Device Data permissions, there is a choice of the following device types. Ensure your installer gives
-you access to each device type, and all data under each device type, based on your installation:
+For each of the Device Data permissions, there is a choice of the following device types. Ensure your installer gives you access to each device type, and all data under each device type, based on your installation:
 
 * String Inverter
 * Residential Inverter
@@ -61,9 +79,7 @@ you access to each device type, and all data under each device type, based on yo
 
 ### If you know your current installer, but would like to manage the devices on your own
 
-There is a plant transfer process, which keeps all data. This can be found under ***Plants → Plant Migration*** in the
-installer interface. You will need your own installer account, and you will need to supply the losing installer with
-your company name and code.
+There is a plant transfer process, which keeps all data. This can be found under ***Plants → Plant Migration*** in the installer interface. You will need your own installer account, and you will need to supply the losing installer with your company name and code.
 
 This can be found here: ***System → System → Company Management → Company Info***
 
@@ -80,20 +96,15 @@ There is a process to create your own installer account, but there are caveats:
 
 [How to login to the API](https://support.huawei.com/enterprise/en/doc/EDOC1100261860/9e1a18d2/login-interface)
 
-An example of the API url is: ```https://intl.fusionsolar.huawei.com/thirdData/``` where ```intl``` is the prefix on
-your own FusionSolar login page.
+An example of the API url is: ```https://intl.fusionsolar.huawei.com/thirdData/``` where ```intl``` is the prefix on your own FusionSolar login page.
 
-The Northbound API has very strict rate limits on endpoints, as well as a single login session limit. If you wish to do
-your own testing or development alongside running this integration, it is recommended to get your installer to create 2
-identical accounts.
+The Northbound API has very strict rate limits on endpoints, as well as a single login session limit. If you wish to do your own testing or development alongside running this integration, it is recommended to get your installer to create 2 identical accounts.
 
-If you try to use the same account in Postman and the integration, you will experience issues such as constant
-directions to log back in using Postman, returned data not being complete etc.
+If you try to use the same account in Postman and the integration, you will experience issues such as constant directions to log back in using Postman, returned data not being complete etc.
 
 ### Exposed Devices
 
-The integration will expose the different devices (Residential inverter, String inverter, Battery, Dongle, ...) in
-your plant/station.
+The integration will expose the different devices (Residential inverter, String inverter, Battery, Dongle, ...) in your plant/station.
 
 ### Realtime data
 
@@ -107,9 +118,7 @@ The devices that support realtime information (`getDevRealKpi` api call):
 * Power Sensor
 * C&I and Utility ESS
 
-The exposed entities can be different per
-device. [These are documented here](https://support.huawei.com/enterprise/en/doc/EDOC1100261860/3557ba96/real-time-device-data-interface).
-But the names are pretty self-explanatory.
+The exposed entities can be different per device. [These are documented here](https://support.huawei.com/enterprise/en/doc/EDOC1100261860/3557ba96/real-time-device-data-interface). But the names are pretty self-explanatory.
 
 The realtime data is updated every minute per device group. As the API only allows 1 call per minute to each
 endpoint and the same endpoint is needed for each device group. The more different devices you have the slower the
@@ -118,6 +127,24 @@ updates will be. See [Disabling devices](#disabling-devices)
 ### Total yields
 
 The integration updates the total yields (current day, current month, current year, lifetime) every 10 minutes.
+
+## Integration with the Energy dashboard
+ 
+If you haven't set up the Energy dashboard in HomeAssistant, you can select it from the side bar and step through the wizard. If you have configured it previously and want to change the settings you can access from the side bar by clicking on [Settings->Dashboards](https://my.home-assistant.io/redirect/lovelace_dashboards/).
+
+As the name suggests, the dashboard requires sensors with units of energy as input (i.e. kWh), not power.
+
+The first thing to configure is the electricity grid:
+
+* Grid consumption is given by *sensor.meter_1_reverse_active_energy*
+* Return to grid is given by *sensor.meter_1_active_energy_forward_active_energy*
+
+For solar panels, the sensor is *sensor.station_name_total_current_day_energy*. You need to replace *station_name* in the sensor entity ID with the name of your station.
+
+Finally the battery needs to be configured:
+
+* Battery energy in is given by *sensor.battery_1_charging_capacity*
+* Battery energy out is given by *sensor.battery_1_discharging_capacity*
 
 ## FAQ
 
@@ -134,33 +161,28 @@ If you don't see the kiosk button, you are probably logged in with an installer 
 
 ### Energy Dashboard: Active Power not showing in the list of available entities
 
-Active Power is the current power production in Watt (W) or kilo Watt (kW). The Energy dashboard expects a value in *
-*kWh**.
-Your plant, inverter(s), batteries, ... expose a lot of entities, you can see them all: Settings → Devices &
-Integrations → Click on the "x devices" on the Fusion Solar Integration. Click on the device you want to see the
-entities for.
+Active Power is the current power production in Watt (W) or kilo Watt (kW). The Energy dashboard expects a value in **kWh**.
+
+Your plant, inverter(s), batteries, ... expose a lot of entities, you can see them all: Settings → Devices & Integrations → Click on the "x devices" on the Fusion Solar Integration. Click on the device you want to see the entities for.
 
 ### What do all entities mean?
 
-As I don't own an installation with all possible devices this integration is mostly based on
-the [Northbound Interface Reference](https://support.huawei.com/enterprise/en/doc/EDOC1100261860/d4ee355a/v6-interface-reference).
+As I don't own an installation with all possible devices this integration is mostly based on the [Northbound Interface Reference](https://support.huawei.com/enterprise/en/doc/EDOC1100261860/d4ee355a/v6-interface-reference).
 
 The entity names are based on the names in the interface reference.
 
 ### Disabling devices
 
 If you have a lot of devices wherefore you don't want to use the data. You can disable them through the interface:
-Settings → Devices & Integrations → Click on the "x devices" on the Fusion Solar Integration. Click on the device you
-want to disable. Click on the pencil icon in the upper right corner. Switch off "Enable device".
 
-This can speed up the updating of the other devices. Keep in mind that a call is made per device type. So if you have
-multiple devices from the same time you need to disable them all to have effect.
+Settings → Devices & Integrations → Click on the "x devices" on the Fusion Solar Integration. Click on the device you want to disable. Click on the pencil icon in the upper right corner. Switch off "Enable device".
+
+This can speed up the updating of the other devices. Keep in mind that a call is made per device type. So if you have multiple devices from the same time you need to disable them all to have effect.
 
 ### Can I work with the API myself?
 
 Yes. There is a [Postman] Collection available. You can import it in Postman and start working with it.
-The collection is available
-under [docs/postman_collection](https://github.com/tijsverkoyen/HomeAssistant-FusionSolar/tree/master/docs/postman_collection.json).
+The collection is available under [docs/postman_collection](https://github.com/tijsverkoyen/HomeAssistant-FusionSolar/tree/master/docs/postman_collection.json).
 
 You will need to create an environment in Postman with the following variables:
 
