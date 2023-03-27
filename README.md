@@ -8,21 +8,10 @@ Integrate FusionSolar into your Home Assistant.
   - [Installation](#installation)
   - [Kiosk](#kiosk)
   - [Northbound API / OpenAPI](#northbound-api--openapi)
-    - [If you know your installer](#if-you-know-your-installer)
-      - [Device Data](#device-data)
-    - [If you know your current installer, but would like to manage the devices on your own](#if-you-know-your-current-installer-but-would-like-to-manage-the-devices-on-your-own)
-    - [If you do not know your installer](#if-you-do-not-know-your-installer)
-    - [API testing](#api-testing)
     - [Exposed Devices](#exposed-devices)
     - [Realtime data](#realtime-data)
-    - [Total yields](#total-yields)
   - [Integration with the Energy dashboard](#integration-with-the-energy-dashboard)
   - [FAQ](#faq)
-    - [Where can I find the kiosk url?](#where-can-i-find-the-kiosk-url)
-    - [Energy Dashboard: Active Power not showing in the list of available entities](#energy-dashboard-active-power-not-showing-in-the-list-of-available-entities)
-    - [What do all entities mean?](#what-do-all-entities-mean)
-    - [Disabling devices](#disabling-devices)
-    - [Can I work with the API myself?](#can-i-work-with-the-api-myself)
 
 
 The integration is able to work with Kiosk mode, or with a Northbound API / OpenAPI account, see below for more details.
@@ -130,21 +119,21 @@ The integration updates the total yields (current day, current month, current ye
 
 ## Integration with the Energy dashboard
  
-If you haven't set up the Energy dashboard in HomeAssistant, you can select it from the side bar and step through the wizard. If you have configured it previously and want to change the settings you can access from the side bar by clicking on [Settings->Dashboards](https://my.home-assistant.io/redirect/lovelace_dashboards/).
+If you have not set up the Energy dashboard in HomeAssistant, you can select it from the sidebar and step through the wizard. If you have configured it previously and want to change the settings you can access from the sidebar by clicking on [Settings → Dashboards](https://my.home-assistant.io/redirect/lovelace_dashboards/).
 
 As the name suggests, the dashboard requires sensors with units of energy as input (i.e. kWh), not power.
 
 The first thing to configure is the electricity grid:
 
-* Grid consumption is given by *sensor.meter_1_reverse_active_energy*
-* Return to grid is given by *sensor.meter_1_active_energy_forward_active_energy*
+* Grid consumption is given by `sensor.xxx_reverse_active_energy`
+* Return to grid is given by `sensor.xxx_active_energy_forward_active_energy`
 
-For solar panels, the sensor is *sensor.station_name_total_current_day_energy*. You need to replace *station_name* in the sensor entity ID with the name of your station.
+For solar panels, the sensor is `sensor.xxx_total_current_day_energy`.
 
 Finally the battery needs to be configured:
 
-* Battery energy in is given by *sensor.battery_1_charging_capacity*
-* Battery energy out is given by *sensor.battery_1_discharging_capacity*
+* Battery energy in is given by `sensor.xxx_charging_capacity`
+* Battery energy out is given by `sensor.xxx_discharging_capacity`
 
 ## FAQ
 
