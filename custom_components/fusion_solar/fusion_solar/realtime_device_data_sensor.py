@@ -3,7 +3,7 @@ import datetime
 from homeassistant.core import callback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.components.sensor import STATE_CLASS_MEASUREMENT, STATE_CLASS_TOTAL_INCREASING, STATE_CLASS_TOTAL, \
-    SensorEntity
+    SensorEntity, SensorStateClass
 from homeassistant.components.binary_sensor import DEVICE_CLASS_CONNECTIVITY, BinarySensorEntity
 from homeassistant.const import DEVICE_CLASS_VOLTAGE, DEVICE_CLASS_CURRENT, DEVICE_CLASS_ENERGY, \
     DEVICE_CLASS_TEMPERATURE, DEVICE_CLASS_POWER_FACTOR, PERCENTAGE, DEVICE_CLASS_FREQUENCY, DEVICE_CLASS_POWER, \
@@ -286,6 +286,16 @@ class FusionSolarRealtimeDeviceDataTimestampSensor(FusionSolarRealtimeDeviceData
             return None
 
         return datetime.datetime.fromtimestamp(state / 1000)
+
+
+class FusionSolarRealtimeDeviceDataPercentageSensor(FusionSolarRealtimeDeviceDataSensor):
+    @property
+    def unit_of_measurement(self) -> str | None:
+        return PERCENTAGE
+
+    @property
+    def state_class(self) -> str:
+        return SensorStateClass.MEASUREMENT
 
 
 class FusionSolarRealtimeDeviceDataBinarySensor(CoordinatorEntity, BinarySensorEntity):
