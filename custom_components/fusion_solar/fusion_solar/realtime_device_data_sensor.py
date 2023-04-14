@@ -2,12 +2,9 @@ import datetime
 
 from homeassistant.core import callback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from homeassistant.components.sensor import STATE_CLASS_MEASUREMENT, STATE_CLASS_TOTAL_INCREASING, STATE_CLASS_TOTAL, \
-    SensorEntity, SensorStateClass
-from homeassistant.components.binary_sensor import DEVICE_CLASS_CONNECTIVITY, BinarySensorEntity
-from homeassistant.const import DEVICE_CLASS_VOLTAGE, DEVICE_CLASS_CURRENT, DEVICE_CLASS_ENERGY, \
-    DEVICE_CLASS_TEMPERATURE, DEVICE_CLASS_POWER_FACTOR, PERCENTAGE, DEVICE_CLASS_FREQUENCY, DEVICE_CLASS_POWER, \
-    DEVICE_CLASS_TIMESTAMP, DEVICE_CLASS_BATTERY, UnitOfEnergy, UnitOfPower, UnitOfTemperature, UnitOfElectricCurrent, \
+from homeassistant.components.sensor import SensorEntity, SensorStateClass, SensorDeviceClass
+from homeassistant.components.binary_sensor import BinarySensorEntity, BinarySensorDeviceClass
+from homeassistant.const import PERCENTAGE, UnitOfEnergy, UnitOfPower, UnitOfTemperature, UnitOfElectricCurrent, \
     UnitOfElectricPotential, UnitOfFrequency
 
 from .openapi.device import FusionSolarDevice
@@ -95,7 +92,7 @@ class FusionSolarRealtimeDeviceDataTranslatedSensor(FusionSolarRealtimeDeviceDat
 class FusionSolarRealtimeDeviceDataVoltageSensor(FusionSolarRealtimeDeviceDataSensor):
     @property
     def device_class(self) -> str:
-        return DEVICE_CLASS_VOLTAGE
+        return SensorDeviceClass.VOLTAGE
 
     @property
     def unit_of_measurement(self) -> str:
@@ -103,13 +100,13 @@ class FusionSolarRealtimeDeviceDataVoltageSensor(FusionSolarRealtimeDeviceDataSe
 
     @property
     def state_class(self) -> str:
-        return STATE_CLASS_MEASUREMENT
+        return SensorStateClass.MEASUREMENT
 
 
 class FusionSolarRealtimeDeviceDataCurrentSensor(FusionSolarRealtimeDeviceDataSensor):
     @property
     def device_class(self) -> str:
-        return DEVICE_CLASS_CURRENT
+        return SensorDeviceClass.CURRENT
 
     @property
     def unit_of_measurement(self) -> str:
@@ -117,13 +114,13 @@ class FusionSolarRealtimeDeviceDataCurrentSensor(FusionSolarRealtimeDeviceDataSe
 
     @property
     def state_class(self) -> str:
-        return STATE_CLASS_MEASUREMENT
+        return SensorStateClass.MEASUREMENT
 
 
 class FusionSolarRealtimeDeviceDataEnergySensor(FusionSolarRealtimeDeviceDataSensor):
     @property
     def device_class(self) -> str:
-        return DEVICE_CLASS_ENERGY
+        return SensorDeviceClass.ENERGY
 
     @property
     def unit_of_measurement(self) -> str:
@@ -131,19 +128,19 @@ class FusionSolarRealtimeDeviceDataEnergySensor(FusionSolarRealtimeDeviceDataSen
 
     @property
     def state_class(self) -> str:
-        return STATE_CLASS_TOTAL
+        return SensorStateClass.TOTAL
 
 
 class FusionSolarRealtimeDeviceDataEnergyTotalIncreasingSensor(FusionSolarRealtimeDeviceDataEnergySensor):
     @property
     def state_class(self) -> str:
-        return STATE_CLASS_TOTAL_INCREASING
+        return SensorStateClass.TOTAL_INCREASING
 
 
 class FusionSolarRealtimeDeviceDataTemperatureSensor(FusionSolarRealtimeDeviceDataSensor):
     @property
     def device_class(self) -> str:
-        return DEVICE_CLASS_TEMPERATURE
+        return SensorDeviceClass.TEMPERATURE
 
     @property
     def unit_of_measurement(self) -> str:
@@ -151,13 +148,13 @@ class FusionSolarRealtimeDeviceDataTemperatureSensor(FusionSolarRealtimeDeviceDa
 
     @property
     def state_class(self) -> str:
-        return STATE_CLASS_MEASUREMENT
+        return SensorStateClass.MEASUREMENT
 
 
 class FusionSolarRealtimeDeviceDataPowerFactorSensor(FusionSolarRealtimeDeviceDataSensor):
     @property
     def device_class(self) -> str:
-        return DEVICE_CLASS_POWER_FACTOR
+        return SensorDeviceClass.POWER_FACTOR
 
     @property
     def unit_of_measurement(self) -> str:
@@ -165,7 +162,7 @@ class FusionSolarRealtimeDeviceDataPowerFactorSensor(FusionSolarRealtimeDeviceDa
 
     @property
     def state_class(self) -> str:
-        return STATE_CLASS_MEASUREMENT
+        return SensorStateClass.MEASUREMENT
 
     @property
     def state(self) -> str:
@@ -180,7 +177,7 @@ class FusionSolarRealtimeDeviceDataPowerFactorSensor(FusionSolarRealtimeDeviceDa
 class FusionSolarRealtimeDeviceDataFrequencySensor(FusionSolarRealtimeDeviceDataSensor):
     @property
     def device_class(self) -> str:
-        return DEVICE_CLASS_FREQUENCY
+        return SensorDeviceClass.FREQUENCY
 
     @property
     def unit_of_measurement(self) -> str:
@@ -188,13 +185,13 @@ class FusionSolarRealtimeDeviceDataFrequencySensor(FusionSolarRealtimeDeviceData
 
     @property
     def state_class(self) -> str:
-        return STATE_CLASS_MEASUREMENT
+        return SensorStateClass.MEASUREMENT
 
 
 class FusionSolarRealtimeDeviceDataPowerSensor(FusionSolarRealtimeDeviceDataSensor):
     @property
     def device_class(self) -> str:
-        return DEVICE_CLASS_POWER
+        return SensorDeviceClass.POWER
 
     @property
     def unit_of_measurement(self) -> str:
@@ -202,7 +199,7 @@ class FusionSolarRealtimeDeviceDataPowerSensor(FusionSolarRealtimeDeviceDataSens
 
     @property
     def state_class(self) -> str:
-        return STATE_CLASS_MEASUREMENT
+        return SensorStateClass.MEASUREMENT
 
 
 class FusionSolarRealtimeDeviceDataPowerInWattSensor(FusionSolarRealtimeDeviceDataPowerSensor):
@@ -222,7 +219,7 @@ class FusionSolarRealtimeDeviceDataReactivePowerSensor(FusionSolarRealtimeDevice
 
     @property
     def state_class(self) -> str:
-        return STATE_CLASS_MEASUREMENT
+        return SensorStateClass.MEASUREMENT
 
 
 class FusionSolarRealtimeDeviceDataReactivePowerInVarSensor(FusionSolarRealtimeDeviceDataReactivePowerSensor):
@@ -242,7 +239,7 @@ class FusionSolarRealtimeDeviceDataApparentPowerSensor(FusionSolarRealtimeDevice
 
     @property
     def state_class(self) -> str:
-        return STATE_CLASS_MEASUREMENT
+        return SensorStateClass.MEASUREMENT
 
 
 class FusionSolarRealtimeDeviceDataWindSpeedSensor(FusionSolarRealtimeDeviceDataSensor):
@@ -256,13 +253,13 @@ class FusionSolarRealtimeDeviceDataWindSpeedSensor(FusionSolarRealtimeDeviceData
 
     @property
     def state_class(self) -> str:
-        return STATE_CLASS_MEASUREMENT
+        return SensorStateClass.MEASUREMENT
 
 
 class FusionSolarRealtimeDeviceDataBatterySensor(FusionSolarRealtimeDeviceDataSensor):
     @property
     def device_class(self) -> str:
-        return DEVICE_CLASS_BATTERY
+        return SensorDeviceClass.BATTERY
 
     @property
     def unit_of_measurement(self) -> str:
@@ -270,13 +267,13 @@ class FusionSolarRealtimeDeviceDataBatterySensor(FusionSolarRealtimeDeviceDataSe
 
     @property
     def state_class(self) -> str:
-        return STATE_CLASS_MEASUREMENT
+        return SensorStateClass.MEASUREMENT
 
 
 class FusionSolarRealtimeDeviceDataTimestampSensor(FusionSolarRealtimeDeviceDataSensor):
     @property
     def device_class(self) -> str:
-        return DEVICE_CLASS_TIMESTAMP
+        return SensorDeviceClass.TIMESTAMP
 
     @property
     def state(self) -> datetime:
@@ -349,7 +346,7 @@ class FusionSolarRealtimeDeviceDataBinarySensor(CoordinatorEntity, BinarySensorE
 class FusionSolarRealtimeDeviceDataStateBinarySensor(FusionSolarRealtimeDeviceDataBinarySensor):
     @property
     def device_class(self) -> str:
-        return DEVICE_CLASS_CONNECTIVITY
+        return BinarySensorDeviceClass.CONNECTIVITY
 
     @property
     def is_on(self) -> bool:
