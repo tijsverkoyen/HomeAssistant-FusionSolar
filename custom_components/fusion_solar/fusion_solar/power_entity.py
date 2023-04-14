@@ -1,5 +1,6 @@
 from homeassistant.core import callback
-from homeassistant.const import DEVICE_CLASS_POWER, UnitOfPower
+from homeassistant.const import UnitOfPower
+from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.helpers.entity import Entity
 
@@ -27,7 +28,7 @@ class FusionSolarPowerEntity(CoordinatorEntity, Entity):
 
     @property
     def device_class(self):
-        return DEVICE_CLASS_POWER
+        return SensorDeviceClass.POWER
 
     @property
     def unique_id(self) -> str:

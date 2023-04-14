@@ -1,8 +1,8 @@
 import logging
 
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from homeassistant.components.sensor import STATE_CLASS_TOTAL_INCREASING, SensorEntity
-from homeassistant.const import DEVICE_CLASS_ENERGY, UnitOfEnergy
+from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
+from homeassistant.const import UnitOfEnergy
 
 from .const import ATTR_TOTAL_LIFETIME_ENERGY, ATTR_REALTIME_POWER
 
@@ -39,7 +39,7 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
 
     @property
     def device_class(self) -> str:
-        return DEVICE_CLASS_ENERGY
+        return SensorDeviceClass.ENERGY
 
     @property
     def unique_id(self) -> str:
@@ -84,7 +84,7 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
 
     @property
     def state_class(self) -> str:
-        return STATE_CLASS_TOTAL_INCREASING
+        return SensorStateClass.TOTAL_INCREASING
 
     @property
     def native_value(self) -> str:
