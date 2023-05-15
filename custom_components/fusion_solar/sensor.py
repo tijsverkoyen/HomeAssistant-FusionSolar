@@ -675,7 +675,7 @@ async def _add_entities_for_stations_year_kpi_data(hass, async_add_entities, sta
         _LOGGER,
         name='FusionSolarOpenAPIStationYearKpi',
         update_method=async_update_station_year_kpi_data,
-        update_interval=timedelta(seconds=600),
+        update_interval=timedelta(hours=1),
     )
 
     # Fetch initial data so we have data when entities subscribe
