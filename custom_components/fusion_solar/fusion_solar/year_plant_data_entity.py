@@ -30,7 +30,7 @@ class FusionSolarYearPlantDataSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def state(self) -> float:
-        key = key = f'{DOMAIN}-{self._station.code}'
+        key = f'{DOMAIN}-{self._station.code}'
 
         if key not in self.coordinator.data:
             return None

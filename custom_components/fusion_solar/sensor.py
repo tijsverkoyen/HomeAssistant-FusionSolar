@@ -29,6 +29,7 @@ from .fusion_solar.device_attribute_entity import *
 from .fusion_solar.realtime_device_data_sensor import *
 from .fusion_solar.station_attribute_entity import *
 from .fusion_solar.year_plant_data_entity import *
+from .fusion_solar.lifetime_plant_data_entity import *
 
 from .device_real_kpi_coordinator import DeviceRealKpiDataCoordinator
 
@@ -692,6 +693,15 @@ async def _add_entities_for_stations_year_kpi_data(hass, async_add_entities, sta
             {'class': 'FusionSolarYearPlantDataReductionTotalCo2Sensor', 'attribute': 'reduction_total_co2'},
             {'class': 'FusionSolarYearPlantDataReductionTotalCoalSensor', 'attribute': 'reduction_total_coal'},
             {'class': 'FusionSolarYearPlantDataReductionTotalTreeSensor', 'attribute': 'reduction_total_tree'},
+
+            {'class': 'FusionSolarLifetimePlantDataInverterPowerSensor', 'attribute': 'inverter_power'},
+            {'class': 'FusionSolarLifetimePlantDataOngridPowerSensor', 'attribute': 'ongrid_power'},
+            {'class': 'FusionSolarLifetimePlantDataUsePowerSensor', 'attribute': 'use_power'},
+            {'class': 'FusionSolarLifetimePlantDataPowerProfitSensor', 'attribute': 'power_profit'},
+            {'class': 'FusionSolarLifetimePlantDataPerpowerRatioSensor', 'attribute': 'perpower_ratio'},
+            {'class': 'FusionSolarLifetimePlantDataReductionTotalCo2Sensor', 'attribute': 'reduction_total_co2'},
+            {'class': 'FusionSolarLifetimePlantDataReductionTotalCoalSensor', 'attribute': 'reduction_total_coal'},
+            {'class': 'FusionSolarLifetimePlantDataReductionTotalTreeSensor', 'attribute': 'reduction_total_tree'},
         ]
 
         entities = []
