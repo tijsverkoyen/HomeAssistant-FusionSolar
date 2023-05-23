@@ -2,7 +2,7 @@ import logging
 
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
-from homeassistant.const import UnitOfEnergy, UnitOfPower, IRRADIATION_WATTS_PER_SQUARE_METER
+from homeassistant.const import UnitOfEnergy, UnitOfPower, UnitOfMass, IRRADIATION_WATTS_PER_SQUARE_METER
 
 from ..const import DOMAIN
 
@@ -221,8 +221,29 @@ class FusionSolarYearPlantDataReductionTotalCo2Sensor(FusionSolarYearPlantDataSe
         return "Current Year - CO2 emission reduction"
 
     @property
+    def device_class(self) -> str:
+        return SensorDeviceClass.WEIGHT
+
+    @property
+    def unit_of_measurement(self) -> str:
+        return UnitOfMass.KILOGRAMS
+
+    @property
     def state_class(self) -> str:
         return SensorStateClass.TOTAL_INCREASING
+
+    @property
+    def state(self) -> float:
+        super_state = super().state
+
+        if super_state is None:
+            return None
+
+        return super_state * 1000
+
+    @property
+    def icon(self) -> str | None:
+        return "mdi:molecule-co2"
 
 
 class FusionSolarYearPlantDataReductionTotalCoalSensor(FusionSolarYearPlantDataSensor):
@@ -231,8 +252,25 @@ class FusionSolarYearPlantDataReductionTotalCoalSensor(FusionSolarYearPlantDataS
         return "Current Year - Standard coal saved"
 
     @property
+    def device_class(self) -> str:
+        return SensorDeviceClass.WEIGHT
+
+    @property
+    def unit_of_measurement(self) -> str:
+        return UnitOfMass.KILOGRAMS
+
+    @property
     def state_class(self) -> str:
         return SensorStateClass.TOTAL_INCREASING
+
+    @property
+    def state(self) -> float:
+        super_state = super().state
+
+        if super_state is None:
+            return None
+
+        return super_state * 1000
 
 
 class FusionSolarYearPlantDataReductionTotalTreeSensor(FusionSolarYearPlantDataSensor):
@@ -243,6 +281,10 @@ class FusionSolarYearPlantDataReductionTotalTreeSensor(FusionSolarYearPlantDataS
     @property
     def state_class(self) -> str:
         return SensorStateClass.TOTAL_INCREASING
+
+    @property
+    def icon(self) -> str | None:
+        return "mdi:tree"
 
 
 # @deprecated, use FusionSolarYearPlantDataInverterPowerSensor instead

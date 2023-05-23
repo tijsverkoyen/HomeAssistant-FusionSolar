@@ -2,7 +2,7 @@ import logging
 
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
-from homeassistant.const import UnitOfEnergy, UnitOfPower, IRRADIATION_WATTS_PER_SQUARE_METER
+from homeassistant.const import UnitOfEnergy, UnitOfMass
 
 from ..const import DOMAIN
 
@@ -134,8 +134,29 @@ class FusionSolarLifetimePlantDataReductionTotalCo2Sensor(FusionSolarLifetimePla
         return "Lifetime - CO2 emission reduction"
 
     @property
+    def device_class(self) -> str:
+        return SensorDeviceClass.WEIGHT
+
+    @property
+    def unit_of_measurement(self) -> str:
+        return UnitOfMass.KILOGRAMS
+
+    @property
     def state_class(self) -> str:
         return SensorStateClass.TOTAL_INCREASING
+
+    @property
+    def state(self) -> float:
+        super_state = super().state
+
+        if super_state is None:
+            return None
+
+        return super_state * 1000
+
+    @property
+    def icon(self) -> str | None:
+        return "mdi:molecule-co2"
 
 
 class FusionSolarLifetimePlantDataReductionTotalCoalSensor(FusionSolarLifetimePlantDataSensor):
@@ -144,8 +165,25 @@ class FusionSolarLifetimePlantDataReductionTotalCoalSensor(FusionSolarLifetimePl
         return "Lifetime - Standard coal saved"
 
     @property
+    def device_class(self) -> str:
+        return SensorDeviceClass.WEIGHT
+
+    @property
+    def unit_of_measurement(self) -> str:
+        return UnitOfMass.KILOGRAMS
+
+    @property
     def state_class(self) -> str:
         return SensorStateClass.TOTAL_INCREASING
+
+    @property
+    def state(self) -> float:
+        super_state = super().state
+
+        if super_state is None:
+            return None
+
+        return super_state * 1000
 
 
 class FusionSolarLifetimePlantDataReductionTotalTreeSensor(FusionSolarLifetimePlantDataSensor):
@@ -156,3 +194,8 @@ class FusionSolarLifetimePlantDataReductionTotalTreeSensor(FusionSolarLifetimePl
     @property
     def state_class(self) -> str:
         return SensorStateClass.TOTAL_INCREASING
+
+
+    @property
+    def icon(self) -> str | None:
+        return "mdi:tree"
