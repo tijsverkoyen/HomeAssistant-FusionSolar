@@ -16,12 +16,10 @@ class FusionSolarYearPlantDataSensor(CoordinatorEntity, SensorEntity):
             self,
             coordinator,
             station,
-            attribute,
     ):
         """Initialize the entity"""
         super().__init__(coordinator)
         self._station = station
-        self._attribute = attribute
         self._device_info = station.device_info()
 
     @property
@@ -57,6 +55,8 @@ class FusionSolarYearPlantDataSensor(CoordinatorEntity, SensorEntity):
 
 
 class FusionSolarYearPlantDataInstalledCapacitySensor(FusionSolarYearPlantDataSensor):
+    _attribute = 'installed_capacity'
+
     @property
     def name(self) -> str:
         return "Current Year - Installed capacity"
@@ -75,6 +75,8 @@ class FusionSolarYearPlantDataInstalledCapacitySensor(FusionSolarYearPlantDataSe
 
 
 class FusionSolarYearPlantDataRadiationIntensitySensor(FusionSolarYearPlantDataSensor):
+    _attribute = 'radiation_intensity'
+
     @property
     def name(self) -> str:
         return "Current Year - Global irradiation"
@@ -102,6 +104,8 @@ class FusionSolarYearPlantDataRadiationIntensitySensor(FusionSolarYearPlantDataS
 
 
 class FusionSolarYearPlantDataTheoryPowerSensor(FusionSolarYearPlantDataSensor):
+    _attribute = 'theory_power'
+
     @property
     def name(self) -> str:
         return "Current Year - Theoretical yield"
@@ -120,6 +124,8 @@ class FusionSolarYearPlantDataTheoryPowerSensor(FusionSolarYearPlantDataSensor):
 
 
 class FusionSolarYearPlantDataPerformanceRatioSensor(FusionSolarYearPlantDataSensor):
+    _attribute = 'performance_ratio'
+
     @property
     def name(self) -> str:
         return "Current Year - Performance ratio"
@@ -138,6 +144,8 @@ class FusionSolarYearPlantDataPerformanceRatioSensor(FusionSolarYearPlantDataSen
 
 
 class FusionSolarYearPlantDataInverterPowerSensor(FusionSolarYearPlantDataSensor):
+    _attribute = 'inverter_power'
+
     @property
     def name(self) -> str:
         return "Current Year - Inverter yield"
@@ -156,6 +164,8 @@ class FusionSolarYearPlantDataInverterPowerSensor(FusionSolarYearPlantDataSensor
 
 
 class FusionSolarYearPlantDataOngridPowerSensor(FusionSolarYearPlantDataSensor):
+    _attribute = 'ongrid_power'
+
     @property
     def name(self) -> str:
         return "Current Year - Feed-in energy"
@@ -174,6 +184,8 @@ class FusionSolarYearPlantDataOngridPowerSensor(FusionSolarYearPlantDataSensor):
 
 
 class FusionSolarYearPlantDataUsePowerSensor(FusionSolarYearPlantDataSensor):
+    _attribute = 'use_power'
+
     @property
     def name(self) -> str:
         return "Current Year - Consumption"
@@ -192,6 +204,8 @@ class FusionSolarYearPlantDataUsePowerSensor(FusionSolarYearPlantDataSensor):
 
 
 class FusionSolarYearPlantDataPowerProfitSensor(FusionSolarYearPlantDataSensor):
+    _attribute = 'power_profit'
+
     @property
     def name(self) -> str:
         return "Current Year - Revenue"
@@ -206,6 +220,8 @@ class FusionSolarYearPlantDataPowerProfitSensor(FusionSolarYearPlantDataSensor):
 
 
 class FusionSolarYearPlantDataPerpowerRatioSensor(FusionSolarYearPlantDataSensor):
+    _attribute = 'perpower_ratio'
+
     @property
     def name(self) -> str:
         return "Current Year - Specific energy"
@@ -216,6 +232,8 @@ class FusionSolarYearPlantDataPerpowerRatioSensor(FusionSolarYearPlantDataSensor
 
 
 class FusionSolarYearPlantDataReductionTotalCo2Sensor(FusionSolarYearPlantDataSensor):
+    _attribute = 'reduction_total_co2'
+
     @property
     def name(self) -> str:
         return "Current Year - CO2 emission reduction"
@@ -247,6 +265,8 @@ class FusionSolarYearPlantDataReductionTotalCo2Sensor(FusionSolarYearPlantDataSe
 
 
 class FusionSolarYearPlantDataReductionTotalCoalSensor(FusionSolarYearPlantDataSensor):
+    _attribute = 'reduction_total_coal'
+
     @property
     def name(self) -> str:
         return "Current Year - Standard coal saved"
@@ -274,6 +294,8 @@ class FusionSolarYearPlantDataReductionTotalCoalSensor(FusionSolarYearPlantDataS
 
 
 class FusionSolarYearPlantDataReductionTotalTreeSensor(FusionSolarYearPlantDataSensor):
+    _attribute = 'reduction_total_tree'
+
     @property
     def name(self) -> str:
         return "Current Year - Equivalent tree planted"

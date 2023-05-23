@@ -707,9 +707,7 @@ async def _add_entities_for_stations_year_kpi_data(hass, async_add_entities, sta
         entities = []
         for entity_to_create in entities_to_create:
             class_name = globals()[entity_to_create['class']]
-            entities.append(
-                class_name(coordinator, station, entity_to_create['attribute'])
-            )
+            entities.append(class_name(coordinator, station))
         async_add_entities(entities)
 
 

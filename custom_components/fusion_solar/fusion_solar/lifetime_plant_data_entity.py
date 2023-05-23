@@ -16,12 +16,10 @@ class FusionSolarLifetimePlantDataSensor(CoordinatorEntity, SensorEntity):
             self,
             coordinator,
             station,
-            attribute,
     ):
         """Initialize the entity"""
         super().__init__(coordinator)
         self._station = station
-        self._attribute = attribute
         self._device_info = station.device_info()
 
     @property
@@ -51,6 +49,8 @@ class FusionSolarLifetimePlantDataSensor(CoordinatorEntity, SensorEntity):
 
 
 class FusionSolarLifetimePlantDataInverterPowerSensor(FusionSolarLifetimePlantDataSensor):
+    _attribute = 'inverter_power'
+
     @property
     def name(self) -> str:
         return "Lifetime - Inverter yield"
@@ -69,6 +69,8 @@ class FusionSolarLifetimePlantDataInverterPowerSensor(FusionSolarLifetimePlantDa
 
 
 class FusionSolarLifetimePlantDataOngridPowerSensor(FusionSolarLifetimePlantDataSensor):
+    _attribute = 'ongrid_power'
+
     @property
     def name(self) -> str:
         return "Lifetime - Feed-in energy"
@@ -87,6 +89,8 @@ class FusionSolarLifetimePlantDataOngridPowerSensor(FusionSolarLifetimePlantData
 
 
 class FusionSolarLifetimePlantDataUsePowerSensor(FusionSolarLifetimePlantDataSensor):
+    _attribute = 'use_power'
+
     @property
     def name(self) -> str:
         return "Lifetime - Consumption"
@@ -105,6 +109,8 @@ class FusionSolarLifetimePlantDataUsePowerSensor(FusionSolarLifetimePlantDataSen
 
 
 class FusionSolarLifetimePlantDataPowerProfitSensor(FusionSolarLifetimePlantDataSensor):
+    _attribute = 'power_profit'
+
     @property
     def name(self) -> str:
         return "Lifetime - Revenue"
@@ -119,6 +125,8 @@ class FusionSolarLifetimePlantDataPowerProfitSensor(FusionSolarLifetimePlantData
 
 
 class FusionSolarLifetimePlantDataPerpowerRatioSensor(FusionSolarLifetimePlantDataSensor):
+    _attribute = 'perpower_ratio'
+
     @property
     def name(self) -> str:
         return "Lifetime - Specific energy"
@@ -129,6 +137,8 @@ class FusionSolarLifetimePlantDataPerpowerRatioSensor(FusionSolarLifetimePlantDa
 
 
 class FusionSolarLifetimePlantDataReductionTotalCo2Sensor(FusionSolarLifetimePlantDataSensor):
+    _attribute = 'reduction_total_co2'
+
     @property
     def name(self) -> str:
         return "Lifetime - CO2 emission reduction"
@@ -160,6 +170,8 @@ class FusionSolarLifetimePlantDataReductionTotalCo2Sensor(FusionSolarLifetimePla
 
 
 class FusionSolarLifetimePlantDataReductionTotalCoalSensor(FusionSolarLifetimePlantDataSensor):
+    _attribute = 'reduction_total_coal'
+
     @property
     def name(self) -> str:
         return "Lifetime - Standard coal saved"
@@ -187,6 +199,8 @@ class FusionSolarLifetimePlantDataReductionTotalCoalSensor(FusionSolarLifetimePl
 
 
 class FusionSolarLifetimePlantDataReductionTotalTreeSensor(FusionSolarLifetimePlantDataSensor):
+    _attribute = 'reduction_total_tree'
+
     @property
     def name(self) -> str:
         return "Lifetime - Equivalent tree planted"
@@ -194,7 +208,6 @@ class FusionSolarLifetimePlantDataReductionTotalTreeSensor(FusionSolarLifetimePl
     @property
     def state_class(self) -> str:
         return SensorStateClass.TOTAL_INCREASING
-
 
     @property
     def icon(self) -> str | None:
