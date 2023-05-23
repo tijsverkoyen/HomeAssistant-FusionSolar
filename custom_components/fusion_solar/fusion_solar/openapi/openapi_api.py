@@ -1,6 +1,8 @@
 """API client for FusionSolar OpenAPI."""
 import logging
 import time
+import datetime
+from datetime import timezone
 
 from requests import post
 
@@ -114,13 +116,14 @@ class FusionSolarOpenApi:
         return response[ATTR_DATA]
 
     def get_kpi_station_year(self, station_codes: list):
-        if self._last_station_list_current_time is None:
-            self.get_station_list()
+        today = datetime.datetime.now()
+        next_year = datetime.datetime(year=today.year + 1, month=1, day=1, hour=0, minute=0, second=0, microsecond=0,
+                                      tzinfo=timezone.utc)
 
         url = self._host + '/thirdData/getKpiStationYear'
         json = {
             'stationCodes': ','.join(station_codes),
-            'collectTime': self._last_station_list_current_time,
+            'collectTime': round(next_year.timestamp() * 1000),
         }
         response = self._do_call(url, json)
 
