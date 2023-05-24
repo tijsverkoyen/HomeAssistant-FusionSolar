@@ -59,7 +59,7 @@ class FusionSolarYearPlantDataInstalledCapacitySensor(FusionSolarYearPlantDataSe
 
     @property
     def name(self) -> str:
-        return "Current Year - Installed capacity"
+        return f'{self._station.readable_name} - Current Year - Installed capacity'
 
     @property
     def device_class(self) -> str:
@@ -79,7 +79,7 @@ class FusionSolarYearPlantDataRadiationIntensitySensor(FusionSolarYearPlantDataS
 
     @property
     def name(self) -> str:
-        return "Current Year - Global irradiation"
+        return f'{self._station.readable_name} - Current Year - Global irradiation'
 
     @property
     def device_class(self) -> str:
@@ -108,7 +108,7 @@ class FusionSolarYearPlantDataTheoryPowerSensor(FusionSolarYearPlantDataSensor):
 
     @property
     def name(self) -> str:
-        return "Current Year - Theoretical yield"
+        return f'{self._station.readable_name} - Current Year - Theoretical yield'
 
     @property
     def device_class(self) -> str:
@@ -128,7 +128,7 @@ class FusionSolarYearPlantDataPerformanceRatioSensor(FusionSolarYearPlantDataSen
 
     @property
     def name(self) -> str:
-        return "Current Year - Performance ratio"
+        return f'{self._station.readable_name} - Current Year - Performance ratio'
 
     @property
     def device_class(self) -> str:
@@ -148,7 +148,7 @@ class FusionSolarYearPlantDataInverterPowerSensor(FusionSolarYearPlantDataSensor
 
     @property
     def name(self) -> str:
-        return "Current Year - Inverter yield"
+        return f'{self._station.readable_name} - Current Year - Inverter yield'
 
     @property
     def device_class(self) -> str:
@@ -168,7 +168,7 @@ class FusionSolarYearPlantDataOngridPowerSensor(FusionSolarYearPlantDataSensor):
 
     @property
     def name(self) -> str:
-        return "Current Year - Feed-in energy"
+        return f'{self._station.readable_name} - Current Year - Feed-in energy'
 
     @property
     def device_class(self) -> str:
@@ -188,7 +188,7 @@ class FusionSolarYearPlantDataUsePowerSensor(FusionSolarYearPlantDataSensor):
 
     @property
     def name(self) -> str:
-        return "Current Year - Consumption"
+        return f'{self._station.readable_name} - Current Year - Consumption'
 
     @property
     def device_class(self) -> str:
@@ -208,7 +208,7 @@ class FusionSolarYearPlantDataPowerProfitSensor(FusionSolarYearPlantDataSensor):
 
     @property
     def name(self) -> str:
-        return "Current Year - Revenue"
+        return f'{self._station.readable_name} - Current Year - Revenue'
 
     @property
     def device_class(self) -> str:
@@ -224,7 +224,7 @@ class FusionSolarYearPlantDataPerpowerRatioSensor(FusionSolarYearPlantDataSensor
 
     @property
     def name(self) -> str:
-        return "Current Year - Specific energy"
+        return f'{self._station.readable_name} - Current Year - Specific energy'
 
     @property
     def state_class(self) -> str:
@@ -236,7 +236,7 @@ class FusionSolarYearPlantDataReductionTotalCo2Sensor(FusionSolarYearPlantDataSe
 
     @property
     def name(self) -> str:
-        return "Current Year - CO2 emission reduction"
+        return f'{self._station.readable_name} - Current Year - CO2 emission reduction'
 
     @property
     def device_class(self) -> str:
@@ -269,7 +269,7 @@ class FusionSolarYearPlantDataReductionTotalCoalSensor(FusionSolarYearPlantDataS
 
     @property
     def name(self) -> str:
-        return "Current Year - Standard coal saved"
+        return f'{self._station.readable_name} - Current Year - Standard coal saved'
 
     @property
     def device_class(self) -> str:
@@ -298,7 +298,7 @@ class FusionSolarYearPlantDataReductionTotalTreeSensor(FusionSolarYearPlantDataS
 
     @property
     def name(self) -> str:
-        return "Current Year - Equivalent tree planted"
+        return f'{self._station.readable_name} - Current Year - Equivalent tree planted'
 
     @property
     def state_class(self) -> str:

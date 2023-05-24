@@ -53,7 +53,7 @@ class FusionSolarLifetimePlantDataInverterPowerSensor(FusionSolarLifetimePlantDa
 
     @property
     def name(self) -> str:
-        return "Lifetime - Inverter yield"
+        return f'{self._station.readable_name} - Lifetime - Inverter yield'
 
     @property
     def device_class(self) -> str:
@@ -73,7 +73,7 @@ class FusionSolarLifetimePlantDataOngridPowerSensor(FusionSolarLifetimePlantData
 
     @property
     def name(self) -> str:
-        return "Lifetime - Feed-in energy"
+        return f'{self._station.readable_name} - Lifetime - Feed-in energy'
 
     @property
     def device_class(self) -> str:
@@ -93,7 +93,7 @@ class FusionSolarLifetimePlantDataUsePowerSensor(FusionSolarLifetimePlantDataSen
 
     @property
     def name(self) -> str:
-        return "Lifetime - Consumption"
+        return f'{self._station.readable_name} - Lifetime - Consumption'
 
     @property
     def device_class(self) -> str:
@@ -113,7 +113,7 @@ class FusionSolarLifetimePlantDataPowerProfitSensor(FusionSolarLifetimePlantData
 
     @property
     def name(self) -> str:
-        return "Lifetime - Revenue"
+        return f'{self._station.readable_name} - Lifetime - Revenue'
 
     @property
     def device_class(self) -> str:
@@ -129,7 +129,7 @@ class FusionSolarLifetimePlantDataPerpowerRatioSensor(FusionSolarLifetimePlantDa
 
     @property
     def name(self) -> str:
-        return "Lifetime - Specific energy"
+        return f'{self._station.readable_name} - Lifetime - Specific energy'
 
     @property
     def state_class(self) -> str:
@@ -141,7 +141,7 @@ class FusionSolarLifetimePlantDataReductionTotalCo2Sensor(FusionSolarLifetimePla
 
     @property
     def name(self) -> str:
-        return "Lifetime - CO2 emission reduction"
+        return f'{self._station.readable_name} - Lifetime - CO2 emission reduction'
 
     @property
     def device_class(self) -> str:
@@ -174,7 +174,7 @@ class FusionSolarLifetimePlantDataReductionTotalCoalSensor(FusionSolarLifetimePl
 
     @property
     def name(self) -> str:
-        return "Lifetime - Standard coal saved"
+        return f'{self._station.readable_name} - Lifetime - Standard coal saved'
 
     @property
     def device_class(self) -> str:
@@ -203,7 +203,7 @@ class FusionSolarLifetimePlantDataReductionTotalTreeSensor(FusionSolarLifetimePl
 
     @property
     def name(self) -> str:
-        return "Lifetime - Equivalent tree planted"
+        return f'{self._station.readable_name} - Lifetime - Equivalent tree planted'
 
     @property
     def state_class(self) -> str:
