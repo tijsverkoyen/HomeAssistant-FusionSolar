@@ -1,6 +1,8 @@
 """API client for FusionSolar OpenAPI."""
 import logging
 import time
+import datetime
+from datetime import timezone
 
 from requests import post
 
@@ -20,7 +22,6 @@ _LOGGER = logging.getLogger(__name__)
 class FusionSolarOpenApi:
     def __init__(self, host: str, username: str, password: str):
         self._token = None
-        self._last_station_list_current_time = None
         self._host = host
         self._username = username
         self._password = password
@@ -56,9 +57,6 @@ class FusionSolarOpenApi:
             _LOGGER.debug(f'Could not use getStationList, trying stations: {error}')
             return self.stations()
 
-        if ATTR_PARAMS in response and ATTR_PARAMS_CURRENT_TIME in response[ATTR_PARAMS]:
-            self._last_station_list_current_time = response[ATTR_PARAMS][ATTR_PARAMS_CURRENT_TIME]
-
         data = []
         for station in response[ATTR_DATA]:
             data.append(
@@ -83,8 +81,6 @@ class FusionSolarOpenApi:
             'pageNo': 1,
         }
         response = self._do_call(url, json)
-
-        self._last_station_list_current_time = round(time.time() * 1000)
 
         data = []
         for station in response[ATTR_DATA][ATTR_LIST]:
@@ -114,13 +110,14 @@ class FusionSolarOpenApi:
         return response[ATTR_DATA]
 
     def get_kpi_station_year(self, station_codes: list):
-        if self._last_station_list_current_time is None:
-            self.get_station_list()
+        today = datetime.datetime.now()
+        next_year = datetime.datetime(year=today.year + 1, month=1, day=1, hour=0, minute=0, second=0, microsecond=0,
+                                      tzinfo=timezone.utc)
 
         url = self._host + '/thirdData/getKpiStationYear'
         json = {
             'stationCodes': ','.join(station_codes),
-            'collectTime': self._last_station_list_current_time,
+            'collectTime': round(next_year.timestamp() * 1000),
         }
         response = self._do_call(url, json)
 
@@ -132,9 +129,6 @@ class FusionSolarOpenApi:
             'stationCodes': ','.join(station_codes),
         }
         response = self._do_call(url, json)
-
-        if ATTR_PARAMS in response and ATTR_PARAMS_CURRENT_TIME in response[ATTR_PARAMS]:
-            self._last_station_list_current_time = response[ATTR_PARAMS][ATTR_PARAMS_CURRENT_TIME]
 
         data = []
         for device in response[ATTR_DATA]:

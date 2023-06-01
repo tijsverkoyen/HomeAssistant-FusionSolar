@@ -28,6 +28,8 @@ from .fusion_solar.power_entity import FusionSolarPowerEntityRealtime, FusionSol
 from .fusion_solar.device_attribute_entity import *
 from .fusion_solar.realtime_device_data_sensor import *
 from .fusion_solar.station_attribute_entity import *
+from .fusion_solar.year_plant_data_entity import *
+from .fusion_solar.lifetime_plant_data_entity import *
 
 from .device_real_kpi_coordinator import DeviceRealKpiDataCoordinator
 
@@ -651,20 +653,15 @@ async def _add_entities_for_stations_year_kpi_data(hass, async_add_entities, sta
 
     async def async_update_station_year_kpi_data():
         data = {}
-        collect_times = {}
         response = await hass.async_add_executor_job(api.get_kpi_station_year, station_codes)
 
         for response_data in response:
             key = f'{DOMAIN}-{response_data[ATTR_STATION_CODE]}'
 
-            if key in collect_times and key in data:
-                # Only update if the collectTime is newer
-                if response_data[ATTR_DATA_COLLECT_TIME] > collect_times[key]:
-                    data[key] = response_data[ATTR_STATION_REAL_KPI_DATA_ITEM_MAP]
-                    collect_times[key] = response_data[ATTR_DATA_COLLECT_TIME]
-            else:
-                data[key] = response_data[ATTR_STATION_REAL_KPI_DATA_ITEM_MAP]
-                collect_times[key] = response_data[ATTR_DATA_COLLECT_TIME]
+            if key not in data:
+                data[key] = {}
+
+            data[key][response_data[ATTR_DATA_COLLECT_TIME]] = response_data[ATTR_STATION_REAL_KPI_DATA_ITEM_MAP]
 
         _LOGGER.debug(f'async_update_station_year_kpi_data: {data}')
 
@@ -682,16 +679,36 @@ async def _add_entities_for_stations_year_kpi_data(hass, async_add_entities, sta
     await coordinator.async_refresh()
 
     for station in stations:
-        async_add_entities([
-            FusionSolarEnergySensorTotalCurrentYear(
-                coordinator,
-                f'{DOMAIN}-{station.code}-{ID_TOTAL_CURRENT_YEAR_ENERGY}',
-                f'{station.readable_name} - {NAME_TOTAL_CURRENT_YEAR_ENERGY}',
-                ATTR_KPI_YEAR_INVERTER_POWER,
-                f'{DOMAIN}-{station.code}',
-                station.device_info()
-            )
-        ])
+        entities_to_create = [
+            {'class': 'FusionSolarYearPlantDataInstalledCapacitySensor'},
+            {'class': 'FusionSolarYearPlantDataRadiationIntensitySensor'},
+            {'class': 'FusionSolarYearPlantDataTheoryPowerSensor'},
+            {'class': 'FusionSolarYearPlantDataPerformanceRatioSensor'},
+            {'class': 'FusionSolarYearPlantDataInverterPowerSensor'},
+            {'class': 'FusionSolarBackwardsCompatibilityTotalCurrentYear'},
+            {'class': 'FusionSolarYearPlantDataOngridPowerSensor'},
+            {'class': 'FusionSolarYearPlantDataUsePowerSensor'},
+            {'class': 'FusionSolarYearPlantDataPowerProfitSensor'},
+            {'class': 'FusionSolarYearPlantDataPerpowerRatioSensor'},
+            {'class': 'FusionSolarYearPlantDataReductionTotalCo2Sensor'},
+            {'class': 'FusionSolarYearPlantDataReductionTotalCoalSensor'},
+            {'class': 'FusionSolarYearPlantDataReductionTotalTreeSensor'},
+
+            {'class': 'FusionSolarLifetimePlantDataInverterPowerSensor'},
+            {'class': 'FusionSolarLifetimePlantDataOngridPowerSensor'},
+            {'class': 'FusionSolarLifetimePlantDataUsePowerSensor'},
+            {'class': 'FusionSolarLifetimePlantDataPowerProfitSensor'},
+            {'class': 'FusionSolarLifetimePlantDataPerpowerRatioSensor'},
+            {'class': 'FusionSolarLifetimePlantDataReductionTotalCo2Sensor'},
+            {'class': 'FusionSolarLifetimePlantDataReductionTotalCoalSensor'},
+            {'class': 'FusionSolarLifetimePlantDataReductionTotalTreeSensor'},
+        ]
+
+        entities = []
+        for entity_to_create in entities_to_create:
+            class_name = globals()[entity_to_create['class']]
+            entities.append(class_name(coordinator, station))
+        async_add_entities(entities)
 
 
 async def _add_static_entities_for_devices(async_add_entities, devices):
