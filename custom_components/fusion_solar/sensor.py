@@ -8,6 +8,7 @@ from datetime import timedelta
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import CONF_NAME, CONF_URL, CONF_HOST, CONF_USERNAME, CONF_PASSWORD
 from homeassistant.exceptions import IntegrationError
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from .fusion_solar.const import ATTR_REALTIME_POWER, ATTR_TOTAL_CURRENT_DAY_ENERGY, \
@@ -578,7 +579,21 @@ async def _add_entities_for_stations_real_kpi_data(hass, async_add_entities, sta
     async def async_update_station_real_kpi_data():
         """Fetch data"""
         data = {}
-        response = await hass.async_add_executor_job(api.get_station_real_kpi, station_codes)
+
+        device_registry = dr.async_get(hass)
+        station_codes_to_get_data_for = []
+        for code in station_codes:
+            device_from_registry = device_registry.async_get_device(identifiers={(DOMAIN, code)})
+            if device_from_registry is not None and device_from_registry.disabled:
+                _LOGGER.debug(f'Station {code} is disabled by the user.')
+                continue
+
+            station_codes_to_get_data_for.append(code)
+
+        if station_codes_to_get_data_for is None or len(station_codes_to_get_data_for) == 0:
+            return data
+
+        response = await hass.async_add_executor_job(api.get_station_real_kpi, station_codes_to_get_data_for)
 
         for response_data in response:
             data[f'{DOMAIN}-{response_data[ATTR_STATION_CODE]}'] = response_data[ATTR_STATION_REAL_KPI_DATA_ITEM_MAP]
@@ -653,7 +668,21 @@ async def _add_entities_for_stations_year_kpi_data(hass, async_add_entities, sta
 
     async def async_update_station_year_kpi_data():
         data = {}
-        response = await hass.async_add_executor_job(api.get_kpi_station_year, station_codes)
+
+        device_registry = dr.async_get(hass)
+        station_codes_to_get_data_for = []
+        for code in station_codes:
+            device_from_registry = device_registry.async_get_device(identifiers={(DOMAIN, code)})
+            if device_from_registry is not None and device_from_registry.disabled:
+                _LOGGER.debug(f'Station {code} is disabled by the user.')
+                continue
+
+            station_codes_to_get_data_for.append(code)
+
+        if station_codes_to_get_data_for is None or len(station_codes_to_get_data_for) == 0:
+            return data
+
+        response = await hass.async_add_executor_job(api.get_kpi_station_year, station_codes_to_get_data_for)
 
         for response_data in response:
             key = f'{DOMAIN}-{response_data[ATTR_STATION_CODE]}'
