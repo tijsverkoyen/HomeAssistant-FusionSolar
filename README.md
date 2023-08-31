@@ -160,13 +160,15 @@ As I don't own an installation with all possible devices this integration is mos
 
 The entity names are based on the names in the interface reference.
 
-### Disabling devices
+### Disabling devices / plants / stations
 
-If you have a lot of devices wherefore you don't want to use the data. You can disable them through the interface:
+If you have a lot of devices / plants / stations wherefore you don't want to use the data. You can disable them through the interface:
 
-Settings → Devices & Integrations → Click on the "x devices" on the Fusion Solar Integration. Click on the device you want to disable. Click on the pencil icon in the upper right corner. Switch off "Enable device".
+Settings → Devices & Integrations → Click on the "x devices" on the Fusion Solar Integration. Click on the device / plant / station you want to disable. Click on the pencil icon in the upper right corner. Switch off "Enable device".
 
 This can speed up the updating of the other devices. Keep in mind that a call is made per device type. So if you have multiple devices from the same time you need to disable them all to have effect.
+
+You will also need to restart Home Assistant.
 
 ### Can I work with the API myself?
 
