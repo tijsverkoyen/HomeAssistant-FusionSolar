@@ -797,7 +797,10 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 
         if not stations:
             _LOGGER.error('No stations found')
-            raise IntegrationError("No stations found in OpenAPI")
+            raise IntegrationError('No stations found in OpenAPI')
+
+        if len(stations) > 100:
+            _LOGGER.error('More than 100 stations found, which is not a good idea.')
 
         await add_entities_for_stations(hass, async_add_entities, stations, api)
 
