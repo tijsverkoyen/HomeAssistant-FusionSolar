@@ -56,6 +56,15 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 _LOGGER = logging.getLogger(__name__)
 
 
+def filter_for_enabled_stations(station, device_registry):
+    device_from_registry = device_registry.async_get_device(identifiers={(DOMAIN, station.code)})
+    if device_from_registry is not None and device_from_registry.disabled:
+        _LOGGER.debug(f'Station {station.code} is disabled by the user.')
+        return False
+
+    return True
+
+
 async def add_entities_for_kiosk(hass, async_add_entities, kiosk: FusionSolarKiosk):
     _LOGGER.debug(f'Adding entities for kiosk {kiosk.id}')
 
@@ -137,8 +146,10 @@ async def add_entities_for_kiosk(hass, async_add_entities, kiosk: FusionSolarKio
 
 
 async def add_entities_for_stations(hass, async_add_entities, stations, api: FusionSolarOpenApi):
-    _LOGGER.debug(f'Adding entities for stations')
+    device_registry = dr.async_get(hass)
+    stations = list(filter(lambda x: filter_for_enabled_stations(x, device_registry), stations))
     station_codes = [station.code for station in stations]
+    _LOGGER.debug(f'Adding entities for stations ({len(station_codes)})')
 
     await _add_entities_for_stations_real_kpi_data(hass, async_add_entities, stations, api)
     await _add_entities_for_stations_year_kpi_data(hass, async_add_entities, stations, api)
@@ -574,26 +585,19 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
 
 
 async def _add_entities_for_stations_real_kpi_data(hass, async_add_entities, stations, api: FusionSolarOpenApi):
+    device_registry = dr.async_get(hass)
+    stations = list(filter(lambda x: filter_for_enabled_stations(x, device_registry), stations))
     station_codes = [station.code for station in stations]
+    _LOGGER.debug(f'Adding stations_real_kpi_data entities for stations ({len(station_codes)})')
 
     async def async_update_station_real_kpi_data():
         """Fetch data"""
         data = {}
 
-        device_registry = dr.async_get(hass)
-        station_codes_to_get_data_for = []
-        for code in station_codes:
-            device_from_registry = device_registry.async_get_device(identifiers={(DOMAIN, code)})
-            if device_from_registry is not None and device_from_registry.disabled:
-                _LOGGER.debug(f'Station {code} is disabled by the user.')
-                continue
-
-            station_codes_to_get_data_for.append(code)
-
-        if station_codes_to_get_data_for is None or len(station_codes_to_get_data_for) == 0:
+        if station_codes is None or len(station_codes) == 0:
             return data
 
-        response = await hass.async_add_executor_job(api.get_station_real_kpi, station_codes_to_get_data_for)
+        response = await hass.async_add_executor_job(api.get_station_real_kpi, station_codes)
 
         for response_data in response:
             data[f'{DOMAIN}-{response_data[ATTR_STATION_CODE]}'] = response_data[ATTR_STATION_REAL_KPI_DATA_ITEM_MAP]
@@ -664,25 +668,18 @@ async def _add_entities_for_stations_real_kpi_data(hass, async_add_entities, sta
 
 
 async def _add_entities_for_stations_year_kpi_data(hass, async_add_entities, stations, api: FusionSolarOpenApi):
+    device_registry = dr.async_get(hass)
+    stations = list(filter(lambda x: filter_for_enabled_stations(x, device_registry), stations))
     station_codes = [station.code for station in stations]
+    _LOGGER.debug(f'Adding stations_year_kpi_data entities for stations ({len(station_codes)})')
 
     async def async_update_station_year_kpi_data():
         data = {}
 
-        device_registry = dr.async_get(hass)
-        station_codes_to_get_data_for = []
-        for code in station_codes:
-            device_from_registry = device_registry.async_get_device(identifiers={(DOMAIN, code)})
-            if device_from_registry is not None and device_from_registry.disabled:
-                _LOGGER.debug(f'Station {code} is disabled by the user.')
-                continue
-
-            station_codes_to_get_data_for.append(code)
-
-        if station_codes_to_get_data_for is None or len(station_codes_to_get_data_for) == 0:
+        if station_codes is None or len(station_codes) == 0:
             return data
 
-        response = await hass.async_add_executor_job(api.get_kpi_station_year, station_codes_to_get_data_for)
+        response = await hass.async_add_executor_job(api.get_kpi_station_year, station_codes)
 
         for response_data in response:
             key = f'{DOMAIN}-{response_data[ATTR_STATION_CODE]}'
