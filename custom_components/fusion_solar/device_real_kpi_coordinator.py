@@ -84,6 +84,11 @@ class DeviceRealKpiDataCoordinator(DataUpdateCoordinator):
                 _LOGGER.debug(f'Device {device.name} ({device.device_id}) is disabled by the user.')
                 continue
 
+            station_from_registry = device_registry.async_get_device(identifiers={(DOMAIN, device.station_code)})
+            if station_from_registry is not None and station_from_registry.disabled:
+                _LOGGER.debug(f'Device {device.name} ({device.device_id}) linked to a disabled station ({device.station_code}).')
+                continue
+
             if device.type_id not in device_ids_grouped_per_type_id:
                 device_ids_grouped_per_type_id[device.type_id] = []
             device_ids_grouped_per_type_id[device.type_id].append(str(device.device_id))
