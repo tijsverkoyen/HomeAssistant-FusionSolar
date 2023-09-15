@@ -116,12 +116,12 @@ class FusionSolarLifetimePlantDataPowerProfitSensor(FusionSolarLifetimePlantData
         return f'{self._station.readable_name} - Lifetime - Revenue'
 
     @property
-    def device_class(self) -> str:
-        return SensorDeviceClass.MONETARY
-
-    @property
     def state_class(self) -> str:
         return SensorStateClass.TOTAL_INCREASING
+
+    @property
+    def icon(self) -> str | None:
+        return "mdi:cash"
 
 
 class FusionSolarLifetimePlantDataPerpowerRatioSensor(FusionSolarLifetimePlantDataSensor):
