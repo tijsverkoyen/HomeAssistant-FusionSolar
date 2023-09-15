@@ -91,7 +91,7 @@ class FusionSolarYearPlantDataRadiationIntensitySensor(FusionSolarYearPlantDataS
 
     @property
     def state_class(self) -> str:
-        return SensorStateClass.TOTAL
+        return SensorStateClass.MEASUREMENT
 
     @property
     def state(self) -> float:
@@ -216,7 +216,7 @@ class FusionSolarYearPlantDataPowerProfitSensor(FusionSolarYearPlantDataSensor):
 
     @property
     def state_class(self) -> str:
-        return SensorStateClass.TOTAL_INCREASING
+        return SensorStateClass.TOTAL
 
 
 class FusionSolarYearPlantDataPerpowerRatioSensor(FusionSolarYearPlantDataSensor):
@@ -239,11 +239,7 @@ class FusionSolarYearPlantDataReductionTotalCo2Sensor(FusionSolarYearPlantDataSe
         return f'{self._station.readable_name} - Current Year - CO2 emission reduction'
 
     @property
-    def device_class(self) -> str:
-        return SensorDeviceClass.WEIGHT
-
-    @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return UnitOfMass.KILOGRAMS
 
     @property
@@ -272,11 +268,7 @@ class FusionSolarYearPlantDataReductionTotalCoalSensor(FusionSolarYearPlantDataS
         return f'{self._station.readable_name} - Current Year - Standard coal saved'
 
     @property
-    def device_class(self) -> str:
-        return SensorDeviceClass.WEIGHT
-
-    @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return UnitOfMass.KILOGRAMS
 
     @property
@@ -291,6 +283,10 @@ class FusionSolarYearPlantDataReductionTotalCoalSensor(FusionSolarYearPlantDataS
             return None
 
         return native_value * 1000
+
+    @property
+    def icon(self) -> str | None:
+        return "mdi:weight"
 
 
 class FusionSolarYearPlantDataReductionTotalTreeSensor(FusionSolarYearPlantDataSensor):
