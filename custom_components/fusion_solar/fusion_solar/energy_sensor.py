@@ -50,7 +50,7 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
         return self._name
 
     @property
-    def state(self) -> float:
+    def native_value(self) -> float:
         # It seems like Huawei Fusion Solar returns some invalid data for the lifetime energy just before midnight
         # Therefore we validate if the new value is higher than the current value
         if ATTR_TOTAL_LIFETIME_ENERGY == self._attribute:
@@ -79,20 +79,12 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
         return float(self.coordinator.data[self._data_name][self._attribute])
 
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return UnitOfEnergy.KILO_WATT_HOUR
 
     @property
     def state_class(self) -> str:
         return SensorStateClass.TOTAL_INCREASING
-
-    @property
-    def native_value(self) -> str:
-        return self.state if self.state else ''
-
-    @property
-    def native_unit_of_measurement(self) -> str:
-        return self.unit_of_measurement
 
     @property
     def device_info(self) -> dict:

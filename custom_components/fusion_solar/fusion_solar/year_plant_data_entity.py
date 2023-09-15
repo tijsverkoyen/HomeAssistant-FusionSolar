@@ -27,7 +27,7 @@ class FusionSolarYearPlantDataSensor(CoordinatorEntity, SensorEntity):
         return f'{DOMAIN}-{self._station.code}-current_year-{self._attribute}'
 
     @property
-    def state(self) -> float:
+    def native_value(self) -> float:
         key = f'{DOMAIN}-{self._station.code}'
 
         if key not in self.coordinator.data:
@@ -66,7 +66,7 @@ class FusionSolarYearPlantDataInstalledCapacitySensor(FusionSolarYearPlantDataSe
         return SensorDeviceClass.POWER
 
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return UnitOfPower.KILO_WATT
 
     @property
@@ -86,7 +86,7 @@ class FusionSolarYearPlantDataRadiationIntensitySensor(FusionSolarYearPlantDataS
         return SensorDeviceClass.IRRADIANCE
 
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return IRRADIATION_WATTS_PER_SQUARE_METER
 
     @property
@@ -115,7 +115,7 @@ class FusionSolarYearPlantDataTheoryPowerSensor(FusionSolarYearPlantDataSensor):
         return SensorDeviceClass.ENERGY
 
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return UnitOfEnergy.KILO_WATT_HOUR
 
     @property
@@ -135,7 +135,7 @@ class FusionSolarYearPlantDataPerformanceRatioSensor(FusionSolarYearPlantDataSen
         return SensorDeviceClass.ENERGY
 
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return UnitOfEnergy.KILO_WATT_HOUR
 
     @property
@@ -155,7 +155,7 @@ class FusionSolarYearPlantDataInverterPowerSensor(FusionSolarYearPlantDataSensor
         return SensorDeviceClass.ENERGY
 
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return UnitOfEnergy.KILO_WATT_HOUR
 
     @property
@@ -175,7 +175,7 @@ class FusionSolarYearPlantDataOngridPowerSensor(FusionSolarYearPlantDataSensor):
         return SensorDeviceClass.ENERGY
 
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return UnitOfEnergy.KILO_WATT_HOUR
 
     @property
@@ -195,7 +195,7 @@ class FusionSolarYearPlantDataUsePowerSensor(FusionSolarYearPlantDataSensor):
         return SensorDeviceClass.ENERGY
 
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return UnitOfEnergy.KILO_WATT_HOUR
 
     @property
@@ -251,13 +251,13 @@ class FusionSolarYearPlantDataReductionTotalCo2Sensor(FusionSolarYearPlantDataSe
         return SensorStateClass.TOTAL_INCREASING
 
     @property
-    def state(self) -> float:
-        super_state = super().state
+    def native_value(self) -> float:
+        native_value = super().native_value
 
-        if super_state is None:
+        if native_value is None:
             return None
 
-        return super_state * 1000
+        return native_value * 1000
 
     @property
     def icon(self) -> str | None:
@@ -284,13 +284,13 @@ class FusionSolarYearPlantDataReductionTotalCoalSensor(FusionSolarYearPlantDataS
         return SensorStateClass.TOTAL_INCREASING
 
     @property
-    def state(self) -> float:
-        super_state = super().state
+    def native_value(self) -> float:
+        native_value = super().native_value
 
-        if super_state is None:
+        if native_value is None:
             return None
 
-        return super_state * 1000
+        return native_value * 1000
 
 
 class FusionSolarYearPlantDataReductionTotalTreeSensor(FusionSolarYearPlantDataSensor):
