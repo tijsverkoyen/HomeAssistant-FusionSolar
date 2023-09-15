@@ -173,10 +173,6 @@ class FusionSolarLifetimePlantDataReductionTotalCoalSensor(FusionSolarLifetimePl
         return f'{self._station.readable_name} - Lifetime - Standard coal saved'
 
     @property
-    def device_class(self) -> str:
-        return SensorDeviceClass.WEIGHT
-
-    @property
     def native_unit_of_measurement(self) -> str:
         return UnitOfMass.KILOGRAMS
 
@@ -192,6 +188,10 @@ class FusionSolarLifetimePlantDataReductionTotalCoalSensor(FusionSolarLifetimePl
             return None
 
         return native_value * 1000
+
+    @property
+    def icon(self) -> str | None:
+        return "mdi:weight"
 
 
 class FusionSolarLifetimePlantDataReductionTotalTreeSensor(FusionSolarLifetimePlantDataSensor):
