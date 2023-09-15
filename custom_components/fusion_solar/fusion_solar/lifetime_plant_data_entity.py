@@ -144,10 +144,6 @@ class FusionSolarLifetimePlantDataReductionTotalCo2Sensor(FusionSolarLifetimePla
         return f'{self._station.readable_name} - Lifetime - CO2 emission reduction'
 
     @property
-    def device_class(self) -> str:
-        return SensorDeviceClass.WEIGHT
-
-    @property
     def native_unit_of_measurement(self) -> str:
         return UnitOfMass.KILOGRAMS
 
