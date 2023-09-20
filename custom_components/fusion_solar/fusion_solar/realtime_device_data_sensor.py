@@ -39,7 +39,7 @@ class FusionSolarRealtimeDeviceDataSensor(CoordinatorEntity, SensorEntity):
         return f'{self._device.name} - {self._name}'
 
     @property
-    def state(self) -> float:
+    def native_value(self) -> float:
         if self._state == '__NOT_INITIALIZED__':
             # check if data is available
             self._handle_coordinator_update()
@@ -95,7 +95,7 @@ class FusionSolarRealtimeDeviceDataVoltageSensor(FusionSolarRealtimeDeviceDataSe
         return SensorDeviceClass.VOLTAGE
 
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return UnitOfElectricPotential.VOLT
 
     @property
@@ -109,7 +109,7 @@ class FusionSolarRealtimeDeviceDataCurrentSensor(FusionSolarRealtimeDeviceDataSe
         return SensorDeviceClass.CURRENT
 
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return UnitOfElectricCurrent.AMPERE
 
     @property
@@ -123,7 +123,7 @@ class FusionSolarRealtimeDeviceDataEnergySensor(FusionSolarRealtimeDeviceDataSen
         return SensorDeviceClass.ENERGY
 
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return UnitOfEnergy.KILO_WATT_HOUR
 
     @property
@@ -143,7 +143,7 @@ class FusionSolarRealtimeDeviceDataTemperatureSensor(FusionSolarRealtimeDeviceDa
         return SensorDeviceClass.TEMPERATURE
 
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return UnitOfTemperature.CELSIUS
 
     @property
@@ -157,7 +157,7 @@ class FusionSolarRealtimeDeviceDataPowerFactorSensor(FusionSolarRealtimeDeviceDa
         return SensorDeviceClass.POWER_FACTOR
 
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return PERCENTAGE
 
     @property
@@ -165,13 +165,13 @@ class FusionSolarRealtimeDeviceDataPowerFactorSensor(FusionSolarRealtimeDeviceDa
         return SensorStateClass.MEASUREMENT
 
     @property
-    def state(self) -> str:
-        state = super().state
+    def native_value(self) -> str:
+        native_value = super().native_value
 
-        if state is None:
+        if native_value is None:
             return None
 
-        return state * 100
+        return native_value * 100
 
 
 class FusionSolarRealtimeDeviceDataFrequencySensor(FusionSolarRealtimeDeviceDataSensor):
@@ -180,7 +180,7 @@ class FusionSolarRealtimeDeviceDataFrequencySensor(FusionSolarRealtimeDeviceData
         return SensorDeviceClass.FREQUENCY
 
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return UnitOfFrequency.HERTZ
 
     @property
@@ -194,7 +194,7 @@ class FusionSolarRealtimeDeviceDataPowerSensor(FusionSolarRealtimeDeviceDataSens
         return SensorDeviceClass.POWER
 
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return UnitOfPower.KILO_WATT
 
     @property
@@ -204,28 +204,38 @@ class FusionSolarRealtimeDeviceDataPowerSensor(FusionSolarRealtimeDeviceDataSens
 
 class FusionSolarRealtimeDeviceDataPowerInWattSensor(FusionSolarRealtimeDeviceDataPowerSensor):
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return UnitOfPower.WATT
 
 
 class FusionSolarRealtimeDeviceDataReactivePowerSensor(FusionSolarRealtimeDeviceDataSensor):
     @property
     def device_class(self) -> str:
-        return 'reactive_power'
+        return SensorDeviceClass.REACTIVE_POWER
 
     @property
-    def unit_of_measurement(self) -> str:
-        return 'kVar'
+    def native_unit_of_measurement(self) -> str:
+        return 'var'
 
     @property
     def state_class(self) -> str:
         return SensorStateClass.MEASUREMENT
 
+    @property
+    def native_value(self) -> float:
+        native_value = super().native_value
+
+        if native_value is None:
+            return None
+
+        return native_value * 1000
+
+
 
 class FusionSolarRealtimeDeviceDataReactivePowerInVarSensor(FusionSolarRealtimeDeviceDataReactivePowerSensor):
     @property
-    def unit_of_measurement(self) -> str:
-        return 'Var'
+    def native_unit_of_measurement(self) -> str:
+        return 'var'
 
 
 class FusionSolarRealtimeDeviceDataApparentPowerSensor(FusionSolarRealtimeDeviceDataSensor):
@@ -234,7 +244,7 @@ class FusionSolarRealtimeDeviceDataApparentPowerSensor(FusionSolarRealtimeDevice
         return 'apparent_power'
 
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return 'kVA'
 
     @property
@@ -248,7 +258,7 @@ class FusionSolarRealtimeDeviceDataWindSpeedSensor(FusionSolarRealtimeDeviceData
         return 'wind_speed'
 
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return 'm/s'
 
     @property
@@ -262,7 +272,7 @@ class FusionSolarRealtimeDeviceDataBatterySensor(FusionSolarRealtimeDeviceDataSe
         return SensorDeviceClass.BATTERY
 
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return PERCENTAGE
 
     @property
@@ -277,7 +287,7 @@ class FusionSolarRealtimeDeviceDataTimestampSensor(FusionSolarRealtimeDeviceData
 
     @property
     def state(self) -> datetime:
-        state = super().state
+        state = super().native_value
 
         if state is None:
             return None
@@ -287,7 +297,7 @@ class FusionSolarRealtimeDeviceDataTimestampSensor(FusionSolarRealtimeDeviceData
 
 class FusionSolarRealtimeDeviceDataPercentageSensor(FusionSolarRealtimeDeviceDataSensor):
     @property
-    def unit_of_measurement(self) -> str | None:
+    def native_unit_of_measurement(self) -> str | None:
         return PERCENTAGE
 
     @property
