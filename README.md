@@ -148,6 +148,10 @@ Finally the battery needs to be configured:
 
 If you don't see the kiosk button, you are probably logged in with an installer account.
 
+### I am using the kiosk mode, but the data is not updating
+
+First check that the Kiosk url is still working. The url is valid for 1 year. So you will need to update the kiosk url every year.
+
 ### Energy Dashboard: Active Power not showing in the list of available entities
 
 Active Power is the current power production in Watt (W) or kilo Watt (kW). The Energy dashboard expects a value in **kWh**.
