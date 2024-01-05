@@ -207,3 +207,34 @@ You will need to create an environment in Postman with the following variables:
 * `SYSTEMCODE`, your Northbound API / OpenAPI password
 * `URL`, the url you will query
 
+### I need to change the Kiosk URL
+
+The Kiosk URL is valid for 1 year. After that you will need to update the URL. At this point there is no way to update
+the URL without re-adding the integration. This can result in data los.
+
+You can work around this, **but this is not recommended and is at your own risk**:
+
+Open the file `.storage/core.config_entries` in the Home Assistant directory.
+
+There will be an entry like below"
+
+```json
+  {
+  "entry_id": "8cd2320a2969e84XXX",
+  "version": 1,
+  "domain": "fusion_solar",
+  "title": "Fusion Solar",
+  "data": {
+    "kiosks": [
+      {
+        "name": "Foo",
+        "url": "https://eu5.fusionsolar.huawei.com/pvmswebsite/nologin/assets/build/index.html#/kiosk?kk=XXX"
+      }
+    ],
+    "credentials": {}
+  },
+  ...
+}
+```
+
+Update the `url`. And restart Home Assistant.
