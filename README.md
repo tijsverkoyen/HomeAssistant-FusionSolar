@@ -238,3 +238,32 @@ There will be an entry like below"
 ```
 
 Update the `url`. And restart Home Assistant.
+
+### How can I verify my Northbound API / OpenAPI credentials?
+
+You can verify your credentials by doing a `curl` call.
+
+```
+curl --location 'https://eu5.fusionsolar.huawei.com/thirdData/login' \
+--header 'Content-Type: application/json' \
+--data '{
+    "userName": "XXX",
+    "systemCode": "YYY"
+}'
+
+```
+
+Check if you need to alter the base hostname https://eu5.fusionsolar.huawei.com. And replace XXX with your username and
+YYY with your password.
+
+The response should look like:
+
+```json
+{
+  "data": null,
+  "success": true,
+  "failCode": 0,
+  "params": {},
+  "message": null
+}
+```
