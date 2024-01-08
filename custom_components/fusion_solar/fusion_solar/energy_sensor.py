@@ -1,4 +1,5 @@
 import logging
+import math
 
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
@@ -60,14 +61,12 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
             if entity is not None:
                 current_value = entity.state
                 if current_value == 'unavailable':
-                    _LOGGER.info(
-                        f'{self.entity_id}: not available.')
+                    _LOGGER.info(f'{self.entity_id}: not available.')
                     return
 
                 realtime_power = self.coordinator.data[self._data_name][ATTR_REALTIME_POWER]
-                if realtime_power == '0.00':
-                    _LOGGER.info(
-                        f'{self.entity_id}: not producing any power, so not updating to prevent positive glitched.')
+                if math.isclose(realtime_power, 0, abs_tol = 0.001):
+                    _LOGGER.info(f'{self.entity_id}: not producing any power, so no energy update to prevent glitches.')
                     return float(current_value)
 
         if self._data_name not in self.coordinator.data:
