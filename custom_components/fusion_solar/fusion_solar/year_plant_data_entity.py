@@ -2,7 +2,7 @@ import logging
 
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
-from homeassistant.const import UnitOfEnergy, UnitOfPower, UnitOfMass, IRRADIATION_WATTS_PER_SQUARE_METER
+from homeassistant.const import UnitOfEnergy, UnitOfPower, UnitOfMass, UnitOfIrradiance
 
 from ..const import DOMAIN
 
@@ -87,7 +87,7 @@ class FusionSolarYearPlantDataRadiationIntensitySensor(FusionSolarYearPlantDataS
 
     @property
     def native_unit_of_measurement(self) -> str:
-        return IRRADIATION_WATTS_PER_SQUARE_METER
+        return UnitOfIrradiance.WATTS_PER_SQUARE_METER
 
     @property
     def state_class(self) -> str:
