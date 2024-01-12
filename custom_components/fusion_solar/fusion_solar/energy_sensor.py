@@ -65,7 +65,7 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
                     return
 
                 realtime_power = self.coordinator.data[self._data_name][ATTR_REALTIME_POWER]
-                if math.isclose(realtime_power, 0, abs_tol = 0.001):
+                if math.isclose(float(realtime_power), 0, abs_tol = 0.001):
                     _LOGGER.info(f'{self.entity_id}: not producing any power, so no energy update to prevent glitches.')
                     return float(current_value)
 
