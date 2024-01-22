@@ -19,7 +19,7 @@ from .fusion_solar.const import ATTR_REALTIME_POWER, ATTR_TOTAL_CURRENT_DAY_ENER
     PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_GRID_METER, PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER, \
     PARAM_DEVICE_TYPE_ID_POWER_SENSOR, PARAM_DEVICE_TYPE_ID_EMI, PARAM_DEVICE_TYPE_ID_BATTERY
 from .fusion_solar.kiosk.kiosk import FusionSolarKiosk
-from .fusion_solar.kiosk.kiosk_api import FusionSolarKioskApi
+from .fusion_solar.kiosk.kiosk_api import FusionSolarKioskApi, FusionSolarKioskApiError
 from .fusion_solar.openapi.openapi_api import FusionSolarOpenApi
 from .fusion_solar.energy_sensor import FusionSolarEnergySensorTotalCurrentDay, \
     FusionSolarEnergySensorTotalCurrentMonth, FusionSolarEnergySensorTotalCurrentYear, \
@@ -76,7 +76,10 @@ async def add_entities_for_kiosk(hass, async_add_entities, kiosk: FusionSolarKio
         _LOGGER.debug(DOMAIN)
         _LOGGER.debug(kiosk.id)
 
-        data[f'{DOMAIN}-{kiosk.id}'] = await hass.async_add_executor_job(api.getRealTimeKpi, kiosk.id)
+        try:
+            data[f'{DOMAIN}-{kiosk.id}'] = await hass.async_add_executor_job(api.getRealTimeKpi, kiosk.id)
+        except FusionSolarKioskApiError as error:
+            raise IntegrationError(f'Could not fetch data from FusionSolar: {error}')
 
         return data
 
