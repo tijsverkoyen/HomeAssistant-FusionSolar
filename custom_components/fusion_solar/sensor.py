@@ -9,7 +9,7 @@ from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import CONF_NAME, CONF_URL, CONF_HOST, CONF_USERNAME, CONF_PASSWORD
 from homeassistant.exceptions import IntegrationError
 from homeassistant.helpers import device_registry as dr
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .fusion_solar.const import ATTR_REALTIME_POWER, ATTR_TOTAL_CURRENT_DAY_ENERGY, \
     ATTR_TOTAL_CURRENT_MONTH_ENERGY, ATTR_TOTAL_CURRENT_YEAR_ENERGY, ATTR_TOTAL_LIFETIME_ENERGY, \
@@ -20,7 +20,7 @@ from .fusion_solar.const import ATTR_REALTIME_POWER, ATTR_TOTAL_CURRENT_DAY_ENER
     PARAM_DEVICE_TYPE_ID_POWER_SENSOR, PARAM_DEVICE_TYPE_ID_EMI, PARAM_DEVICE_TYPE_ID_BATTERY
 from .fusion_solar.kiosk.kiosk import FusionSolarKiosk
 from .fusion_solar.kiosk.kiosk_api import FusionSolarKioskApi, FusionSolarKioskApiError
-from .fusion_solar.openapi.openapi_api import FusionSolarOpenApi
+from .fusion_solar.openapi.openapi_api import FusionSolarOpenApi, FusionSolarOpenApiError
 from .fusion_solar.energy_sensor import FusionSolarEnergySensorTotalCurrentDay, \
     FusionSolarEnergySensorTotalCurrentMonth, FusionSolarEnergySensorTotalCurrentYear, \
     FusionSolarEnergySensorTotalLifetime
@@ -79,7 +79,7 @@ async def add_entities_for_kiosk(hass, async_add_entities, kiosk: FusionSolarKio
         try:
             data[f'{DOMAIN}-{kiosk.id}'] = await hass.async_add_executor_job(api.getRealTimeKpi, kiosk.id)
         except FusionSolarKioskApiError as error:
-            raise IntegrationError(f'Could not fetch data from FusionSolar: {error}')
+            raise UpdateFailed(f'Kiosk API Error: {error}')
 
         return data
 
@@ -600,7 +600,10 @@ async def _add_entities_for_stations_real_kpi_data(hass, async_add_entities, sta
         if station_codes is None or len(station_codes) == 0:
             return data
 
-        response = await hass.async_add_executor_job(api.get_station_real_kpi, station_codes)
+        try:
+            response = await hass.async_add_executor_job(api.get_station_real_kpi, station_codes)
+        except FusionSolarOpenApiError as error:
+            raise UpdateFailed(f'OpenAPI Error: {error}')
 
         for response_data in response:
             data[f'{DOMAIN}-{response_data[ATTR_STATION_CODE]}'] = response_data[ATTR_STATION_REAL_KPI_DATA_ITEM_MAP]
@@ -682,7 +685,10 @@ async def _add_entities_for_stations_year_kpi_data(hass, async_add_entities, sta
         if station_codes is None or len(station_codes) == 0:
             return data
 
-        response = await hass.async_add_executor_job(api.get_kpi_station_year, station_codes)
+        try:
+            response = await hass.async_add_executor_job(api.get_kpi_station_year, station_codes)
+        except FusionSolarOpenApiError as error:
+            raise UpdateFailed(f'OpenAPI Error: {error}')
 
         for response_data in response:
             key = f'{DOMAIN}-{response_data[ATTR_STATION_CODE]}'

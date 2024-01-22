@@ -11,7 +11,7 @@ from .const import DOMAIN
 from .fusion_solar.const import ATTR_DEVICE_REAL_KPI_DEV_ID, ATTR_DEVICE_REAL_KPI_DATA_ITEM_MAP, \
     PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_EMI, PARAM_DEVICE_TYPE_ID_GRID_METER, \
     PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER, PARAM_DEVICE_TYPE_ID_BATTERY, PARAM_DEVICE_TYPE_ID_POWER_SENSOR
-from .fusion_solar.openapi.openapi_api import FusionSolarOpenApiAccessFrequencyTooHighError
+from .fusion_solar.openapi.openapi_api import FusionSolarOpenApiError, FusionSolarOpenApiAccessFrequencyTooHighError
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -61,6 +61,8 @@ class DeviceRealKpiDataCoordinator(DataUpdateCoordinator):
         except FusionSolarOpenApiAccessFrequencyTooHighError as e:
             self.skip = True
             return False
+        except FusionSolarOpenApiError as error:
+            raise UpdateFailed(f'OpenAPI Error: {error}')
 
         for response_data in response:
             key = f'{DOMAIN}-{response_data[ATTR_DEVICE_REAL_KPI_DEV_ID]}'
@@ -86,7 +88,8 @@ class DeviceRealKpiDataCoordinator(DataUpdateCoordinator):
 
             station_from_registry = device_registry.async_get_device(identifiers={(DOMAIN, device.station_code)})
             if station_from_registry is not None and station_from_registry.disabled:
-                _LOGGER.debug(f'Device {device.name} ({device.device_id}) linked to a disabled station ({device.station_code}).')
+                _LOGGER.debug(
+                    f'Device {device.name} ({device.device_id}) linked to a disabled station ({device.station_code}).')
                 continue
 
             if device.type_id not in device_ids_grouped_per_type_id:

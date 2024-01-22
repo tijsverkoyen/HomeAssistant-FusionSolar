@@ -195,6 +195,9 @@ class FusionSolarOpenApi:
                     f'Retrieving the data for {url} failed with failCode: {json_data[ATTR_FAIL_CODE]}, message: {json_data[ATTR_DATA]}'
                 )
 
+            if ATTR_DATA not in json_data:
+                raise FusionSolarOpenApiError(f'Retrieving the data failed. Raw response: {response.text}')
+
             return json_data
 
         except KeyError as error:
@@ -206,9 +209,9 @@ class FusionSolarOpenApiError(Exception):
     pass
 
 
-class FusionSolarOpenApiAccessFrequencyTooHighError(Exception):
+class FusionSolarOpenApiAccessFrequencyTooHighError(FusionSolarOpenApiError):
     pass
 
 
-class FusionSolarOpenApiErrorInvalidAccessToCurrentInterfaceError(Exception):
+class FusionSolarOpenApiErrorInvalidAccessToCurrentInterfaceError(FusionSolarOpenApiError):
     pass
