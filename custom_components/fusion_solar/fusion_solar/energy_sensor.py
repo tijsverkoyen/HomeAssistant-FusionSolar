@@ -56,9 +56,10 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
             entity = self.hass.states.get(self.entity_id)
 
             if entity is not None:
-                current_value = entity.state
-                if current_value == 'unavailable':
-                    _LOGGER.info(f'{self.entity_id}: not available.')
+                try:
+                    current_value = float(entity.state)
+                except ValueError:
+                    _LOGGER.info(f'{self.entity_id}: not available, so no update to prevent issues.')
                     return
 
                 realtime_power = self.coordinator.data[self._data_name][ATTR_REALTIME_POWER]
