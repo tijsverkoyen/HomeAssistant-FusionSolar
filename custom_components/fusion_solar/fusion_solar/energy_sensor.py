@@ -61,10 +61,10 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
                     _LOGGER.info(f'{self.entity_id}: not available, so no update to prevent issues.')
                     return
 
-                realtime_power = self.coordinator.data[self._data_name][ATTR_REALTIME_POWER]
-                if math.isclose(float(realtime_power), 0, abs_tol = 0.001):
-                    _LOGGER.info(f'{self.entity_id}: not producing any power, so no energy update to prevent glitches.')
-                    return float(current_value)
+                # Return the current value if the system is not producing
+                if not self.is_producing_at_the_moment():
+                    _LOGGER.info(f'{self.entity_id}: not producing any power, so no update to prevent glitches.')
+                    return current_value
 
         try:
             return self.get_float_value_from_coordinator(self._attribute)
@@ -83,6 +83,14 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
     @property
     def device_info(self) -> dict:
         return self._device_info
+
+    def is_producing_at_the_moment(self) -> bool:
+        try:
+            realtime_power = self.get_float_value_from_coordinator(ATTR_REALTIME_POWER)
+            return not math.isclose(realtime_power, 0, abs_tol=0.001)
+        except FusionSolarEnergySensorException as e:
+            _LOGGER.info(e)
+            return False
 
     def get_float_value_from_coordinator(self, attribute_name: str) -> float:
         if self.coordinator.data is False:
