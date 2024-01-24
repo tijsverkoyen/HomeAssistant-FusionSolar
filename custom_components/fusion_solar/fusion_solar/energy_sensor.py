@@ -54,7 +54,6 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
                 or ATTR_TOTAL_CURRENT_MONTH_ENERGY == self._attribute
         ):
             entity = self.hass.states.get(self.entity_id)
-
             if entity is not None:
                 try:
                     current_value = float(entity.state)
@@ -67,13 +66,11 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
                     _LOGGER.info(f'{self.entity_id}: not producing any power, so no energy update to prevent glitches.')
                     return float(current_value)
 
-        if self._data_name not in self.coordinator.data:
+        try:
+            return self.get_float_value_from_coordinator(self._attribute)
+        except FusionSolarEnergySensorException as e:
+            _LOGGER.error(e)
             return None
-
-        if self._attribute not in self.coordinator.data[self._data_name]:
-            return None
-
-        return float(self.coordinator.data[self._data_name][self._attribute])
 
     @property
     def native_unit_of_measurement(self) -> str:
@@ -86,6 +83,25 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
     @property
     def device_info(self) -> dict:
         return self._device_info
+
+    def get_float_value_from_coordinator(self, attribute_name: str) -> float:
+        if self.coordinator.data is False:
+            raise FusionSolarEnergySensorException('Coordinator data is False')
+        if self._data_name not in self.coordinator.data:
+            raise FusionSolarEnergySensorException(f'Attribute {self._data_name} not in coordinator data')
+        if self._attribute not in self.coordinator.data[self._data_name]:
+            raise FusionSolarEnergySensorException(f'Attribute {attribute_name} not in coordinator data')
+
+        if self.coordinator.data[self._data_name][attribute_name] is None:
+            raise FusionSolarEnergySensorException(f'Attribute {attribute_name} has value None')
+        elif self.coordinator.data[self._data_name][attribute_name] == 'N/A':
+            raise FusionSolarEnergySensorException(f'Attribute {attribute_name} has value N/A')
+
+        try:
+            return float(self.coordinator.data[self._data_name][attribute_name])
+        except ValueError:
+            raise FusionSolarEnergySensorException(
+                f'Attribute {self._attribute} has value {self.coordinator.data[self._data_name][attribute_name]} which is not a float')
 
 
 class FusionSolarEnergySensorTotalCurrentDay(FusionSolarEnergySensor):
@@ -101,4 +117,8 @@ class FusionSolarEnergySensorTotalCurrentYear(FusionSolarEnergySensor):
 
 
 class FusionSolarEnergySensorTotalLifetime(FusionSolarEnergySensor):
+    pass
+
+
+class FusionSolarEnergySensorException(Exception):
     pass
