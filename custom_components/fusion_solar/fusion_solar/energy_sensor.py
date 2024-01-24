@@ -5,7 +5,8 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
 from homeassistant.const import UnitOfEnergy
 
-from .const import ATTR_TOTAL_LIFETIME_ENERGY, ATTR_REALTIME_POWER
+from .const import ATTR_TOTAL_LIFETIME_ENERGY, ATTR_TOTAL_CURRENT_YEAR_ENERGY, ATTR_TOTAL_CURRENT_MONTH_ENERGY, \
+    ATTR_REALTIME_POWER
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -52,10 +53,14 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
 
     @property
     def native_value(self) -> float:
-        # It seems like Huawei Fusion Solar returns some invalid data for the lifetime energy just before midnight
-        # Therefore we validate if the new value is higher than the current value
-        if ATTR_TOTAL_LIFETIME_ENERGY == self._attribute:
-            # Grab the current data
+        # It seems like Huawei Fusion Solar returns some invalid data for the cumulativeEnergy, yearEnergy and
+        # monthEnergy just before midnight.
+        # So we update the value only if the system is producing power at the moment.
+        if (
+                ATTR_TOTAL_LIFETIME_ENERGY == self._attribute
+                or ATTR_TOTAL_CURRENT_YEAR_ENERGY == self._attribute
+                or ATTR_TOTAL_CURRENT_MONTH_ENERGY == self._attribute
+        ):
             entity = self.hass.states.get(self.entity_id)
 
             if entity is not None:
