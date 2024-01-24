@@ -11,14 +11,6 @@ from .const import ATTR_TOTAL_LIFETIME_ENERGY, ATTR_TOTAL_CURRENT_YEAR_ENERGY, A
 _LOGGER = logging.getLogger(__name__)
 
 
-def isfloat(num) -> bool:
-    try:
-        float(num)
-        return True
-    except ValueError:
-        return False
-
-
 class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
     """Base class for all FusionSolarEnergySensor sensors."""
 
