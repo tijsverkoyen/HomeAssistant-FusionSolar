@@ -44,8 +44,8 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
 
     @property
     def native_value(self) -> float:
-        # It seems like Huawei Fusion Solar returns some invalid data for the lifetime energy just before midnight
-        # Therefore we validate if the new value is higher than the current value
+        # It seems like Huawei Fusion Solar returns some invalid data for the cumulativeEnergy just before midnight.
+        # So we update the value only if the system is producing power at the moment.
         if ATTR_TOTAL_LIFETIME_ENERGY == self._attribute:
             # Grab the current data
             entity = self.hass.states.get(self.entity_id)
