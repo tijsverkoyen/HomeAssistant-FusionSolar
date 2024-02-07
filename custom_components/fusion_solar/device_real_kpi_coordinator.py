@@ -64,6 +64,13 @@ class DeviceRealKpiDataCoordinator(DataUpdateCoordinator):
         except FusionSolarOpenApiError as error:
             raise UpdateFailed(f'OpenAPI Error: {error}')
 
+        # When there is no data we can't update.
+        if response is None:
+            _LOGGER.warning(
+                f'getDevRealKpi returned a data object with no data. Check if you have sufficient permissions.'
+            )
+            return False
+
         for response_data in response:
             key = f'{DOMAIN}-{response_data[ATTR_DEVICE_REAL_KPI_DEV_ID]}'
             data[key] = response_data[ATTR_DEVICE_REAL_KPI_DATA_ITEM_MAP]
