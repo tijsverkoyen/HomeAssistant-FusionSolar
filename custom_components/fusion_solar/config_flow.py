@@ -23,7 +23,6 @@ class FusionSolarConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return await self.async_step_choose_type(user_input)
 
     async def async_step_choose_type(self, user_input: Optional[Dict[str, Any]] = None):
-        _LOGGER.debug(f'async_step_choose_type: {user_input}')
         errors: Dict[str, str] = {}
 
         if user_input is not None:
@@ -48,7 +47,6 @@ class FusionSolarConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
     async def async_step_kiosk(self, user_input: Optional[Dict[str, Any]] = None):
-        _LOGGER.debug(f'async_step_kiosk: {user_input}')
         errors: Dict[str, str] = {}
 
         if user_input is not None:
@@ -76,7 +74,6 @@ class FusionSolarConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
     async def async_step_openapi(self, user_input: Optional[Dict[str, Any]] = None):
-        _LOGGER.debug(f'async_step_openapi: {user_input}')
         errors: Dict[str, str] = {}
 
         if user_input is not None:
