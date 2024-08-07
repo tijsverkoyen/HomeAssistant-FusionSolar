@@ -3,6 +3,7 @@ Custom integration to integrate FusionSolar with Home Assistant.
 """
 from homeassistant.core import HomeAssistant, Config
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import Platform
 
 from .const import DOMAIN
 
@@ -20,7 +21,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data[DOMAIN][entry.entry_id] = entry.data
 
     # Forward the setup to the sensor platform.
-    hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(entry, "sensor")
+    hass.add_job(
+        hass.config_entries.async_forward_entry_setups(entry, [Platform.SENSOR])
     )
     return True
