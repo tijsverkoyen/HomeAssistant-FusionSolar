@@ -1,7 +1,8 @@
 """
 Custom integration to integrate FusionSolar with Home Assistant.
 """
-from homeassistant.core import HomeAssistant, Config
+from homeassistant.core import HomeAssistant
+from homeassistant.core_config import Config
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 
