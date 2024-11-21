@@ -34,6 +34,14 @@ The integration updates the data every 10 minutes.
 
 **In kiosk mode the "realtime" data is not really realtime, it is cached at FusionSolars end for 30 minutes.**
 
+The kiosk only exposes the following data:
+
+* Realtime Power
+* Total Current Day Energy
+* Total Current Month Energy
+* Total Current Year Energy
+* Total Lifetime Energy
+
 If you need more accurate information you should use the API mode.
 
 ## Northbound API / OpenAPI
