@@ -17,7 +17,7 @@ from .fusion_solar.const import ATTR_REALTIME_POWER, ATTR_TOTAL_CURRENT_DAY_ENER
     ATTR_STATION_REAL_KPI_TOTAL_CURRENT_MONTH_ENERGY, ATTR_STATION_REAL_KPI_TOTAL_LIFETIME_ENERGY, \
     ATTR_DATA_COLLECT_TIME, ATTR_KPI_YEAR_INVERTER_POWER, ATTR_DEVICE_REAL_KPI_ACTIVE_POWER, \
     PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_GRID_METER, PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER, \
-    PARAM_DEVICE_TYPE_ID_POWER_SENSOR, PARAM_DEVICE_TYPE_ID_EMI, PARAM_DEVICE_TYPE_ID_BATTERY
+    PARAM_DEVICE_TYPE_ID_POWER_SENSOR, PARAM_DEVICE_TYPE_ID_EMI, PARAM_DEVICE_TYPE_ID_BATTERY, PARAM_DEVICE_TYPE_ID_C_I_UTILITY_ESS
 from .fusion_solar.kiosk.kiosk import FusionSolarKiosk
 from .fusion_solar.kiosk.kiosk_api import FusionSolarKioskApi, FusionSolarKioskApiError
 from .fusion_solar.openapi.openapi_api import FusionSolarOpenApi, FusionSolarOpenApiError
@@ -549,6 +549,21 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                  'name': 'Battery state of health (SOH)'},
                 {'class': 'FusionSolarRealtimeDeviceDataTranslatedSensor', 'attribute': 'ch_discharge_model',
                  'name': 'Charge/Discharge mode'},
+                {'class': 'FusionSolarRealtimeDeviceDataEnergyTotalIncreasingSensor', 'attribute': 'charge_cap',
+                 'name': 'Charging capacity'},
+                {'class': 'FusionSolarRealtimeDeviceDataEnergyTotalIncreasingSensor', 'attribute': 'discharge_cap',
+                 'name': 'Discharging capacity'},
+                {'class': 'FusionSolarRealtimeDeviceDataStateBinarySensor', 'attribute': 'run_state', 'name': 'Status'},
+            ]
+
+        if device.type_id == PARAM_DEVICE_TYPE_ID_C_I_UTILITY_ESS:
+            entities_to_create = [
+                {'class': 'FusionSolarRealtimeDeviceDataPowerInWattSensor', 'attribute': 'ch_discharge_power',
+                 'name': 'Charge/Discharge power'},
+                {'class': 'FusionSolarRealtimeDeviceDataBatterySensor', 'attribute': 'battery_soc',
+                 'name': 'Battery state of charge (SOC)'},
+                {'class': 'FusionSolarRealtimeDeviceDataSensor', 'attribute': 'battery_soh',
+                 'name': 'Battery state of health (SOH)'},
                 {'class': 'FusionSolarRealtimeDeviceDataEnergyTotalIncreasingSensor', 'attribute': 'charge_cap',
                  'name': 'Charging capacity'},
                 {'class': 'FusionSolarRealtimeDeviceDataEnergyTotalIncreasingSensor', 'attribute': 'discharge_cap',

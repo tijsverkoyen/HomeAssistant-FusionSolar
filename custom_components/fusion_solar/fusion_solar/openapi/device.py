@@ -57,6 +57,8 @@ class FusionSolarDevice:
             return 'Battery'
         if self.type_id == 40:
             return 'Backup box'
+        if self.type_id == 41:
+            return 'ESS'
         if self.type_id == 45:
             return 'PLC'
         if self.type_id == 46:
