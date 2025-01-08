@@ -13,7 +13,7 @@ class FusionSolarKiosk:
         self._parseId()
 
     def _parseId(self):
-        id = re.search("\?kk=(.*)", self.url).group(1)
+        id = re.search("\\?kk=(.*)", self.url).group(1)
         _LOGGER.debug('calculated KioskId: ' + id)
         self.id = id
 
