@@ -1,0 +1,91 @@
+{
+    "title": "Fusion Solar",
+    "config": {
+        "error": {
+            "invalid_type": "Tipo non valido, sono consentiti solo kiosk o openapi.",
+            "invalid_credentials": "Impossibile autenticarsi con le credenziali fornite."
+        },
+        "step": {
+            "choose_type": {
+                "description": "FusionSolar pu\u00f2 essere connesso in due modi:\n* **Kiosk**: Questo \u00e8 il modo pi\u00f9 semplice, poich\u00e9 (probabilmente) non \u00e8 necessario alcun intervento con Huawei Fusion Solar, lo svantaggio \u00e8 che le informazioni in tempo reale sono aggiornate ogni 30 minuti.\n* **OpenAPI**: Avrai bisogno di un account OpenAPI di Huawei, che ti fornir\u00e0 migliori informazioni in tempo reale. [Maggiori informazioni](https://forum.huawei.com/enterprise/en/communicate-with-fusionsolar-through-an-openapi-account/thread/591478-100027).",
+                "data": {
+                    "type": "Scegli il modo in cui vuoi connetterti a Fusion Solar"
+                }
+            },
+            "kiosk": {
+                "description": "1. Accedi al [portale Huawei FusionSolar](https://eu5.fusionsolar.huawei.com/).\n2. Se necessario, seleziona il tuo impianto.\n3. In alto c'\u00e8 un pulsante: \"Kiosk\", cliccalo.\n4. Verr\u00e0 aperto un sovrapposizione e dovrai abilitare la visualizzazione del kiosk attivando l'interruttore.",
+                "data": {
+                    "name": "Nome",
+                    "url": "URL del Kiosk",
+                    "add_another": "Aggiungi un altro URL del Kiosk"
+                }
+            },
+            "openapi": {
+                "description": "Inserisci le credenziali OpenAPI che hai ricevuto da Huawei FusionSolar qui sotto.",
+                "data": {
+                    "host": "Host",
+                    "username": "Nome utente",
+                    "password": "Password"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "battery_status": {
+                "state": {
+                    "0": "offline",
+                    "1": "standby",
+                    "2": "in esecuzione",
+                    "3": "guasto",
+                    "4": "ibernazione"
+                }
+            },
+            "ch_discharge_model": {
+                "state": {
+                    "0": "nessuno",
+                    "1": "carica/scarica forzata",
+                    "2": "prezzo a tempo di utilizzo",
+                    "3": "carica/scarica fissa",
+                    "4": "carica/scarica automatica"
+                }
+            },
+            "meter_status": {
+                "state": {
+                    "0": "offline",
+                    "1": "normale"
+                }
+            },
+            "inverter_state": {
+                "state": {
+                    "0": "Standby: inizializzazione",
+                    "1": "Standby: rilevamento resistenza di isolamento",
+                    "2": "Standby: rilevamento luce solare",
+                    "3": "Standby: rilevamento rete elettrica",
+                    "256": "Avvio",
+                    "512": "Connessione alla rete",
+                    "513": "Connessione alla rete: potenza limitata",
+                    "514": "Connessione alla rete: auto-riduzione",
+                    "768": "Arresto: arresto imprevisto",
+                    "769": "Arresto: arresto comandato",
+                    "770": "Arresto: OVGR",
+                    "771": "Arresto: disconnessione della comunicazione",
+                    "772": "Arresto: potenza limitata",
+                    "773": "Arresto: \u00e8 necessaria l'accensione manuale",
+                    "774": "Arresto: interruttore DC disconnesso",
+                    "1025": "Pianificazione della rete: curva cos\u03c8-P",
+                    "1026": "Pianificazione della rete: curva Q-U",
+                    "1280": "Verifica rapida pronta",
+                    "1281": "Verifica in corso",
+                    "1536": "Ispezione in corso",
+                    "1792": "Auto-verifica AFCI",
+                    "2048": "Scansione I-V",
+                    "2304": "Rilevamento ingresso DC",
+                    "40960": "Standby: nessuna luce solare",
+                    "45056": "Disconnessione della comunicazione (scritta dal SmartLogger)",
+                    "49152": "Caricamento (scritto dal SmartLogger)"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,91 @@
+{
+    "title": "Fusion Solar",
+    "config": {
+        "error": {
+            "invalid_type": "Type invalide, seuls kiosk ou openapi sont autoris\u00e9s.",
+            "invalid_credentials": "Impossible de s'authentifier avec les identifiants fournis."
+        },
+        "step": {
+            "choose_type": {
+                "description": "FusionSolar peut \u00eatre connect\u00e9 de deux mani\u00e8res :\n* **Kiosk** : C'est la mani\u00e8re la plus simple, car vous n'avez (probablement) pas besoin d'interagir avec Huawei Fusion Solar. L'inconv\u00e9nient est que les informations en temps r\u00e9el sont mises \u00e0 jour toutes les 30 minutes.\n* **OpenAPI** : Vous aurez besoin d'un compte OpenAPI de Huawei, ce qui vous permettra d'obtenir des informations en temps r\u00e9el plus pr\u00e9cises. [Plus d'informations](https://forum.huawei.com/enterprise/en/communicate-with-fusionsolar-through-an-openapi-account/thread/591478-100027).",
+                "data": {
+                    "type": "Choisissez la m\u00e9thode de connexion \u00e0 Fusion Solar"
+                }
+            },
+            "kiosk": {
+                "description": "1. Connectez-vous au [portail Huawei FusionSolar](https://eu5.fusionsolar.huawei.com/).\n2. S\u00e9lectionnez votre site si n\u00e9cessaire.\n3. En haut, il y a un bouton : \"Kiosk\", cliquez dessus.\n4. Une fen\u00eatre s'ouvrira, et vous devrez activer l'affichage Kiosk en activant le bouton de bascule.",
+                "data": {
+                    "name": "Nom",
+                    "url": "URL du Kiosk",
+                    "add_another": "Ajouter une autre URL de Kiosk"
+                }
+            },
+            "openapi": {
+                "description": "Entrez les identifiants OpenAPI que vous avez re\u00e7us de Huawei FusionSolar ci-dessous.",
+                "data": {
+                    "host": "H\u00f4te",
+                    "username": "Nom d'utilisateur",
+                    "password": "Mot de passe"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "battery_status": {
+                "state": {
+                    "0": "hors ligne",
+                    "1": "en veille",
+                    "2": "en fonctionnement",
+                    "3": "d\u00e9fectueux",
+                    "4": "hibernation"
+                }
+            },
+            "ch_discharge_model": {
+                "state": {
+                    "0": "aucun",
+                    "1": "charge/d\u00e9charge forc\u00e9e",
+                    "2": "tarification selon l'heure",
+                    "3": "charge/d\u00e9charge fixe",
+                    "4": "charge/d\u00e9charge automatique"
+                }
+            },
+            "meter_status": {
+                "state": {
+                    "0": "hors ligne",
+                    "1": "normal"
+                }
+            },
+            "inverter_state": {
+                "state": {
+                    "0": "En veille : initialisation",
+                    "1": "En veille : d\u00e9tection de r\u00e9sistance d'isolement",
+                    "2": "En veille : d\u00e9tection de la lumi\u00e8re solaire",
+                    "3": "En veille : d\u00e9tection du r\u00e9seau \u00e9lectrique",
+                    "256": "D\u00e9marrage",
+                    "512": "Connexion au r\u00e9seau",
+                    "513": "Connexion au r\u00e9seau : puissance limit\u00e9e",
+                    "514": "Connexion au r\u00e9seau : auto-r\u00e9duction",
+                    "768": "Arr\u00eat : arr\u00eat inattendu",
+                    "769": "Arr\u00eat : arr\u00eat command\u00e9",
+                    "770": "Arr\u00eat : OVGR",
+                    "771": "Arr\u00eat : d\u00e9connexion de communication",
+                    "772": "Arr\u00eat : puissance limit\u00e9e",
+                    "773": "Arr\u00eat : red\u00e9marrage manuel requis",
+                    "774": "Arr\u00eat : interrupteur DC d\u00e9connect\u00e9",
+                    "1025": "R\u00e9gulation du r\u00e9seau : courbe cos\u03c8-P",
+                    "1026": "R\u00e9gulation du r\u00e9seau : courbe Q-U",
+                    "1280": "Pr\u00eat pour le contr\u00f4le ponctuel",
+                    "1281": "Contr\u00f4le ponctuel en cours",
+                    "1536": "Inspection en cours",
+                    "1792": "Auto-v\u00e9rification AFCI",
+                    "2048": "Balayage I-V",
+                    "2304": "D\u00e9tection d'entr\u00e9e DC",
+                    "40960": "En veille : absence de lumi\u00e8re solaire",
+                    "45056": "D\u00e9connexion de communication (\u00e9crit par le SmartLogger)",
+                    "49152": "Chargement (\u00e9crit par le SmartLogger)"
+                }
+            }
+        }
+    }
+}

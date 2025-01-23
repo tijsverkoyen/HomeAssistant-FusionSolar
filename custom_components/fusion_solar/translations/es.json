@@ -1,0 +1,91 @@
+{
+    "title": "Fusion Solar",
+    "config": {
+        "error": {
+            "invalid_type": "Tipo inv\u00e1lido, solo se permiten kiosk o openapi.",
+            "invalid_credentials": "No se pudo autenticar con las credenciales proporcionadas."
+        },
+        "step": {
+            "choose_type": {
+                "description": "FusionSolar se puede conectar de dos maneras:\n* **Kiosk**: Esta es la forma m\u00e1s f\u00e1cil, ya que (probablemente) no necesites ninguna interacci\u00f3n con Huawei Fusion Solar. Sin embargo, la informaci\u00f3n en tiempo real se actualiza cada 30 minutos.\n* **OpenAPI**: Necesitar\u00e1s una cuenta OpenAPI de Huawei, lo que te proporcionar\u00e1 una mejor informaci\u00f3n en tiempo real. [M\u00e1s informaci\u00f3n](https://forum.huawei.com/enterprise/en/communicate-with-fusionsolar-through-an-openapi-account/thread/591478-100027).",
+                "data": {
+                    "type": "Elige la forma en la que deseas conectarte a Fusion Solar"
+                }
+            },
+            "kiosk": {
+                "description": "1. Inicia sesi\u00f3n en el [portal Huawei FusionSolar](https://eu5.fusionsolar.huawei.com/).\n2. Selecciona tu planta si es necesario.\n3. En la parte superior hay un bot\u00f3n: \"Kiosk\", haz clic en \u00e9l.\n4. Se abrir\u00e1 una ventana emergente y deber\u00e1s habilitar la vista kiosk activando el interruptor.",
+                "data": {
+                    "name": "Nombre",
+                    "url": "URL del Kiosk",
+                    "add_another": "Agregar otra URL de Kiosk"
+                }
+            },
+            "openapi": {
+                "description": "Introduce las credenciales de OpenAPI que recibiste de Huawei FusionSolar a continuaci\u00f3n.",
+                "data": {
+                    "host": "Host",
+                    "username": "Usuario",
+                    "password": "Contrase\u00f1a"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "battery_status": {
+                "state": {
+                    "0": "fuera de l\u00ednea",
+                    "1": "en espera",
+                    "2": "en funcionamiento",
+                    "3": "con falla",
+                    "4": "hibernaci\u00f3n"
+                }
+            },
+            "ch_discharge_model": {
+                "state": {
+                    "0": "ninguno",
+                    "1": "carga/descarga forzada",
+                    "2": "precio seg\u00fan horario de uso",
+                    "3": "carga/descarga fija",
+                    "4": "carga/descarga autom\u00e1tica"
+                }
+            },
+            "meter_status": {
+                "state": {
+                    "0": "fuera de l\u00ednea",
+                    "1": "normal"
+                }
+            },
+            "inverter_state": {
+                "state": {
+                    "0": "En espera: inicializando",
+                    "1": "En espera: detecci\u00f3n de resistencia de aislamiento",
+                    "2": "En espera: detecci\u00f3n de luz solar",
+                    "3": "En espera: detecci\u00f3n de la red el\u00e9ctrica",
+                    "256": "Inicio",
+                    "512": "Conexi\u00f3n a la red",
+                    "513": "Conexi\u00f3n a la red: potencia limitada",
+                    "514": "Conexi\u00f3n a la red: autolimitaci\u00f3n",
+                    "768": "Apagado: apagado inesperado",
+                    "769": "Apagado: apagado por comando",
+                    "770": "Apagado: OVGR",
+                    "771": "Apagado: desconexi\u00f3n de comunicaci\u00f3n",
+                    "772": "Apagado: potencia limitada",
+                    "773": "Apagado: se requiere inicio manual",
+                    "774": "Apagado: interruptor de CC desconectado",
+                    "1025": "Programaci\u00f3n de red: curva cos\u03c8-P",
+                    "1026": "Programaci\u00f3n de red: curva Q-U",
+                    "1280": "Listo para verificaci\u00f3n puntual",
+                    "1281": "Verificaci\u00f3n puntual en curso",
+                    "1536": "Inspeccionando",
+                    "1792": "Autocomprobaci\u00f3n AFCI",
+                    "2048": "Escaneo I-V",
+                    "2304": "Detecci\u00f3n de entrada de CC",
+                    "40960": "En espera: sin luz solar",
+                    "45056": "Desconexi\u00f3n de comunicaci\u00f3n (escrito por el SmartLogger)",
+                    "49152": "Cargando (escrito por el SmartLogger)"
+                }
+            }
+        }
+    }
+}
