@@ -1,0 +1,91 @@
+{
+    "title": "Fusion Solar",
+    "config": {
+        "error": {
+            "invalid_type": "Ung\u00fcltiger Typ, nur Kiosk oder OpenAPI sind erlaubt.",
+            "invalid_credentials": "Die Authentifizierung mit den angegebenen Anmeldedaten war nicht m\u00f6glich."
+        },
+        "step": {
+            "choose_type": {
+                "description": "FusionSolar kann auf zwei Arten verbunden werden:\n* **Kiosk**: Dies ist der einfachste Weg, da (wahrscheinlich) keine Interaktion mit Huawei Fusion Solar erforderlich ist, der Nachteil ist, dass die Echtzeitinformationen alle 30 Minuten aktualisiert werden.\n* **OpenAPI**: Du ben\u00f6tigst ein OpenAPI-Konto von Huawei, was dir bessere Echtzeitinformationen bietet. [Weitere Informationen](https://forum.huawei.com/enterprise/en/communicate-with-fusionsolar-through-an-openapi-account/thread/591478-100027).",
+                "data": {
+                    "type": "W\u00e4hle die Art der Verbindung zu Fusion Solar"
+                }
+            },
+            "kiosk": {
+                "description": "1. Melde dich im [Huawei FusionSolar-Portal](https://eu5.fusionsolar.huawei.com/) an.\n2. W\u00e4hle dein Kraftwerk, falls erforderlich.\n3. Oben gibt es einen Button: \"Kiosk\", klicke darauf.\n4. Ein Overlay wird ge\u00f6ffnet, und du musst den Kiosk-Modus aktivieren, indem du den Schalter umlegst.",
+                "data": {
+                    "name": "Name",
+                    "url": "Kiosk-URL",
+                    "add_another": "F\u00fcge eine weitere Kiosk-URL hinzu"
+                }
+            },
+            "openapi": {
+                "description": "Gib die OpenAPI-Anmeldedaten ein, die du von Huawei FusionSolar erhalten hast.",
+                "data": {
+                    "host": "Host",
+                    "username": "Benutzername",
+                    "password": "Passwort"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "battery_status": {
+                "state": {
+                    "0": "offline",
+                    "1": "standby",
+                    "2": "running",
+                    "3": "fehlerhaft",
+                    "4": "Ruhezustand"
+                }
+            },
+            "ch_discharge_model": {
+                "state": {
+                    "0": "keine",
+                    "1": "erzwungene Lade-/Entladung",
+                    "2": "Nutzungspreis",
+                    "3": "feste Lade-/Entladung",
+                    "4": "automatische Lade-/Entladung"
+                }
+            },
+            "meter_status": {
+                "state": {
+                    "0": "offline",
+                    "1": "normal"
+                }
+            },
+            "inverter_state": {
+                "state": {
+                    "0": "Standby: Initialisierung",
+                    "1": "Standby: Isolationswiderstandserkennung",
+                    "2": "Standby: Sonnenerkennung",
+                    "3": "Standby: Netzwerkerkennung",
+                    "256": "Start",
+                    "512": "Netzanschluss",
+                    "513": "Netzanschluss: begrenzte Leistung",
+                    "514": "Netzanschluss: Selbstabstufung",
+                    "768": "Abschaltung: unerwartete Abschaltung",
+                    "769": "Abschaltung: befohlenes Abschalten",
+                    "770": "Abschaltung: OVGR",
+                    "771": "Abschaltung: Kommunikationsunterbrechung",
+                    "772": "Abschaltung: begrenzte Leistung",
+                    "773": "Abschaltung: manuelle Inbetriebnahme erforderlich",
+                    "774": "Abschaltung: DC-Schalter getrennt",
+                    "1025": "Netzplanung: cos\u03c8-P-Kurve",
+                    "1026": "Netzplanung: Q-U-Kurve",
+                    "1280": "Spot-Check bereit",
+                    "1281": "Spot-Check l\u00e4uft",
+                    "1536": "\u00dcberpr\u00fcfung",
+                    "1792": "AFCI Selbstpr\u00fcfung",
+                    "2048": "I-V-Scanning",
+                    "2304": "DC-Eingangserkennung",
+                    "40960": "Standby: kein Sonnenlicht",
+                    "45056": "Kommunikationsunterbrechung (geschrieben vom SmartLogger)",
+                    "49152": "Laden (geschrieben vom SmartLogger)"
+                }
+            }
+        }
+    }
+}
