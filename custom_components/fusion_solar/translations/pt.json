@@ -1,0 +1,91 @@
+{
+    "title": "Fusion Solar",
+    "config": {
+        "error": {
+            "invalid_type": "Tipo inv\u00e1lido, apenas kiosk ou openapi s\u00e3o permitidos.",
+            "invalid_credentials": "N\u00e3o foi poss\u00edvel autenticar com as credenciais fornecidas."
+        },
+        "step": {
+            "choose_type": {
+                "description": "O FusionSolar pode ser conectado de duas maneiras:\n* **Kiosk**: Esta \u00e9 a forma mais f\u00e1cil, pois (provavelmente) voc\u00ea n\u00e3o precisar\u00e1 de intera\u00e7\u00e3o com o Huawei Fusion Solar, a desvantagem \u00e9 que as informa\u00e7\u00f5es em tempo real s\u00e3o atualizadas a cada 30 minutos.\n* **OpenAPI**: Voc\u00ea precisar\u00e1 de uma conta OpenAPI da Huawei, o que lhe dar\u00e1 melhores informa\u00e7\u00f5es em tempo real. [Mais informa\u00e7\u00f5es](https://forum.huawei.com/enterprise/en/communicate-with-fusionsolar-through-an-openapi-account/thread/591478-100027).",
+                "data": {
+                    "type": "Escolha a forma como deseja se conectar ao Fusion Solar"
+                }
+            },
+            "kiosk": {
+                "description": "1. Fa\u00e7a login no [portal Huawei FusionSolar](https://eu5.fusionsolar.huawei.com/).\n2. Se necess\u00e1rio, selecione sua planta.\n3. No topo, h\u00e1 um bot\u00e3o: \"Kiosk\", clique nele.\n4. Uma sobreposi\u00e7\u00e3o ser\u00e1 aberta e voc\u00ea precisar\u00e1 habilitar a visualiza\u00e7\u00e3o do kiosk ativando o alternador.",
+                "data": {
+                    "name": "Nome",
+                    "url": "URL do Kiosk",
+                    "add_another": "Adicionar outra URL de Kiosk"
+                }
+            },
+            "openapi": {
+                "description": "Digite as credenciais OpenAPI que voc\u00ea recebeu do Huawei FusionSolar abaixo.",
+                "data": {
+                    "host": "Host",
+                    "username": "Nome de usu\u00e1rio",
+                    "password": "Senha"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "battery_status": {
+                "state": {
+                    "0": "offline",
+                    "1": "standby",
+                    "2": "running",
+                    "3": "faulty",
+                    "4": "hibernation"
+                }
+            },
+            "ch_discharge_model": {
+                "state": {
+                    "0": "nenhum",
+                    "1": "carga/descarga for\u00e7ada",
+                    "2": "pre\u00e7o de uso hor\u00e1rio",
+                    "3": "carga/descarga fixa",
+                    "4": "carga/descarga autom\u00e1tica"
+                }
+            },
+            "meter_status": {
+                "state": {
+                    "0": "offline",
+                    "1": "normal"
+                }
+            },
+            "inverter_state": {
+                "state": {
+                    "0": "Standby: inicializando",
+                    "1": "Standby: detec\u00e7\u00e3o de resist\u00eancia de isolamento",
+                    "2": "Standby: detec\u00e7\u00e3o de luz solar",
+                    "3": "Standby: detec\u00e7\u00e3o de rede el\u00e9trica",
+                    "256": "Iniciar",
+                    "512": "Conex\u00e3o com a rede",
+                    "513": "Conex\u00e3o com a rede: pot\u00eancia limitada",
+                    "514": "Conex\u00e3o com a rede: auto-redu\u00e7\u00e3o",
+                    "768": "Desligamento: desligamento inesperado",
+                    "769": "Desligamento: desligamento comandado",
+                    "770": "Desligamento: OVGR",
+                    "771": "Desligamento: desconex\u00e3o de comunica\u00e7\u00e3o",
+                    "772": "Desligamento: pot\u00eancia limitada",
+                    "773": "Desligamento: inicializa\u00e7\u00e3o manual necess\u00e1ria",
+                    "774": "Desligamento: interruptor DC desconectado",
+                    "1025": "Planejamento da rede: curva cos\u03c8-P",
+                    "1026": "Planejamento da rede: curva Q-U",
+                    "1280": "Verifica\u00e7\u00e3o r\u00e1pida pronta",
+                    "1281": "Verificando",
+                    "1536": "Inspecionando",
+                    "1792": "Auto-check AFCI",
+                    "2048": "Escaneamento I-V",
+                    "2304": "Detec\u00e7\u00e3o de entrada DC",
+                    "40960": "Standby: sem luz solar",
+                    "45056": "Desconex\u00e3o de comunica\u00e7\u00e3o (escrito pelo SmartLogger)",
+                    "49152": "Carregando (escrito pelo SmartLogger)"
+                }
+            }
+        }
+    }
+}
