@@ -599,6 +599,7 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                 {'class': 'FusionSolarRealtimeDeviceDataVoltageSensor', 'attribute': 'a_u', 'name': 'Phase A voltage'},
                 {'class': 'FusionSolarRealtimeDeviceDataVoltageSensor', 'attribute': 'b_u', 'name': 'Phase B voltage'},
                 {'class': 'FusionSolarRealtimeDeviceDataVoltageSensor', 'attribute': 'c_u', 'name': 'Phase C voltage'},
+                {'class': 'FusionSolarRealtimeDeviceDataCurrentSensor', 'attribute': 'a_i', 'name': 'Phase A current'},
                 {'class': 'FusionSolarRealtimeDeviceDataCurrentSensor', 'attribute': 'b_i', 'name': 'Phase B current'},
                 {'class': 'FusionSolarRealtimeDeviceDataCurrentSensor', 'attribute': 'c_i', 'name': 'Phase C current'},
                 {'class': 'FusionSolarRealtimeDeviceDataEnergySensor', 'attribute': 'forward_reactive_cap',
