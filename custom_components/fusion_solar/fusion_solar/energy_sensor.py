@@ -45,22 +45,25 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
     @property
     def native_value(self) -> float:
         # It seems like Huawei Fusion Solar returns some invalid data for the cumulativeEnergy just before midnight.
-        # So we update the value only if the system is producing power at the moment.
+        # So we update the value only if it's increasing
         if ATTR_TOTAL_LIFETIME_ENERGY == self._attribute:
             # Grab the current data
             entity = self.hass.states.get(self.entity_id)
             if entity is not None:
+                new_value = self.get_float_value_from_coordinator(self._attribute)
                 try:
                     current_value = float(entity.state)
                 except ValueError:
                     _LOGGER.info(f'{self.entity_id}: not available, so no update to prevent issues.')
                     return
-
-                # Return the current value if the system is not producing
-                if not self.is_producing_at_the_moment():
-                    _LOGGER.info(f'{self.entity_id}: not producing any power, so no update to prevent glitches.')
-                    return current_value
-
+                if current_value is not None and new_value is not None:
+                    if new_value < current_value:
+                        _LOGGER.warning(
+                            f'{self.entity_id}: New value ({new_value}) is lower than current value ({current_value}). '
+                            f'Keeping current value to prevent decrease.'
+                        )
+                        # Return the current value if the new value is lower
+                        return current_value
         try:
             return self.get_float_value_from_coordinator(self._attribute)
         except FusionSolarEnergySensorException as e:
