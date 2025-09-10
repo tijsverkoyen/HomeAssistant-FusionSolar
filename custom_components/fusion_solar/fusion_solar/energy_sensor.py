@@ -5,7 +5,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
 from homeassistant.const import UnitOfEnergy
 
-from .const import ATTR_TOTAL_LIFETIME_ENERGY, ATTR_REALTIME_POWER
+from .const import ATTR_TOTAL_LIFETIME_ENERGY, ATTR_REALTIME_POWER, ATTR_STATION_REAL_KPI_TOTAL_LIFETIME_ENERGY
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -46,7 +46,7 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
     def native_value(self) -> float:
         # It seems like Huawei Fusion Solar returns some invalid data for the cumulativeEnergy just before midnight.
         # So we update the value only if it's increasing
-        if ATTR_TOTAL_LIFETIME_ENERGY == self._attribute:
+        if self._attribute in [ATTR_STATION_REAL_KPI_TOTAL_LIFETIME_ENERGY, ATTR_TOTAL_LIFETIME_ENERGY]:
             # Grab the current data
             entity = self.hass.states.get(self.entity_id)
             if entity is not None:
@@ -58,7 +58,7 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
                     return
                 if current_value is not None and new_value is not None:
                     if new_value < current_value:
-                        _LOGGER.warning(
+                        _LOGGER.error(
                             f'{self.entity_id}: New value ({new_value}) is lower than current value ({current_value}). '
                             f'Keeping current value to prevent decrease.'
                         )
