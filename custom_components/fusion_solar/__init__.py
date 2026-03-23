@@ -5,8 +5,11 @@ from homeassistant.core import HomeAssistant
 from homeassistant.core_config import Config
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
+from homeassistant.helpers import config_validation as cv
 
 from .const import DOMAIN
+
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 
 async def async_setup(hass: HomeAssistant, config: Config) -> bool:

@@ -43,6 +43,9 @@ class FusionSolarConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema({
                 vol.Required(CONF_TYPE, default=CONF_TYPE_KIOSK): vol.In(type_listing)
             }),
+            description_placeholders={
+                "openapi_help_url": "https://forum.huawei.com/enterprise/en/communicate-with-fusionsolar-through-an-openapi-account/thread/591478-100027",
+            },
             errors=errors,
         )
 
@@ -70,6 +73,9 @@ class FusionSolarConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required(CONF_URL): str,
                 vol.Optional("add_another"): bool,
             }),
+            description_placeholders={
+                "kiosk_portal_url": "https://eu5.fusionsolar.huawei.com/",
+            },
             errors=errors,
         )
 

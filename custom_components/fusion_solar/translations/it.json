@@ -7,13 +7,13 @@
         },
         "step": {
             "choose_type": {
-                "description": "FusionSolar pu\u00f2 essere connesso in due modi:\n* **Kiosk**: Questo \u00e8 il modo pi\u00f9 semplice, poich\u00e9 (probabilmente) non \u00e8 necessario alcun intervento con Huawei Fusion Solar, lo svantaggio \u00e8 che le informazioni in tempo reale sono aggiornate ogni 30 minuti.\n* **OpenAPI**: Avrai bisogno di un account OpenAPI di Huawei, che ti fornir\u00e0 migliori informazioni in tempo reale. [Maggiori informazioni](https://forum.huawei.com/enterprise/en/communicate-with-fusionsolar-through-an-openapi-account/thread/591478-100027).",
+                "description": "FusionSolar pu\u00f2 essere connesso in due modi:\n* **Kiosk**: Questo \u00e8 il modo pi\u00f9 semplice, poich\u00e9 (probabilmente) non \u00e8 necessario alcun intervento con Huawei Fusion Solar, lo svantaggio \u00e8 che le informazioni in tempo reale sono aggiornate ogni 30 minuti.\n* **OpenAPI**: Avrai bisogno di un account OpenAPI di Huawei, che ti fornir\u00e0 migliori informazioni in tempo reale. [Maggiori informazioni]({openapi_help_url}).",
                 "data": {
                     "type": "Scegli il modo in cui vuoi connetterti a Fusion Solar"
                 }
             },
             "kiosk": {
-                "description": "1. Accedi al [portale Huawei FusionSolar](https://eu5.fusionsolar.huawei.com/).\n2. Se necessario, seleziona il tuo impianto.\n3. In alto c'\u00e8 un pulsante: \"Kiosk\", cliccalo.\n4. Verr\u00e0 aperto un sovrapposizione e dovrai abilitare la visualizzazione del kiosk attivando l'interruttore.",
+                "description": "1. Accedi al [portale Huawei FusionSolar]({kiosk_portal_url}).\n2. Se necessario, seleziona il tuo impianto.\n3. In alto c'\u00e8 un pulsante: \"Kiosk\", cliccalo.\n4. Verr\u00e0 aperto un sovrapposizione e dovrai abilitare la visualizzazione del kiosk attivando l'interruttore.",
                 "data": {
                     "name": "Nome",
                     "url": "URL del Kiosk",

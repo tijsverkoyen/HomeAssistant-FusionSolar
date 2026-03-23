@@ -7,13 +7,13 @@
         },
         "step": {
             "choose_type": {
-                "description": "FusionSolar peut \u00eatre connect\u00e9 de deux mani\u00e8res :\n* **Kiosk** : C'est la mani\u00e8re la plus simple, car vous n'avez (probablement) pas besoin d'interagir avec Huawei Fusion Solar. L'inconv\u00e9nient est que les informations en temps r\u00e9el sont mises \u00e0 jour toutes les 30 minutes.\n* **OpenAPI** : Vous aurez besoin d'un compte OpenAPI de Huawei, ce qui vous permettra d'obtenir des informations en temps r\u00e9el plus pr\u00e9cises. [Plus d'informations](https://forum.huawei.com/enterprise/en/communicate-with-fusionsolar-through-an-openapi-account/thread/591478-100027).",
+                "description": "FusionSolar peut \u00eatre connect\u00e9 de deux mani\u00e8res :\n* **Kiosk** : C'est la mani\u00e8re la plus simple, car vous n'avez (probablement) pas besoin d'interagir avec Huawei Fusion Solar. L'inconv\u00e9nient est que les informations en temps r\u00e9el sont mises \u00e0 jour toutes les 30 minutes.\n* **OpenAPI** : Vous aurez besoin d'un compte OpenAPI de Huawei, ce qui vous permettra d'obtenir des informations en temps r\u00e9el plus pr\u00e9cises. [Plus d'informations]({openapi_help_url}).",
                 "data": {
                     "type": "Choisissez la m\u00e9thode de connexion \u00e0 Fusion Solar"
                 }
             },
             "kiosk": {
-                "description": "1. Connectez-vous au [portail Huawei FusionSolar](https://eu5.fusionsolar.huawei.com/).\n2. S\u00e9lectionnez votre site si n\u00e9cessaire.\n3. En haut, il y a un bouton : \"Kiosk\", cliquez dessus.\n4. Une fen\u00eatre s'ouvrira, et vous devrez activer l'affichage Kiosk en activant le bouton de bascule.",
+                "description": "1. Connectez-vous au [portail Huawei FusionSolar]({kiosk_portal_url}).\n2. S\u00e9lectionnez votre site si n\u00e9cessaire.\n3. En haut, il y a un bouton : \"Kiosk\", cliquez dessus.\n4. Une fen\u00eatre s'ouvrira, et vous devrez activer l'affichage Kiosk en activant le bouton de bascule.",
                 "data": {
                     "name": "Nom",
                     "url": "URL du Kiosk",
