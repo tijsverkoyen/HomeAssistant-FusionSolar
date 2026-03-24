@@ -7,13 +7,13 @@
         },
         "step": {
             "choose_type": {
-                "description": "FusionSolar se puede conectar de dos maneras:\n* **Kiosk**: Esta es la forma m\u00e1s f\u00e1cil, ya que (probablemente) no necesites ninguna interacci\u00f3n con Huawei Fusion Solar. Sin embargo, la informaci\u00f3n en tiempo real se actualiza cada 30 minutos.\n* **OpenAPI**: Necesitar\u00e1s una cuenta OpenAPI de Huawei, lo que te proporcionar\u00e1 una mejor informaci\u00f3n en tiempo real. [M\u00e1s informaci\u00f3n](https://forum.huawei.com/enterprise/en/communicate-with-fusionsolar-through-an-openapi-account/thread/591478-100027).",
+                "description": "FusionSolar se puede conectar de dos maneras:\n* **Kiosk**: Esta es la forma m\u00e1s f\u00e1cil, ya que (probablemente) no necesites ninguna interacci\u00f3n con Huawei Fusion Solar. Sin embargo, la informaci\u00f3n en tiempo real se actualiza cada 30 minutos.\n* **OpenAPI**: Necesitar\u00e1s una cuenta OpenAPI de Huawei, lo que te proporcionar\u00e1 una mejor informaci\u00f3n en tiempo real. [M\u00e1s informaci\u00f3n]({openapi_help_url}).",
                 "data": {
                     "type": "Elige la forma en la que deseas conectarte a Fusion Solar"
                 }
             },
             "kiosk": {
-                "description": "1. Inicia sesi\u00f3n en el [portal Huawei FusionSolar](https://eu5.fusionsolar.huawei.com/).\n2. Selecciona tu planta si es necesario.\n3. En la parte superior hay un bot\u00f3n: \"Kiosk\", haz clic en \u00e9l.\n4. Se abrir\u00e1 una ventana emergente y deber\u00e1s habilitar la vista kiosk activando el interruptor.",
+                "description": "1. Inicia sesi\u00f3n en el [portal Huawei FusionSolar]({kiosk_portal_url}).\n2. Selecciona tu planta si es necesario.\n3. En la parte superior hay un bot\u00f3n: \"Kiosk\", haz clic en \u00e9l.\n4. Se abrir\u00e1 una ventana emergente y deber\u00e1s habilitar la vista kiosk activando el interruptor.",
                 "data": {
                     "name": "Nombre",
                     "url": "URL del Kiosk",

@@ -7,13 +7,13 @@
         },
         "step": {
             "choose_type": {
-                "description": "O FusionSolar pode ser conectado de duas maneiras:\n* **Kiosk**: Esta \u00e9 a forma mais f\u00e1cil, pois (provavelmente) voc\u00ea n\u00e3o precisar\u00e1 de intera\u00e7\u00e3o com o Huawei Fusion Solar, a desvantagem \u00e9 que as informa\u00e7\u00f5es em tempo real s\u00e3o atualizadas a cada 30 minutos.\n* **OpenAPI**: Voc\u00ea precisar\u00e1 de uma conta OpenAPI da Huawei, o que lhe dar\u00e1 melhores informa\u00e7\u00f5es em tempo real. [Mais informa\u00e7\u00f5es](https://forum.huawei.com/enterprise/en/communicate-with-fusionsolar-through-an-openapi-account/thread/591478-100027).",
+                "description": "O FusionSolar pode ser conectado de duas maneiras:\n* **Kiosk**: Esta \u00e9 a forma mais f\u00e1cil, pois (provavelmente) voc\u00ea n\u00e3o precisar\u00e1 de intera\u00e7\u00e3o com o Huawei Fusion Solar, a desvantagem \u00e9 que as informa\u00e7\u00f5es em tempo real s\u00e3o atualizadas a cada 30 minutos.\n* **OpenAPI**: Voc\u00ea precisar\u00e1 de uma conta OpenAPI da Huawei, o que lhe dar\u00e1 melhores informa\u00e7\u00f5es em tempo real. [Mais informa\u00e7\u00f5es]({openapi_help_url}).",
                 "data": {
                     "type": "Escolha a forma como deseja se conectar ao Fusion Solar"
                 }
             },
             "kiosk": {
-                "description": "1. Fa\u00e7a login no [portal Huawei FusionSolar](https://eu5.fusionsolar.huawei.com/).\n2. Se necess\u00e1rio, selecione sua planta.\n3. No topo, h\u00e1 um bot\u00e3o: \"Kiosk\", clique nele.\n4. Uma sobreposi\u00e7\u00e3o ser\u00e1 aberta e voc\u00ea precisar\u00e1 habilitar a visualiza\u00e7\u00e3o do kiosk ativando o alternador.",
+                "description": "1. Fa\u00e7a login no [portal Huawei FusionSolar]({kiosk_portal_url}).\n2. Se necess\u00e1rio, selecione sua planta.\n3. No topo, h\u00e1 um bot\u00e3o: \"Kiosk\", clique nele.\n4. Uma sobreposi\u00e7\u00e3o ser\u00e1 aberta e voc\u00ea precisar\u00e1 habilitar a visualiza\u00e7\u00e3o do kiosk ativando o alternador.",
                 "data": {
                     "name": "Nome",
                     "url": "URL do Kiosk",

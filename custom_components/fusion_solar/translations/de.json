@@ -7,13 +7,13 @@
         },
         "step": {
             "choose_type": {
-                "description": "FusionSolar kann auf zwei Arten verbunden werden:\n* **Kiosk**: Dies ist der einfachste Weg, da (wahrscheinlich) keine Interaktion mit Huawei Fusion Solar erforderlich ist, der Nachteil ist, dass die Echtzeitinformationen alle 30 Minuten aktualisiert werden.\n* **OpenAPI**: Du ben\u00f6tigst ein OpenAPI-Konto von Huawei, was dir bessere Echtzeitinformationen bietet. [Weitere Informationen](https://forum.huawei.com/enterprise/en/communicate-with-fusionsolar-through-an-openapi-account/thread/591478-100027).",
+                "description": "FusionSolar kann auf zwei Arten verbunden werden:\n* **Kiosk**: Dies ist der einfachste Weg, da (wahrscheinlich) keine Interaktion mit Huawei Fusion Solar erforderlich ist, der Nachteil ist, dass die Echtzeitinformationen alle 30 Minuten aktualisiert werden.\n* **OpenAPI**: Du ben\u00f6tigst ein OpenAPI-Konto von Huawei, was dir bessere Echtzeitinformationen bietet. [Weitere Informationen]({openapi_help_url}).",
                 "data": {
                     "type": "W\u00e4hle die Art der Verbindung zu Fusion Solar"
                 }
             },
             "kiosk": {
-                "description": "1. Melde dich im [Huawei FusionSolar-Portal](https://eu5.fusionsolar.huawei.com/) an.\n2. W\u00e4hle dein Kraftwerk, falls erforderlich.\n3. Oben gibt es einen Button: \"Kiosk\", klicke darauf.\n4. Ein Overlay wird ge\u00f6ffnet, und du musst den Kiosk-Modus aktivieren, indem du den Schalter umlegst.",
+                "description": "1. Melde dich im [Huawei FusionSolar-Portal]({kiosk_portal_url}) an.\n2. W\u00e4hle dein Kraftwerk, falls erforderlich.\n3. Oben gibt es einen Button: \"Kiosk\", klicke darauf.\n4. Ein Overlay wird ge\u00f6ffnet, und du musst den Kiosk-Modus aktivieren, indem du den Schalter umlegst.",
                 "data": {
                     "name": "Name",
                     "url": "Kiosk-URL",
