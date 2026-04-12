@@ -47,7 +47,15 @@
                     "1": "carga/descarga forzada",
                     "2": "precio seg\u00fan horario de uso",
                     "3": "carga/descarga fija",
-                    "4": "carga/descarga autom\u00e1tica"
+                    "4": "carga/descarga autom\u00e1tica",
+                    "5": "inyecci\u00f3n total a la red",
+                    "6": "TOU",
+                    "7": "programaci\u00f3n remota \u2013 autoconsumo m\u00e1ximo",
+                    "8": "programaci\u00f3n remota \u2013 inyecci\u00f3n total a la red",
+                    "9": "programaci\u00f3n remota \u2013 TOU",
+                    "10": "control energ\u00e9tico mediante IA",
+                    "11": "control remoto \u2013 control energ\u00e9tico mediante IA",
+                    "12": "gesti\u00f3n por terceros"
                 }
             },
             "meter_status": {
