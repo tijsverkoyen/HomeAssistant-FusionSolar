@@ -47,7 +47,15 @@
                     "1": "erzwungene Lade-/Entladung",
                     "2": "Nutzungspreis",
                     "3": "feste Lade-/Entladung",
-                    "4": "automatische Lade-/Entladung"
+                    "4": "automatische Lade-/Entladung",
+                    "5": "vollst\u00e4ndige Einspeisung ins Netz",
+                    "6": "TOU",
+                    "7": "Fernsteuerung – maximaler Eigenverbrauch",
+                    "8": "Fernsteuerung – vollst\u00e4ndige Einspeisung ins Netz",
+                    "9": "Fernsteuerung – TOU",
+                    "10": "KI-Energiesteuerung",
+                    "11": "Fernsteuerung – KI-Energiesteuerung",
+                    "12": "Steuerung durch Dritte"
                 }
             },
             "meter_status": {
