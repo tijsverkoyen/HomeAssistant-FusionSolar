@@ -47,7 +47,15 @@
           "1": "forced charge/discharge",
           "2": "time-of-use price",
           "3": "fixed charge/discharge",
-          "4": "automatic charge/discharge"
+          "4": "automatic charge/discharge",
+          "5": "fully fed to grid",
+          "6": "TOU",
+          "7": "remote scheduling–max. self-consumption",
+          "8": "remote scheduling–fully fed to grid",
+          "9": "remote scheduling–TOU",
+          "10": "AI energy control",
+          "11": "remote control–AI energy control",
+          "12": "third-party dispatch"
         }
       },
       "meter_status": {
