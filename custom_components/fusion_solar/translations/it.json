@@ -47,7 +47,15 @@
                     "1": "carica/scarica forzata",
                     "2": "prezzo a tempo di utilizzo",
                     "3": "carica/scarica fissa",
-                    "4": "carica/scarica automatica"
+                    "4": "carica/scarica automatica",
+                    "5": "immissione totale in rete",
+                    "6": "TOU",
+                    "7": "programmazione remota - massimo autoconsumo",
+                    "8": "programmazione remota - immissione totale in rete",
+                    "9": "programmazione remota - TOU",
+                    "10": "controllo energetico AI",
+                    "11": "controllo remoto - controllo energetico AI",
+                    "12": "dispacciamento di terze parti"
                 }
             },
             "meter_status": {

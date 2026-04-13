@@ -47,7 +47,15 @@
                     "1": "carga/descarga for\u00e7ada",
                     "2": "pre\u00e7o de uso hor\u00e1rio",
                     "3": "carga/descarga fixa",
-                    "4": "carga/descarga autom\u00e1tica"
+                    "4": "carga/descarga autom\u00e1tica",
+                    "5": "alimentação total para a rede",
+                    "6": "TOU",
+                    "7": "programação remota - autoconsumo m\u00e1ximo",
+                    "8": "programação remota - alimenta\u00e7\u00e3o total para a rede",
+                    "9": "programação remota - TOU",
+                    "10": "controlo de energia por IA",
+                    "11": "controlo remoto - controlo de energia por IA",
+                    "12": "despacho por terceiros"
                 }
             },
             "meter_status": {

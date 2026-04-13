@@ -47,7 +47,15 @@
                     "1": "charge/d\u00e9charge forc\u00e9e",
                     "2": "tarification selon l'heure",
                     "3": "charge/d\u00e9charge fixe",
-                    "4": "charge/d\u00e9charge automatique"
+                    "4": "charge/d\u00e9charge automatique",
+                    "5": "injection totale dans le r\u00e9seau",
+                    "6": "TOU",
+                    "7": "programmation \u00e0 distance – autoconsommation maximale",
+                    "8": "programmation \u00e0 distance – injection totale dans le réseau",
+                    "9": "programmation \u00e0 distance – TOU",
+                    "10": "contr\u00f4le \u00e9nerg\u00e9tique par IA",
+                    "11": "contr\u00f4le \u00e0 distance – contr\u00f4le \u00e9nerg\u00e9tique par IA",
+                    "12": "r\u00e9partition par un tiers"
                 }
             },
             "meter_status": {
