@@ -48,20 +48,16 @@ If you need more accurate information you should use the API mode.
 
 You will need a Northbound API / OpenAPI account from your Huawei installer for this to work.
 
-### If you know your installer
+### If you know your installer, or you have the installer account
 
 Please pass them the following guide:
 
-[How to create a Northbound API Account](https://forum.huawei.com/enterprise/en/smart-pv-encyclopedia-how-to-create-a-northbound-api-account-through-the-fusionsolar/thread/1025182-100027)
-
-They will need to grant the following permissions:
-
-* Plant List (Select appropriate plant/company)
-* Real Time Plant Data (Select **All**)
-* Hourly, Daily, Monthly and Yearly Plant Data (Select **All**)
-* Device List
-* Real Time Device Data (See Below)
-* Daily, Monthly and Yearly Device Data (See Below)
+1. Go to System -> Company managemet -> Northbound Management
+2. Create (new
+3. Set a username, password and associated account. Set the deadline 50 years into the future (or similar).
+4. Tick the companies/plants and use the ">>" button to actually have it chosen
+5. Enable "Basic APIs"
+6. OK
 
 #### Device Data
 
