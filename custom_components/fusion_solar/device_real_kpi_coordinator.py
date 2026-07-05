@@ -11,7 +11,7 @@ from .const import DOMAIN
 from .fusion_solar.const import ATTR_DEVICE_REAL_KPI_DEV_ID, ATTR_DEVICE_REAL_KPI_DATA_ITEM_MAP, \
     PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_EMI, PARAM_DEVICE_TYPE_ID_GRID_METER, \
     PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER, PARAM_DEVICE_TYPE_ID_BATTERY, PARAM_DEVICE_TYPE_ID_POWER_SENSOR, \
-    PARAM_DEVICE_TYPE_ID_C_I_UTILITY_ESS
+    PARAM_DEVICE_TYPE_ID_C_I_UTILITY_ESS, PARAM_DEVICE_TYPE_ID_EMMA
 from .fusion_solar.openapi.openapi_api import FusionSolarOpenApiError, FusionSolarOpenApiAccessFrequencyTooHighError
 
 _LOGGER = logging.getLogger(__name__)
@@ -87,7 +87,7 @@ class DeviceRealKpiDataCoordinator(DataUpdateCoordinator):
             if device.type_id not in [PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_EMI,
                                       PARAM_DEVICE_TYPE_ID_GRID_METER, PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER,
                                       PARAM_DEVICE_TYPE_ID_BATTERY, PARAM_DEVICE_TYPE_ID_POWER_SENSOR,
-                                      PARAM_DEVICE_TYPE_ID_C_I_UTILITY_ESS]:
+                                      PARAM_DEVICE_TYPE_ID_C_I_UTILITY_ESS, PARAM_DEVICE_TYPE_ID_EMMA]:
                 continue
 
             device_from_registry = device_registry.async_get_device(identifiers={(DOMAIN, device.device_id)})
