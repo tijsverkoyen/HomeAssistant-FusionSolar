@@ -17,7 +17,7 @@ from .fusion_solar.const import ATTR_REALTIME_POWER, ATTR_TOTAL_CURRENT_DAY_ENER
     ATTR_STATION_REAL_KPI_TOTAL_CURRENT_MONTH_ENERGY, ATTR_STATION_REAL_KPI_TOTAL_LIFETIME_ENERGY, \
     ATTR_DATA_COLLECT_TIME, ATTR_KPI_YEAR_INVERTER_POWER, ATTR_DEVICE_REAL_KPI_ACTIVE_POWER, \
     PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_GRID_METER, PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER, \
-    PARAM_DEVICE_TYPE_ID_POWER_SENSOR, PARAM_DEVICE_TYPE_ID_EMI, PARAM_DEVICE_TYPE_ID_BATTERY, PARAM_DEVICE_TYPE_ID_C_I_UTILITY_ESS
+    PARAM_DEVICE_TYPE_ID_POWER_SENSOR, PARAM_DEVICE_TYPE_ID_EMI, PARAM_DEVICE_TYPE_ID_BATTERY, PARAM_DEVICE_TYPE_ID_C_I_UTILITY_ESS, PARAM_DEVICE_TYPE_ID_EMMA
 from .fusion_solar.kiosk.kiosk import FusionSolarKiosk
 from .fusion_solar.kiosk.kiosk_api import FusionSolarKioskApi, FusionSolarKioskApiError
 from .fusion_solar.openapi.openapi_api import FusionSolarOpenApi, FusionSolarOpenApiError
@@ -162,7 +162,8 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
     for device in devices:
         if device.type_id not in [PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_EMI,
                                   PARAM_DEVICE_TYPE_ID_GRID_METER, PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER,
-                                  PARAM_DEVICE_TYPE_ID_BATTERY, PARAM_DEVICE_TYPE_ID_POWER_SENSOR]:
+                                  PARAM_DEVICE_TYPE_ID_BATTERY, PARAM_DEVICE_TYPE_ID_POWER_SENSOR,
+                                  PARAM_DEVICE_TYPE_ID_EMMA]:
             continue
 
         if device.type_id not in devices_grouped_per_type_id:
@@ -178,7 +179,7 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
 
     for device in devices:
         if device.type_id in [PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_GRID_METER,
-                              PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER]:
+                              PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER, PARAM_DEVICE_TYPE_ID_EMMA]:
             async_add_entities([
                 FusionSolarPowerEntityRealtime(
                     coordinator,
@@ -652,6 +653,66 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                  'name': 'Positive reactive energy (off-peak)'},
                 {'class': 'FusionSolarRealtimeDeviceDataReactivePowerSensor', 'attribute': 'positive_reactive_top',
                  'name': 'Positive reactive energy (sharp)'},
+            ]
+
+                # ======================================================
+        # EMMA-A02 (devTypeId 23070)
+        # Fields verified via getDevRealKpi on a live installation
+        # Firmware: SmartHEMS V100R025C00SPC120
+        # ======================================================
+        if device.type_id == PARAM_DEVICE_TYPE_ID_EMMA:
+            entities_to_create = [
+                # --- Grid voltage ---
+                {'class': 'FusionSolarRealtimeDeviceDataVoltageSensor', 'attribute': 'ab_u',
+                 'name': 'Grid AB voltage'},
+                {'class': 'FusionSolarRealtimeDeviceDataVoltageSensor', 'attribute': 'bc_u',
+                 'name': 'Grid BC voltage'},
+                {'class': 'FusionSolarRealtimeDeviceDataVoltageSensor', 'attribute': 'ca_u',
+                 'name': 'Grid CA voltage'},
+
+                # --- Current per phase ---
+                {'class': 'FusionSolarRealtimeDeviceDataCurrentSensor', 'attribute': 'a_i',
+                 'name': 'Phase A current'},
+                {'class': 'FusionSolarRealtimeDeviceDataCurrentSensor', 'attribute': 'b_i',
+                 'name': 'Phase B current'},
+                {'class': 'FusionSolarRealtimeDeviceDataCurrentSensor', 'attribute': 'c_i',
+                 'name': 'Phase C current'},
+
+                # --- Active power (total + per phase) ---
+                {'class': 'FusionSolarRealtimeDeviceDataPowerSensor', 'attribute': 'active_power',
+                 'name': 'Active power'},
+                {'class': 'FusionSolarRealtimeDeviceDataPowerSensor', 'attribute': 'active_power_a',
+                 'name': 'Active power PA'},
+                {'class': 'FusionSolarRealtimeDeviceDataPowerSensor', 'attribute': 'active_power_b',
+                 'name': 'Active power PB'},
+                {'class': 'FusionSolarRealtimeDeviceDataPowerSensor', 'attribute': 'active_power_c',
+                 'name': 'Active power PC'},
+
+                # --- Reactive power ---
+                {'class': 'FusionSolarRealtimeDeviceDataReactivePowerSensor', 'attribute': 'reactive_power',
+                 'name': 'Reactive power'},
+
+                # --- Power factor ---
+                {'class': 'FusionSolarRealtimeDeviceDataPowerFactorSensor', 'attribute': 'power_factor',
+                 'name': 'Power factor'},
+
+                # --- Cumulative energy (total_increasing — never resets) ---
+                {'class': 'FusionSolarRealtimeDeviceDataEnergySensor', 'attribute': 'active_cap',
+                 'name': 'Active energy (grid import total)'},
+                {'class': 'FusionSolarRealtimeDeviceDataEnergySensor', 'attribute': 'reverse_active_cap',
+                 'name': 'Reverse active energy (grid export total)'},
+
+                # --- External measurement (ex_ fields — secondary measurement point on EMMA) ---
+                {'class': 'FusionSolarRealtimeDeviceDataPowerSensor', 'attribute': 'ex_active_power',
+                 'name': 'External active power'},
+                {'class': 'FusionSolarRealtimeDeviceDataEnergySensor', 'attribute': 'ex_active_cap',
+                 'name': 'External active energy (grid import total)'},
+                {'class': 'FusionSolarRealtimeDeviceDataEnergySensor', 'attribute': 'ex_reverse_active_cap',
+                 'name': 'External reverse active energy (grid export total)'},
+
+                # --- Status ---
+                {'class': 'FusionSolarRealtimeDeviceDataStateBinarySensor', 'attribute': 'run_state',
+                 'name': 'Status'},
             ]
 
         entities = []
