@@ -655,11 +655,6 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                  'name': 'Positive reactive energy (sharp)'},
             ]
 
-                # ======================================================
-        # EMMA-A02 (devTypeId 23070)
-        # Fields verified via getDevRealKpi on a live installation
-        # Firmware: SmartHEMS V100R025C00SPC120
-        # ======================================================
         if device.type_id == PARAM_DEVICE_TYPE_ID_EMMA:
             entities_to_create = [
                 # --- Grid voltage ---
