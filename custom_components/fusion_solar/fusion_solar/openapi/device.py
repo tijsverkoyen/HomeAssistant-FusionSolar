@@ -71,6 +71,8 @@ class FusionSolarDevice:
             return 'Distributed SmartLogger'
         if self.type_id == 70:
             return 'Safety box'
+        if self.type_id == 23070:
+            return 'EMMA'
 
         return 'Unknown'
 
