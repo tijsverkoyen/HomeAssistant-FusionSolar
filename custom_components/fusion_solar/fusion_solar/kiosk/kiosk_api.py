@@ -29,7 +29,7 @@ class FusionSolarKioskApi:
             response = get(url, headers=headers)
             jsonData = response.json()
 
-            if ATTR_SUCCESS not in jsonData or not jsonData[ATTR_SUCCESS]:
+            if jsonData is None or ATTR_SUCCESS not in jsonData or not jsonData[ATTR_SUCCESS]:
                 raise FusionSolarKioskApiError(f'Retrieving the data failed. Raw response: {response.text}')
 
             # convert encoded html string to JSON

@@ -53,13 +53,16 @@ class FusionSolarEnergySensor(CoordinatorEntity, SensorEntity):
                 try:
                     current_value = float(entity.state)
                 except ValueError:
-                    _LOGGER.info(f'{self.entity_id}: not available, so no update to prevent issues.')
-                    return
-
-                # Return the current value if the system is not producing
-                if not self.is_producing_at_the_moment():
-                    _LOGGER.info(f'{self.entity_id}: not producing any power, so no update to prevent glitches.')
-                    return current_value
+                    # Previous state is unknown/unavailable. We have no anchor value,
+                    # so we cannot apply the "skip update if not producing" safeguard.
+                    # Fall through to the coordinator-driven update so the sensor can
+                    # recover instead of staying stuck in unknown forever.
+                    _LOGGER.info(f'{self.entity_id}: previous value unavailable, recovering from coordinator data.')
+                else:
+                    # Return the current value if the system is not producing
+                    if not self.is_producing_at_the_moment():
+                        _LOGGER.info(f'{self.entity_id}: not producing any power, so no update to prevent glitches.')
+                        return current_value
 
         try:
             return self.get_float_value_from_coordinator(self._attribute)
