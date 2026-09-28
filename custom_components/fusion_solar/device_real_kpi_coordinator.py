@@ -18,8 +18,9 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class DeviceRealKpiDataCoordinator(DataUpdateCoordinator):
-    def __init__(self, hass, api, devices):
+    def __init__(self, hass, api, devices, config_entry_id):
         self.name = 'FusionSolarOpenAPIDeviceRealKpiType'
+        self.config_entry_id = config_entry_id
 
         super().__init__(
             hass,
@@ -90,12 +91,12 @@ class DeviceRealKpiDataCoordinator(DataUpdateCoordinator):
                                       PARAM_DEVICE_TYPE_ID_C_I_UTILITY_ESS, PARAM_DEVICE_TYPE_ID_EMMA]:
                 continue
 
-            device_from_registry = device_registry.async_get_device(identifiers={(DOMAIN, device.device_id)})
+            device_from_registry = device_registry.async_get_device_by_identifier((DOMAIN, device.device_id), self.config_entry_id)
             if device_from_registry is not None and device_from_registry.disabled:
                 _LOGGER.debug(f'Device {device.name} ({device.device_id}) is disabled by the user.')
                 continue
 
-            station_from_registry = device_registry.async_get_device(identifiers={(DOMAIN, device.station_code)})
+            station_from_registry = device_registry.async_get_device_by_identifier((DOMAIN, device.station_code), self.config_entry_id)
             if station_from_registry is not None and station_from_registry.disabled:
                 _LOGGER.debug(
                     f'Device {device.name} ({device.device_id}) linked to a disabled station ({device.station_code}).')

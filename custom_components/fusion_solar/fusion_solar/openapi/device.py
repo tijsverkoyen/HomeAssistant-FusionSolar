@@ -77,7 +77,7 @@ class FusionSolarDevice:
         return 'Unknown'
 
     def device_info(self):
-        return {
+        info = {
             'identifiers': {
                 (DOMAIN, self.device_id)
             },
@@ -85,8 +85,11 @@ class FusionSolarDevice:
             'manufacturer': 'Huawei FusionSolar',
             'model': self.model,
             'sw_version': self.software_version,
-            'via_device': (DOMAIN, self.station_code)
         }
+        via_device_id = getattr(self, 'via_device_id', None)
+        if via_device_id is not None:
+            info['via_device_id'] = via_device_id
+        return info
 
     @property
     def readable_name(self):

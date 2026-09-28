@@ -56,8 +56,8 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 _LOGGER = logging.getLogger(__name__)
 
 
-def filter_for_enabled_stations(station, device_registry):
-    device_from_registry = device_registry.async_get_device(identifiers={(DOMAIN, station.code)})
+def filter_for_enabled_stations(station, device_registry, config_entry_id):
+    device_from_registry = device_registry.async_get_device_by_identifier((DOMAIN, station.code), config_entry_id)
     if device_from_registry is not None and device_from_registry.disabled:
         _LOGGER.debug(f'Station {station.code} is disabled by the user.')
         return False
@@ -148,16 +148,20 @@ async def add_entities_for_kiosk(hass, async_add_entities, kiosk: FusionSolarKio
     ])
 
 
-async def add_entities_for_stations(hass, async_add_entities, stations, api: FusionSolarOpenApi):
+async def add_entities_for_stations(hass, async_add_entities, stations, api: FusionSolarOpenApi, config_entry_id):
     device_registry = dr.async_get(hass)
-    stations = list(filter(lambda x: filter_for_enabled_stations(x, device_registry), stations))
+    stations = list(filter(lambda x: filter_for_enabled_stations(x, device_registry, config_entry_id), stations))
     station_codes = [station.code for station in stations]
     _LOGGER.debug(f'Adding entities for stations ({len(station_codes)})')
 
-    await _add_entities_for_stations_real_kpi_data(hass, async_add_entities, stations, api)
-    await _add_entities_for_stations_year_kpi_data(hass, async_add_entities, stations, api)
+    await _add_entities_for_stations_real_kpi_data(hass, async_add_entities, stations, api, config_entry_id)
+    await _add_entities_for_stations_year_kpi_data(hass, async_add_entities, stations, api, config_entry_id)
 
     devices = await hass.async_add_executor_job(api.get_dev_list, station_codes)
+    for device in devices:
+        via_device = device_registry.async_get_device_by_identifier((DOMAIN, device.station_code), config_entry_id)
+        device.via_device_id = via_device.id if via_device else None
+
     devices_grouped_per_type_id = {}
     for device in devices:
         if device.type_id not in [PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_EMI,
@@ -172,7 +176,7 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
 
     await _add_static_entities_for_devices(async_add_entities, devices)
 
-    coordinator = DeviceRealKpiDataCoordinator(hass, api, devices)
+    coordinator = DeviceRealKpiDataCoordinator(hass, api, devices, config_entry_id)
 
     # Fetch initial data so we have data when entities subscribe
     await coordinator.async_refresh()
@@ -720,9 +724,9 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
         async_add_entities(entities)
 
 
-async def _add_entities_for_stations_real_kpi_data(hass, async_add_entities, stations, api: FusionSolarOpenApi):
+async def _add_entities_for_stations_real_kpi_data(hass, async_add_entities, stations, api: FusionSolarOpenApi, config_entry_id):
     device_registry = dr.async_get(hass)
-    stations = list(filter(lambda x: filter_for_enabled_stations(x, device_registry), stations))
+    stations = list(filter(lambda x: filter_for_enabled_stations(x, device_registry, config_entry_id), stations))
     station_codes = [station.code for station in stations]
     _LOGGER.debug(f'Adding stations_real_kpi_data entities for stations ({len(station_codes)})')
 
@@ -806,9 +810,9 @@ async def _add_entities_for_stations_real_kpi_data(hass, async_add_entities, sta
         ])
 
 
-async def _add_entities_for_stations_year_kpi_data(hass, async_add_entities, stations, api: FusionSolarOpenApi):
+async def _add_entities_for_stations_year_kpi_data(hass, async_add_entities, stations, api: FusionSolarOpenApi, config_entry_id):
     device_registry = dr.async_get(hass)
-    stations = list(filter(lambda x: filter_for_enabled_stations(x, device_registry), stations))
+    stations = list(filter(lambda x: filter_for_enabled_stations(x, device_registry, config_entry_id), stations))
     station_codes = [station.code for station in stations]
     _LOGGER.debug(f'Adding stations_year_kpi_data entities for stations ({len(station_codes)})')
 
@@ -941,7 +945,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         if len(stations) > 100:
             _LOGGER.error('More than 100 stations found, which is not a good idea.')
 
-        await add_entities_for_stations(hass, async_add_entities, stations, api)
+        await add_entities_for_stations(hass, async_add_entities, stations, api, config_entry.entry_id)
 
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
