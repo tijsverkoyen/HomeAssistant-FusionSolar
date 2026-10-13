@@ -4,13 +4,14 @@ import html
 import json
 
 from ..const import (
+    REQUEST_TIMEOUT,
     ATTR_DATA,
     ATTR_FAIL_CODE,
     ATTR_SUCCESS,
     ATTR_DATA_REALKPI,
 )
 
-from requests import get
+from requests import get, RequestException
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -26,7 +27,7 @@ class FusionSolarKioskApi:
         }
 
         try:
-            response = get(url, headers=headers)
+            response = get(url, headers=headers, timeout=REQUEST_TIMEOUT)
             jsonData = response.json()
 
             if jsonData is None or ATTR_SUCCESS not in jsonData or not jsonData[ATTR_SUCCESS]:
@@ -45,6 +46,9 @@ class FusionSolarKioskApi:
         except FusionSolarKioskApiError as error:
             _LOGGER.error(error)
             _LOGGER.debug(response.text)
+
+        except RequestException as error:
+            _LOGGER.error(f'Request to {url} failed: {error}')
 
         return {
             ATTR_SUCCESS: False

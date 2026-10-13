@@ -1,11 +1,13 @@
 """Tests for the OpenAPI client, with HTTP mocked by requests-mock."""
 import pytest
+import requests
 
 from custom_components.fusion_solar.fusion_solar.openapi.openapi_api import (
     FusionSolarOpenApi,
     FusionSolarOpenApiAccessFrequencyTooHighError,
     FusionSolarOpenApiError,
 )
+from custom_components.fusion_solar.fusion_solar.const import REQUEST_TIMEOUT
 
 from .const import (
     DEV_LIST,
@@ -103,6 +105,50 @@ def test_expired_token_triggers_relogin(api, login, requests_mock):
     assert api.get_station_real_kpi([STATION_CODE]) == STATION_REAL_KPI['data']
     assert login.call_count == 2
     assert real_kpi.call_count == 2
+
+
+def test_token_expiring_again_after_relogin_raises(api, login, requests_mock):
+    real_kpi = requests_mock.post(
+        f'{OPENAPI_HOST}/thirdData/getStationRealKpi',
+        json={'success': False, 'failCode': 305, 'data': None},
+    )
+
+    with pytest.raises(FusionSolarOpenApiError):
+        api.get_station_real_kpi([STATION_CODE])
+
+    assert login.call_count == 2
+    assert real_kpi.call_count == 2
+
+
+def test_requests_use_timeout(api, login, requests_mock):
+    real_kpi = requests_mock.post(f'{OPENAPI_HOST}/thirdData/getStationRealKpi', json=STATION_REAL_KPI)
+
+    api.get_station_real_kpi([STATION_CODE])
+
+    assert login.last_request.timeout == REQUEST_TIMEOUT
+    assert real_kpi.last_request.timeout == REQUEST_TIMEOUT
+
+
+@pytest.mark.parametrize('exception', [requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError])
+def test_network_error_raises_api_error(api, login, requests_mock, exception):
+    requests_mock.post(f'{OPENAPI_HOST}/thirdData/getStationRealKpi', exc=exception)
+
+    with pytest.raises(FusionSolarOpenApiError):
+        api.get_station_real_kpi([STATION_CODE])
+
+
+def test_http_error_raises_api_error(api, login, requests_mock):
+    requests_mock.post(f'{OPENAPI_HOST}/thirdData/getStationRealKpi', status_code=502)
+
+    with pytest.raises(FusionSolarOpenApiError):
+        api.get_station_real_kpi([STATION_CODE])
+
+
+def test_login_timeout_raises_api_error(api, requests_mock):
+    requests_mock.post(LOGIN_URL, exc=requests.exceptions.ReadTimeout)
+
+    with pytest.raises(FusionSolarOpenApiError):
+        api.login()
 
 
 def test_rate_limit_raises_access_frequency_error(api, login, requests_mock):
