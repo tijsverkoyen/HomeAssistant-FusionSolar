@@ -141,8 +141,8 @@ class FusionSolarOpenApi:
                     device[ATTR_DEVICE_TYPE_ID],
                     device[ATTR_DEVICE_INVERTER_TYPE],
                     device[ATTR_DEVICE_SOFTWARE_VERSION],
-                    device[ATTR_DEVICE_LATITUDE],
                     device[ATTR_DEVICE_LONGITUDE],
+                    device[ATTR_DEVICE_LATITUDE],
                 )
             )
 

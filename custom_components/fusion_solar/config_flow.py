@@ -13,10 +13,11 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class FusionSolarConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    data: Optional[Dict[str, Any]] = {
-        CONF_KIOSKS: [],
-        CONF_OPENAPI_CREDENTIALS: {}
-    }
+    def __init__(self):
+        self.data: Dict[str, Any] = {
+            CONF_KIOSKS: [],
+            CONF_OPENAPI_CREDENTIALS: {}
+        }
 
     async def async_step_user(self, user_input: Optional[Dict[str, Any]] = None):
         """Invoked when a user initiates a flow via the user interface."""

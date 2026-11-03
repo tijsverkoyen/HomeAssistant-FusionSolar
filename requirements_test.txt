@@ -1,0 +1,3 @@
+# Pulls in Home Assistant, pytest and HA's test helpers, pinned to a matching HA release.
+pytest-homeassistant-custom-component==0.13.371
+requests-mock==1.12.1
