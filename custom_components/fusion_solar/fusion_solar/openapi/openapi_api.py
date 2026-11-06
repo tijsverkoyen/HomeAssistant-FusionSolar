@@ -123,6 +123,17 @@ class FusionSolarOpenApi:
 
         return response[ATTR_DATA]
 
+    def get_kpi_station_day(self, station_codes: list):
+        # The API returns the daily data for every day of the month that contains collectTime.
+        url = self._host + '/thirdData/getKpiStationDay'
+        json = {
+            'stationCodes': ','.join(station_codes),
+            'collectTime': round(time.time() * 1000),
+        }
+        response = self._do_call(url, json)
+
+        return response[ATTR_DATA]
+
     def get_dev_list(self, station_codes: list):
         url = self._host + '/thirdData/getDevList'
         json = {

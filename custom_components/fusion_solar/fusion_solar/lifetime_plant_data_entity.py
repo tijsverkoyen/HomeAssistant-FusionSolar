@@ -208,3 +208,83 @@ class FusionSolarLifetimePlantDataReductionTotalTreeSensor(FusionSolarLifetimePl
     @property
     def icon(self) -> str | None:
         return "mdi:tree"
+
+
+class FusionSolarLifetimePlantDataBuyPowerSensor(FusionSolarLifetimePlantDataSensor):
+    _attribute = 'buy_power'
+
+    @property
+    def name(self) -> str:
+        return f'{self._station.readable_name} - Lifetime - Energy from grid'
+
+    @property
+    def device_class(self) -> str:
+        return SensorDeviceClass.ENERGY
+
+    @property
+    def native_unit_of_measurement(self) -> str:
+        return UnitOfEnergy.KILO_WATT_HOUR
+
+    @property
+    def state_class(self) -> str:
+        return SensorStateClass.TOTAL_INCREASING
+
+
+class FusionSolarLifetimePlantDataSelfUsePowerSensor(FusionSolarLifetimePlantDataSensor):
+    _attribute = 'self_use_power'
+
+    @property
+    def name(self) -> str:
+        return f'{self._station.readable_name} - Lifetime - Self-consumption'
+
+    @property
+    def device_class(self) -> str:
+        return SensorDeviceClass.ENERGY
+
+    @property
+    def native_unit_of_measurement(self) -> str:
+        return UnitOfEnergy.KILO_WATT_HOUR
+
+    @property
+    def state_class(self) -> str:
+        return SensorStateClass.TOTAL_INCREASING
+
+
+class FusionSolarLifetimePlantDataChargeCapSensor(FusionSolarLifetimePlantDataSensor):
+    _attribute = 'charge_cap'
+
+    @property
+    def name(self) -> str:
+        return f'{self._station.readable_name} - Lifetime - Battery charged energy'
+
+    @property
+    def device_class(self) -> str:
+        return SensorDeviceClass.ENERGY
+
+    @property
+    def native_unit_of_measurement(self) -> str:
+        return UnitOfEnergy.KILO_WATT_HOUR
+
+    @property
+    def state_class(self) -> str:
+        return SensorStateClass.TOTAL_INCREASING
+
+
+class FusionSolarLifetimePlantDataDischargeCapSensor(FusionSolarLifetimePlantDataSensor):
+    _attribute = 'discharge_cap'
+
+    @property
+    def name(self) -> str:
+        return f'{self._station.readable_name} - Lifetime - Battery discharged energy'
+
+    @property
+    def device_class(self) -> str:
+        return SensorDeviceClass.ENERGY
+
+    @property
+    def native_unit_of_measurement(self) -> str:
+        return UnitOfEnergy.KILO_WATT_HOUR
+
+    @property
+    def state_class(self) -> str:
+        return SensorStateClass.TOTAL_INCREASING

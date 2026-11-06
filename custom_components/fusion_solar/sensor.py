@@ -20,7 +20,8 @@ from .fusion_solar.const import ATTR_REALTIME_POWER, ATTR_TOTAL_CURRENT_DAY_ENER
     PARAM_DEVICE_TYPE_ID_POWER_SENSOR, PARAM_DEVICE_TYPE_ID_EMI, PARAM_DEVICE_TYPE_ID_BATTERY, PARAM_DEVICE_TYPE_ID_C_I_UTILITY_ESS, PARAM_DEVICE_TYPE_ID_EMMA
 from .fusion_solar.kiosk.kiosk import FusionSolarKiosk
 from .fusion_solar.kiosk.kiosk_api import FusionSolarKioskApi, FusionSolarKioskApiError
-from .fusion_solar.openapi.openapi_api import FusionSolarOpenApi, FusionSolarOpenApiError
+from .fusion_solar.openapi.openapi_api import FusionSolarOpenApi, FusionSolarOpenApiError, \
+    FusionSolarOpenApiAccessFrequencyTooHighError, FusionSolarOpenApiErrorInvalidAccessToCurrentInterfaceError
 from .fusion_solar.energy_sensor import FusionSolarEnergySensorTotalCurrentDay, \
     FusionSolarEnergySensorTotalCurrentMonth, FusionSolarEnergySensorTotalCurrentYear, \
     FusionSolarEnergySensorTotalLifetime
@@ -31,6 +32,8 @@ from .fusion_solar.realtime_device_data_sensor import *
 from .fusion_solar.station_attribute_entity import *
 from .fusion_solar.year_plant_data_entity import *
 from .fusion_solar.lifetime_plant_data_entity import *
+from .fusion_solar.day_plant_data_entity import *
+from .fusion_solar.station_real_kpi_entity import *
 
 from .device_real_kpi_coordinator import DeviceRealKpiDataCoordinator
 
@@ -54,6 +57,15 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 )
 
 _LOGGER = logging.getLogger(__name__)
+
+
+def station_kpi_has_attribute(coordinator, station, attribute):
+    """Check if the (per collect time) KPI data of a station contains the given attribute."""
+    if not coordinator.data:
+        return False
+
+    data_per_collect_time = coordinator.data.get(f'{DOMAIN}-{station.code}', {})
+    return any(attribute in data for data in data_per_collect_time.values())
 
 
 def filter_for_enabled_stations(station, device_registry, config_entry_id):
@@ -156,6 +168,7 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
 
     await _add_entities_for_stations_real_kpi_data(hass, async_add_entities, stations, api, config_entry_id)
     await _add_entities_for_stations_year_kpi_data(hass, async_add_entities, stations, api, config_entry_id)
+    await _add_entities_for_stations_day_kpi_data(hass, async_add_entities, stations, api, config_entry_id)
 
     devices = await hass.async_add_executor_job(api.get_dev_list, station_codes)
     for device in devices:
@@ -806,7 +819,10 @@ async def _add_entities_for_stations_real_kpi_data(hass, async_add_entities, sta
                 ATTR_STATION_REAL_KPI_TOTAL_LIFETIME_ENERGY,
                 f'{DOMAIN}-{station.code}',
                 station.device_info()
-            )
+            ),
+            FusionSolarStationRealKpiDayIncomeSensor(coordinator, station),
+            FusionSolarStationRealKpiTotalIncomeSensor(coordinator, station),
+            FusionSolarStationRealKpiHealthStateSensor(coordinator, station),
         ])
 
 
@@ -865,6 +881,10 @@ async def _add_entities_for_stations_year_kpi_data(hass, async_add_entities, sta
             {'class': 'FusionSolarYearPlantDataReductionTotalCo2Sensor'},
             {'class': 'FusionSolarYearPlantDataReductionTotalCoalSensor'},
             {'class': 'FusionSolarYearPlantDataReductionTotalTreeSensor'},
+            {'class': 'FusionSolarYearPlantDataBuyPowerSensor', 'optional': True},
+            {'class': 'FusionSolarYearPlantDataSelfUsePowerSensor', 'optional': True},
+            {'class': 'FusionSolarYearPlantDataChargeCapSensor', 'optional': True},
+            {'class': 'FusionSolarYearPlantDataDischargeCapSensor', 'optional': True},
 
             {'class': 'FusionSolarLifetimePlantDataInverterPowerSensor'},
             {'class': 'FusionSolarLifetimePlantDataOngridPowerSensor'},
@@ -874,13 +894,104 @@ async def _add_entities_for_stations_year_kpi_data(hass, async_add_entities, sta
             {'class': 'FusionSolarLifetimePlantDataReductionTotalCo2Sensor'},
             {'class': 'FusionSolarLifetimePlantDataReductionTotalCoalSensor'},
             {'class': 'FusionSolarLifetimePlantDataReductionTotalTreeSensor'},
+            {'class': 'FusionSolarLifetimePlantDataBuyPowerSensor', 'optional': True},
+            {'class': 'FusionSolarLifetimePlantDataSelfUsePowerSensor', 'optional': True},
+            {'class': 'FusionSolarLifetimePlantDataChargeCapSensor', 'optional': True},
+            {'class': 'FusionSolarLifetimePlantDataDischargeCapSensor', 'optional': True},
         ]
 
-        entities = []
-        for entity_to_create in entities_to_create:
-            class_name = globals()[entity_to_create['class']]
-            entities.append(class_name(coordinator, station))
-        async_add_entities(entities)
+        _add_station_kpi_entities(async_add_entities, coordinator, station, entities_to_create)
+
+
+async def _add_entities_for_stations_day_kpi_data(hass, async_add_entities, stations, api: FusionSolarOpenApi, config_entry_id):
+    device_registry = dr.async_get(hass)
+    stations = list(filter(lambda x: filter_for_enabled_stations(x, device_registry, config_entry_id), stations))
+    station_codes = [station.code for station in stations]
+    _LOGGER.debug(f'Adding stations_day_kpi_data entities for stations ({len(station_codes)})')
+
+    interface_unavailable = False
+
+    async def async_update_station_day_kpi_data():
+        nonlocal interface_unavailable
+        data = {}
+
+        if station_codes is None or len(station_codes) == 0:
+            return data
+
+        try:
+            response = await hass.async_add_executor_job(api.get_kpi_station_day, station_codes)
+        except FusionSolarOpenApiAccessFrequencyTooHighError as error:
+            # getKpiStationDay is limited to ~24 calls a day, keep the previous data instead of going unavailable.
+            if coordinator.data:
+                _LOGGER.info(f'getKpiStationDay rate limited, keeping previous data: {error}')
+                return coordinator.data
+            raise UpdateFailed(f'OpenAPI Error: {error}')
+        except FusionSolarOpenApiErrorInvalidAccessToCurrentInterfaceError as error:
+            interface_unavailable = True
+            raise UpdateFailed(f'OpenAPI Error: {error}')
+        except FusionSolarOpenApiError as error:
+            raise UpdateFailed(f'OpenAPI Error: {error}')
+
+        for response_data in response:
+            key = f'{DOMAIN}-{response_data[ATTR_STATION_CODE]}'
+
+            if key not in data:
+                data[key] = {}
+
+            data[key][response_data[ATTR_DATA_COLLECT_TIME]] = response_data[ATTR_STATION_REAL_KPI_DATA_ITEM_MAP]
+
+        _LOGGER.debug(f'async_update_station_day_kpi_data: {data}')
+
+        return data
+
+    coordinator = DataUpdateCoordinator(
+        hass,
+        _LOGGER,
+        name='FusionSolarOpenAPIStationDayKpi',
+        update_method=async_update_station_day_kpi_data,
+        # getKpiStationDay allows Roundup(plants / 100) + 24 calls a day.
+        update_interval=timedelta(hours=1),
+    )
+
+    # Fetch initial data so we have data when entities subscribe
+    await coordinator.async_refresh()
+
+    # Without entities the coordinator has no listeners, so it won't poll the interface again.
+    if interface_unavailable:
+        _LOGGER.warning(
+            'getKpiStationDay is not available for this account, the daily plant data sensors are not created. '
+            'Ask your installer to give the Northbound account access to the daily plant data interface.'
+        )
+        return
+
+    for station in stations:
+        entities_to_create = [
+            {'class': 'FusionSolarDayPlantDataInverterPowerSensor'},
+            {'class': 'FusionSolarDayPlantDataOngridPowerSensor'},
+            {'class': 'FusionSolarDayPlantDataUsePowerSensor'},
+            {'class': 'FusionSolarDayPlantDataPowerProfitSensor'},
+            {'class': 'FusionSolarDayPlantDataBuyPowerSensor', 'optional': True},
+            {'class': 'FusionSolarDayPlantDataSelfUsePowerSensor', 'optional': True},
+            {'class': 'FusionSolarDayPlantDataChargeCapSensor', 'optional': True},
+            {'class': 'FusionSolarDayPlantDataDischargeCapSensor', 'optional': True},
+        ]
+
+        _add_station_kpi_entities(async_add_entities, coordinator, station, entities_to_create)
+
+
+def _add_station_kpi_entities(async_add_entities, coordinator, station, entities_to_create):
+    entities = []
+    for entity_to_create in entities_to_create:
+        class_name = globals()[entity_to_create['class']]
+
+        # Not every FusionSolar version / plant returns these fields, only create them when they are available.
+        if entity_to_create.get('optional') and \
+                not station_kpi_has_attribute(coordinator, station, class_name._attribute):
+            _LOGGER.debug(f'Skipping {entity_to_create["class"]} for station {station.code}: not returned by the API')
+            continue
+
+        entities.append(class_name(coordinator, station))
+    async_add_entities(entities)
 
 
 async def _add_static_entities_for_devices(async_add_entities, devices):

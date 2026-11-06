@@ -58,6 +58,13 @@
                     "12": "r\u00e9partition par un tiers"
                 }
             },
+            "real_health_state": {
+                "state": {
+                    "1": "d\u00e9connect\u00e9",
+                    "2": "d\u00e9faillant",
+                    "3": "sain"
+                }
+            },
             "meter_status": {
                 "state": {
                     "0": "hors ligne",
