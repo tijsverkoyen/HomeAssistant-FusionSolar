@@ -1,9 +1,12 @@
 import logging
-import time
+from datetime import time
 
+from homeassistant.core import callback
+from homeassistant.helpers.event import async_track_time_change
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
 from homeassistant.const import UnitOfEnergy
+from homeassistant.util import dt as dt_util
 
 from ..const import DOMAIN
 
@@ -30,6 +33,17 @@ class FusionSolarDayPlantDataSensor(CoordinatorEntity, SensorEntity):
         self._station = station
         self._device_info = station.device_info()
 
+    async def async_added_to_hass(self) -> None:
+        await super().async_added_to_hass()
+        # The data is only fetched every hour, so re-evaluate at midnight to stop showing yesterday's totals.
+        self.async_on_remove(
+            async_track_time_change(self.hass, self._async_handle_midnight, hour=0, minute=0, second=0)
+        )
+
+    @callback
+    def _async_handle_midnight(self, now) -> None:
+        self.async_write_ha_state()
+
     @property
     def unique_id(self) -> str:
         return f'{DOMAIN}-{self._station.code}-current_day-{self._attribute}'
@@ -42,23 +56,36 @@ class FusionSolarDayPlantDataSensor(CoordinatorEntity, SensorEntity):
             return None
 
         # The API returns one record per day of the current month, keyed by the start of the day (in the timezone of
-        # the plant). Today's record is the most recent one that started less than 24 hours ago.
-        now = round(time.time() * 1000)
+        # the plant). Use the most recent record that has started.
+        now = dt_util.utcnow()
+        now_in_ms = round(now.timestamp() * 1000)
         highest_collect_time = 0
         latest_data = None
 
         for collect_time, data in self.coordinator.data[key].items():
-            if highest_collect_time < collect_time <= now:
+            if highest_collect_time < collect_time <= now_in_ms:
                 highest_collect_time = collect_time
                 latest_data = data
 
-        if latest_data is None or now - highest_collect_time >= ONE_DAY_IN_MS:
+        if latest_data is None or not self._is_today(highest_collect_time, now):
             return None
 
         if latest_data.get(self._attribute) is None:
             return None
 
         return float(latest_data[self._attribute])
+
+    @staticmethod
+    def _is_today(collect_time: int, now) -> bool:
+        start_of_record = dt_util.as_local(dt_util.utc_from_timestamp(collect_time / 1000))
+
+        # When the plant is in the same timezone as Home Assistant the record starts at local midnight, so compare
+        # calendar dates; this also handles the 23 and 25 hour days of a daylight saving time switch.
+        if start_of_record.time() == time(0, 0):
+            return start_of_record.date() == dt_util.as_local(now).date()
+
+        # Different timezones: we don't know the plant's timezone, so fall back to the age of the record.
+        return round(now.timestamp() * 1000) - collect_time < ONE_DAY_IN_MS
 
     @property
     def device_info(self) -> dict:

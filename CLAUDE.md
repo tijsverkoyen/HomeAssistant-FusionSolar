@@ -39,6 +39,7 @@ Tests use `pytest-homeassistant-custom-component`, which boots a real (in-memory
 - `tests/const.py` — sample API payloads (one station with a residential inverter, battery and power sensor)
 - `tests/conftest.py` — `mock_kiosk_api` / `mock_openapi` fixtures, `kiosk_entry` / `openapi_entry` config entries, and `get_state(hass, unique_id)` (look entities up by unique ID, not generated entity ID)
 - `test_init.py` — end-to-end setup of both modes; use `async_fire_time_changed` to drive coordinator updates
+- `test_station_kpi.py` — daily plant data (`getKpiStationDay`), station revenue / health state and the optional energy sensors; uses `freezer` and `hass.config.async_set_time_zone` for the midnight and daylight saving time cases
 - `test_openapi_api.py`, `test_kiosk_api.py`, `test_models.py`, `test_device_real_kpi_coordinator.py`, `test_config_flow.py` — focused unit tests
 
 Tests marked `xfail(strict=True)` document known bugs; when you fix one, the test starts passing and fails the run until you remove the marker.

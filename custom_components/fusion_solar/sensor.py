@@ -21,7 +21,7 @@ from .fusion_solar.const import ATTR_REALTIME_POWER, ATTR_TOTAL_CURRENT_DAY_ENER
 from .fusion_solar.kiosk.kiosk import FusionSolarKiosk
 from .fusion_solar.kiosk.kiosk_api import FusionSolarKioskApi, FusionSolarKioskApiError
 from .fusion_solar.openapi.openapi_api import FusionSolarOpenApi, FusionSolarOpenApiError, \
-    FusionSolarOpenApiAccessFrequencyTooHighError
+    FusionSolarOpenApiAccessFrequencyTooHighError, FusionSolarOpenApiErrorInvalidAccessToCurrentInterfaceError
 from .fusion_solar.energy_sensor import FusionSolarEnergySensorTotalCurrentDay, \
     FusionSolarEnergySensorTotalCurrentMonth, FusionSolarEnergySensorTotalCurrentYear, \
     FusionSolarEnergySensorTotalLifetime
@@ -909,7 +909,10 @@ async def _add_entities_for_stations_day_kpi_data(hass, async_add_entities, stat
     station_codes = [station.code for station in stations]
     _LOGGER.debug(f'Adding stations_day_kpi_data entities for stations ({len(station_codes)})')
 
+    interface_unavailable = False
+
     async def async_update_station_day_kpi_data():
+        nonlocal interface_unavailable
         data = {}
 
         if station_codes is None or len(station_codes) == 0:
@@ -922,6 +925,9 @@ async def _add_entities_for_stations_day_kpi_data(hass, async_add_entities, stat
             if coordinator.data:
                 _LOGGER.info(f'getKpiStationDay rate limited, keeping previous data: {error}')
                 return coordinator.data
+            raise UpdateFailed(f'OpenAPI Error: {error}')
+        except FusionSolarOpenApiErrorInvalidAccessToCurrentInterfaceError as error:
+            interface_unavailable = True
             raise UpdateFailed(f'OpenAPI Error: {error}')
         except FusionSolarOpenApiError as error:
             raise UpdateFailed(f'OpenAPI Error: {error}')
@@ -949,6 +955,14 @@ async def _add_entities_for_stations_day_kpi_data(hass, async_add_entities, stat
 
     # Fetch initial data so we have data when entities subscribe
     await coordinator.async_refresh()
+
+    # Without entities the coordinator has no listeners, so it won't poll the interface again.
+    if interface_unavailable:
+        _LOGGER.warning(
+            'getKpiStationDay is not available for this account, the daily plant data sensors are not created. '
+            'Ask your installer to give the Northbound account access to the daily plant data interface.'
+        )
+        return
 
     for station in stations:
         entities_to_create = [
