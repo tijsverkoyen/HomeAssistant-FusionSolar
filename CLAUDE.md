@@ -21,12 +21,29 @@ Access at `http://localhost:8123`. The entire repo mounts to `/config`.
 
 ## Validation (CI)
 
-Two GitHub Actions workflows run on push/PR and daily:
+Three GitHub Actions workflows run on push/PR and daily:
 
 - `hassfest`: Validates the integration manifest and structure
 - `hacs`: Validates HACS compatibility
+- `tests`: Runs the pytest suite
 
-There are no unit tests. Validation is done by running the integration in a real Home Assistant instance.
+## Tests
+
+```bash
+pip install -r requirements_test.txt
+pytest
+```
+
+Tests use `pytest-homeassistant-custom-component`, which boots a real (in-memory) Home Assistant. It requires Linux/macOS (HA imports `fcntl`); on Windows run it inside WSL. All HTTP is mocked with `requests-mock` — no test talks to FusionSolar.
+
+- `tests/const.py` — sample API payloads (one station with a residential inverter, battery and power sensor)
+- `tests/conftest.py` — `mock_kiosk_api` / `mock_openapi` fixtures, `kiosk_entry` / `openapi_entry` config entries, and `get_state(hass, unique_id)` (look entities up by unique ID, not generated entity ID)
+- `test_init.py` — end-to-end setup of both modes; use `async_fire_time_changed` to drive coordinator updates
+- `test_openapi_api.py`, `test_kiosk_api.py`, `test_models.py`, `test_device_real_kpi_coordinator.py`, `test_config_flow.py` — focused unit tests
+
+Tests marked `xfail(strict=True)` document known bugs; when you fix one, the test starts passing and fails the run until you remove the marker.
+
+The device `run_state` entities are `BinarySensorEntity` subclasses but are added by the sensor platform, so they live in the `sensor` domain.
 
 ## Architecture
 
