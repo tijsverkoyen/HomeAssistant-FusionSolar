@@ -182,8 +182,8 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
     await coordinator.async_refresh()
 
     for device in devices:
-        if device.type_id in [PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_GRID_METER,
-                              PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER, PARAM_DEVICE_TYPE_ID_EMMA]:
+        if device.type_id in [PARAM_DEVICE_TYPE_ID_STRING_INVERTER, PARAM_DEVICE_TYPE_ID_RESIDENTIAL_INVERTER,
+                              PARAM_DEVICE_TYPE_ID_EMMA]:
             async_add_entities([
                 FusionSolarPowerEntityRealtime(
                     coordinator,
@@ -195,7 +195,9 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                 ),
             ])
 
-        if device.type_id in [PARAM_DEVICE_TYPE_ID_POWER_SENSOR]:
+        # Grid meters and power sensors report active power in W, although the API reference documents kW for grid
+        # meters (see issue #313: the phase powers only match voltage x current in W).
+        if device.type_id in [PARAM_DEVICE_TYPE_ID_GRID_METER, PARAM_DEVICE_TYPE_ID_POWER_SENSOR]:
             async_add_entities([
                 FusionSolarPowerEntityRealtimeInWatt(
                     coordinator,
@@ -394,7 +396,7 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                 {'class': 'FusionSolarRealtimeDeviceDataCurrentSensor', 'attribute': 'a_i', 'name': 'Phase A current'},
                 {'class': 'FusionSolarRealtimeDeviceDataCurrentSensor', 'attribute': 'b_i', 'name': 'Phase B current'},
                 {'class': 'FusionSolarRealtimeDeviceDataCurrentSensor', 'attribute': 'c_i', 'name': 'Phase C current'},
-                {'class': 'FusionSolarRealtimeDeviceDataPowerSensor', 'attribute': 'active_power',
+                {'class': 'FusionSolarRealtimeDeviceDataPowerInWattSensor', 'attribute': 'active_power',
                  'name': 'Active power'},
                 {'class': 'FusionSolarRealtimeDeviceDataPowerFactorSensor', 'attribute': 'power_factor',
                  'name': 'Power factor'},
@@ -408,11 +410,11 @@ async def add_entities_for_stations(hass, async_add_entities, stations, api: Fus
                  'name': 'Forward active energy'},
                 {'class': 'FusionSolarRealtimeDeviceDataEnergySensor', 'attribute': 'reverse_reactive_cap',
                  'name': 'Reverse reactive energy'},
-                {'class': 'FusionSolarRealtimeDeviceDataPowerSensor', 'attribute': 'active_power_a',
+                {'class': 'FusionSolarRealtimeDeviceDataPowerInWattSensor', 'attribute': 'active_power_a',
                  'name': 'Active power PA'},
-                {'class': 'FusionSolarRealtimeDeviceDataPowerSensor', 'attribute': 'active_power_b',
+                {'class': 'FusionSolarRealtimeDeviceDataPowerInWattSensor', 'attribute': 'active_power_b',
                  'name': 'Active power PB'},
-                {'class': 'FusionSolarRealtimeDeviceDataPowerSensor', 'attribute': 'active_power_c',
+                {'class': 'FusionSolarRealtimeDeviceDataPowerInWattSensor', 'attribute': 'active_power_c',
                  'name': 'Active power PC'},
                 {'class': 'FusionSolarRealtimeDeviceDataReactivePowerSensor', 'attribute': 'reactive_power_a',
                  'name': 'Reactive power QA'},
