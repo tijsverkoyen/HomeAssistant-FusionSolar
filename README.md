@@ -131,6 +131,19 @@ updates will be. See [Disabling devices](#disabling-devices)
 ### Total yields
 
 The integration updates the total yields (current day, current month, current year, lifetime) every 10 minutes.
+Together with the yields, the revenue (today and total) and the plant health state (healthy, faulty, disconnected) are
+exposed.
+
+### Daily, yearly and lifetime plant data
+
+The daily plant data (`getKpiStationDay` api call) and yearly plant data (`getKpiStationYear` api call) are updated
+every hour, as these endpoints only allow around 24 calls per day. The "Current Day" sensors (inverter yield, feed-in
+energy, consumption, revenue) reset every day, which makes them usable in the Energy dashboard. If your Northbound
+account has no access to the daily plant data interface, these sensors are not created and a warning is logged.
+
+Newer FusionSolar versions also return the energy taken from the grid, self-consumption and battery charged / discharged
+energy. Sensors for these values are only created when the API returns them for your plant. If they are missing after
+the API starts returning them, reload the integration.
 
 ## Integration with the Energy dashboard
 

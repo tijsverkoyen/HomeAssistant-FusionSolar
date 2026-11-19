@@ -58,6 +58,13 @@
                     "12": "Steuerung durch Dritte"
                 }
             },
+            "real_health_state": {
+                "state": {
+                    "1": "getrennt",
+                    "2": "fehlerhaft",
+                    "3": "gesund"
+                }
+            },
             "meter_status": {
                 "state": {
                     "0": "offline",

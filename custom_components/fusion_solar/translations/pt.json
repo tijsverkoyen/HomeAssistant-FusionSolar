@@ -58,6 +58,13 @@
                     "12": "despacho por terceiros"
                 }
             },
+            "real_health_state": {
+                "state": {
+                    "1": "desconectado",
+                    "2": "com falha",
+                    "3": "saud\u00e1vel"
+                }
+            },
             "meter_status": {
                 "state": {
                     "0": "offline",

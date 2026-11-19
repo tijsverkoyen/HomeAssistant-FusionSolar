@@ -58,6 +58,13 @@
           "12": "third-party dispatch"
         }
       },
+      "real_health_state": {
+        "state": {
+          "1": "disconnected",
+          "2": "faulty",
+          "3": "healthy"
+        }
+      },
       "meter_status": {
         "state": {
           "0": "offline",

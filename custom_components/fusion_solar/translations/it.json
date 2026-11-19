@@ -58,6 +58,13 @@
                     "12": "dispacciamento di terze parti"
                 }
             },
+            "real_health_state": {
+                "state": {
+                    "1": "disconnesso",
+                    "2": "guasto",
+                    "3": "integro"
+                }
+            },
             "meter_status": {
                 "state": {
                     "0": "offline",

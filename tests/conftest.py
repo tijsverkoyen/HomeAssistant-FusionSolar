@@ -12,6 +12,7 @@ from .const import (
     DEV_REAL_KPI_BY_TYPE,
     KIOSK_API_URL,
     KIOSK_CONFIG,
+    KPI_STATION_DAY,
     KPI_STATION_YEAR,
     OPENAPI_CONFIG,
     OPENAPI_HOST,
@@ -44,6 +45,7 @@ def mock_openapi(requests_mock):
     requests_mock.post(f'{OPENAPI_HOST}/thirdData/getStationList', json=STATION_LIST)
     requests_mock.post(f'{OPENAPI_HOST}/thirdData/getStationRealKpi', json=STATION_REAL_KPI)
     requests_mock.post(f'{OPENAPI_HOST}/thirdData/getKpiStationYear', json=KPI_STATION_YEAR)
+    requests_mock.post(f'{OPENAPI_HOST}/thirdData/getKpiStationDay', json=KPI_STATION_DAY)
     requests_mock.post(f'{OPENAPI_HOST}/thirdData/getDevList', json=DEV_LIST)
     requests_mock.post(
         f'{OPENAPI_HOST}/thirdData/getDevRealKpi',

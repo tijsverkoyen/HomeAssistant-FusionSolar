@@ -79,6 +79,8 @@ STATION_REAL_KPI = {
                 'month_power': '310.25',
                 'total_power': '15000.75',
                 'real_health_state': 3,
+                'day_income': '3.250',
+                'total_income': '1500.000',
             },
         }
     ],
@@ -100,6 +102,34 @@ KPI_STATION_YEAR = {
         },
     ],
 }
+
+PLANT_TIME_ZONE = 'Europe/Brussels'
+
+# Records start at midnight in the plant's timezone (Europe/Brussels).
+JUNE_14 = 1718316000000
+JUNE_15 = 1718402400000
+MARCH_31 = 1711839600000  # 23 hour day, daylight saving time starts
+OCTOBER_27 = 1729980000000  # 25 hour day, daylight saving time ends
+
+
+def kpi_station_day(*records):
+    """Build a getKpiStationDay response from (collectTime, dataItemMap) tuples."""
+    return {
+        'success': True,
+        'failCode': 0,
+        'data': [
+            {'stationCode': STATION_CODE, 'collectTime': collect_time, 'dataItemMap': data_item_map}
+            for collect_time, data_item_map in records
+        ],
+    }
+
+
+KPI_STATION_DAY = kpi_station_day(
+    (JUNE_14, {'inverter_power': 30.0, 'ongrid_power': 20.0, 'use_power': 15.0, 'power_profit': 6.0,
+               'buy_power': 4.0, 'charge_cap': 2.0}),
+    (JUNE_15, {'inverter_power': 12.5, 'ongrid_power': None, 'use_power': 8.0, 'power_profit': 2.5,
+               'buy_power': 3.0, 'charge_cap': 1.0}),
+)
 
 INVERTER_ID = 1000000001
 BATTERY_ID = 1000000002

@@ -305,6 +305,86 @@ class FusionSolarYearPlantDataReductionTotalTreeSensor(FusionSolarYearPlantDataS
         return "mdi:tree"
 
 
+class FusionSolarYearPlantDataBuyPowerSensor(FusionSolarYearPlantDataSensor):
+    _attribute = 'buy_power'
+
+    @property
+    def name(self) -> str:
+        return f'{self._station.readable_name} - Current Year - Energy from grid'
+
+    @property
+    def device_class(self) -> str:
+        return SensorDeviceClass.ENERGY
+
+    @property
+    def native_unit_of_measurement(self) -> str:
+        return UnitOfEnergy.KILO_WATT_HOUR
+
+    @property
+    def state_class(self) -> str:
+        return SensorStateClass.TOTAL_INCREASING
+
+
+class FusionSolarYearPlantDataSelfUsePowerSensor(FusionSolarYearPlantDataSensor):
+    _attribute = 'self_use_power'
+
+    @property
+    def name(self) -> str:
+        return f'{self._station.readable_name} - Current Year - Self-consumption'
+
+    @property
+    def device_class(self) -> str:
+        return SensorDeviceClass.ENERGY
+
+    @property
+    def native_unit_of_measurement(self) -> str:
+        return UnitOfEnergy.KILO_WATT_HOUR
+
+    @property
+    def state_class(self) -> str:
+        return SensorStateClass.TOTAL_INCREASING
+
+
+class FusionSolarYearPlantDataChargeCapSensor(FusionSolarYearPlantDataSensor):
+    _attribute = 'charge_cap'
+
+    @property
+    def name(self) -> str:
+        return f'{self._station.readable_name} - Current Year - Battery charged energy'
+
+    @property
+    def device_class(self) -> str:
+        return SensorDeviceClass.ENERGY
+
+    @property
+    def native_unit_of_measurement(self) -> str:
+        return UnitOfEnergy.KILO_WATT_HOUR
+
+    @property
+    def state_class(self) -> str:
+        return SensorStateClass.TOTAL_INCREASING
+
+
+class FusionSolarYearPlantDataDischargeCapSensor(FusionSolarYearPlantDataSensor):
+    _attribute = 'discharge_cap'
+
+    @property
+    def name(self) -> str:
+        return f'{self._station.readable_name} - Current Year - Battery discharged energy'
+
+    @property
+    def device_class(self) -> str:
+        return SensorDeviceClass.ENERGY
+
+    @property
+    def native_unit_of_measurement(self) -> str:
+        return UnitOfEnergy.KILO_WATT_HOUR
+
+    @property
+    def state_class(self) -> str:
+        return SensorStateClass.TOTAL_INCREASING
+
+
 # @deprecated, use FusionSolarYearPlantDataInverterPowerSensor instead
 class FusionSolarBackwardsCompatibilityTotalCurrentYear(FusionSolarYearPlantDataInverterPowerSensor):
     @property

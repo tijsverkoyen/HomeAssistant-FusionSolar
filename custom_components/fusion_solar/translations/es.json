@@ -58,6 +58,13 @@
                     "12": "gesti\u00f3n por terceros"
                 }
             },
+            "real_health_state": {
+                "state": {
+                    "1": "desconectado",
+                    "2": "averiado",
+                    "3": "saludable"
+                }
+            },
             "meter_status": {
                 "state": {
                     "0": "fuera de l\u00ednea",
