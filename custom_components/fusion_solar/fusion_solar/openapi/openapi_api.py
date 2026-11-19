@@ -4,9 +4,9 @@ import time
 import datetime
 from datetime import timezone
 
-from requests import post
+from requests import post, RequestException
 
-from ..const import ATTR_AID_TYPE, ATTR_BUILD_STATE, ATTR_CAPACITY, ATTR_COMBINE_TYPE, ATTR_CONTACT_PERSON_PHONE, \
+from ..const import REQUEST_TIMEOUT, ATTR_AID_TYPE, ATTR_BUILD_STATE, ATTR_CAPACITY, ATTR_COMBINE_TYPE, ATTR_CONTACT_PERSON_PHONE, \
     ATTR_DATA, ATTR_DEVICE_ESN_CODE, ATTR_DEVICE_ID, ATTR_DEVICE_INVERTER_TYPE, ATTR_DEVICE_LATITUDE, \
     ATTR_DEVICE_LONGITUDE, ATTR_DEVICE_NAME, ATTR_DEVICE_SOFTWARE_VERSION, ATTR_DEVICE_STATION_CODE, \
     ATTR_DEVICE_TYPE_ID, ATTR_FAIL_CODE, ATTR_LIST, ATTR_PARAMS, ATTR_PARAMS_CURRENT_TIME, ATTR_PLANT_ADDRESS, \
@@ -37,7 +37,7 @@ class FusionSolarOpenApi:
         }
 
         try:
-            response = post(url, headers=headers, json=json)
+            response = post(url, headers=headers, json=json, timeout=REQUEST_TIMEOUT)
             response.raise_for_status()
 
             if 'xsrf-token' in response.headers:
@@ -158,7 +158,7 @@ class FusionSolarOpenApi:
 
         return response[ATTR_DATA]
 
-    def _do_call(self, url: str, json: dict):
+    def _do_call(self, url: str, json: dict, retry_on_expired_token: bool = True):
         if self._token is None:
             self.login()
 
@@ -168,16 +168,19 @@ class FusionSolarOpenApi:
         }
 
         try:
-            response = post(url, headers=headers, json=json)
+            response = post(url, headers=headers, json=json, timeout=REQUEST_TIMEOUT)
             response.raise_for_status()
             json_data = response.json()
             _LOGGER.debug(f'JSON data for {url}: {json_data}')
 
             if ATTR_FAIL_CODE in json_data and json_data[ATTR_FAIL_CODE] == 305:
-                _LOGGER.debug('Token expired, trying to login again')
                 # token expired
                 self._token = None
-                return self._do_call(url, json)
+                if not retry_on_expired_token:
+                    raise FusionSolarOpenApiError(f'Token for {url} expired again right after logging in')
+
+                _LOGGER.debug('Token expired, trying to login again')
+                return self._do_call(url, json, retry_on_expired_token=False)
 
             if ATTR_FAIL_CODE in json_data and json_data[ATTR_FAIL_CODE] == 401:
                 raise FusionSolarOpenApiErrorInvalidAccessToCurrentInterfaceError(json_data[ATTR_MESSAGE])
@@ -199,6 +202,9 @@ class FusionSolarOpenApi:
                 raise FusionSolarOpenApiError(f'Retrieving the data failed. Raw response: {response.text}')
 
             return json_data
+
+        except RequestException as error:
+            raise FusionSolarOpenApiError(f'Request to {url} failed: {error}') from error
 
         except KeyError as error:
             _LOGGER.error(error)

@@ -1,7 +1,9 @@
 """Tests for the kiosk URL parser and kiosk API client."""
 import pytest
+import requests
 
 from custom_components.fusion_solar.fusion_solar.kiosk.kiosk import FusionSolarKiosk
+from custom_components.fusion_solar.fusion_solar.const import REQUEST_TIMEOUT
 from custom_components.fusion_solar.fusion_solar.kiosk.kiosk_api import FusionSolarKioskApi
 
 from .const import KIOSK_API_URL, KIOSK_HOST, KIOSK_ID, KIOSK_NAME, KIOSK_REAL_KPI, KIOSK_URL, kiosk_response
@@ -34,6 +36,7 @@ def test_get_real_time_kpi_decodes_html_escaped_json(requests_mock):
 
     assert data == KIOSK_REAL_KPI
     assert requests_mock.last_request.headers['accept'] == 'application/json'
+    assert requests_mock.last_request.timeout == REQUEST_TIMEOUT
 
 
 def test_get_real_time_kpi_unsuccessful_response(requests_mock):
@@ -44,5 +47,12 @@ def test_get_real_time_kpi_unsuccessful_response(requests_mock):
 
 def test_get_real_time_kpi_missing_real_kpi(requests_mock):
     requests_mock.get(KIOSK_API_URL, json={'success': True, 'data': '{&quot;other&quot;: 1}'})
+
+    assert FusionSolarKioskApi(KIOSK_HOST).getRealTimeKpi(KIOSK_ID) == {'success': False}
+
+
+@pytest.mark.parametrize('exception', [requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError])
+def test_get_real_time_kpi_network_error(requests_mock, exception):
+    requests_mock.get(KIOSK_API_URL, exc=exception)
 
     assert FusionSolarKioskApi(KIOSK_HOST).getRealTimeKpi(KIOSK_ID) == {'success': False}
